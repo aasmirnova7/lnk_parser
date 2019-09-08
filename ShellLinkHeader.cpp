@@ -26,6 +26,7 @@ static bool EnableTargetMetadataSet = false;    // PROPERTY_STORE_PROPS
 static bool RunWithShimLayerSet = false;        // SHIM_PROPS
 static bool ForceNoLinkTrackSet = false;        // TRACKER_PROPS - The TrackerDataBlock (section 2.5.10) is ignored.
 
+// TODO:  подумать над LinkCLSID
 ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
         fillShellLinkHeader(header);
     }
@@ -108,7 +109,7 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
             return false;
         }
         /* Check LinkCLSID */
-        if(false) { // ДОДЕЛАТЬ!!!!!!!!!!!!!!1
+        if(false) { // TODO ДОДЕЛАТЬ!!!!!!!!!!!!!!
             cout << "Invalid LinkCLSID value. It MUST be 00021401-0000-0000-C000-000000000046" << endl;
             return false;
         }
@@ -276,6 +277,7 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
         if (ShowCommand[3] == 7) cout << "SW_SHOWMINNOACTIVE" << endl;
     }
 
+    // TODO: Дописать парсинг времени + странный FileSize:
     void ShellLinkHeader::printHeader(){
         cout << "____________________ShellLinkHeader______________________" << endl;
         cout << "HeaderSize:           " << dec << Utils::lenFourBytes(HeaderSize) << " bytes" << endl;
@@ -345,9 +347,9 @@ bool ShellLinkHeader::EnableTargetMetadataIsSet(){
 bool ShellLinkHeader::RunWithShimLayerIsSet(){
     return RunWithShimLayerSet;
 }
-    bool ShellLinkHeader::ForceNoLinkTrackIsSet(){
-        return ForceNoLinkTrackSet;
-    }
+bool ShellLinkHeader::ForceNoLinkTrackIsSet(){
+    return ForceNoLinkTrackSet;
+}
 
 
 

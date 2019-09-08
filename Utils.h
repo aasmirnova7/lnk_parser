@@ -18,7 +18,7 @@ public:
     static int lenTwoBytes(std::vector<unsigned int> vec);
     static void print_vec(std::vector<unsigned int>& vec);
     static void print_vec_unicode(std::vector<unsigned int>& vec);
-    static void fillItemIdList(std::vector<LinkTargetIDList::ItemIDList> IDList, int count,
+    static std::vector<LinkTargetIDList::ItemIDList> fillItemIdList(int count,
                                std::vector<unsigned char>::const_iterator it);
 
     static int getCountOfBytesBeforeNullTerminator(std::vector<unsigned char>::const_iterator it);

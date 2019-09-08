@@ -17,8 +17,6 @@ void StringData::fillStringData(ReadStream *readStream, int readFrom) {
 
     if(ShellLinkHeader::HasNameIsSet()) {
         vector<unsigned char> nameStringSize  = readStream->read(tmpReadFrom,2);
-//        for(int i = 0; i < 2 ; ++i)
-//            cout <<  hex << (int)nameStringSize[i] << ' ';
         reverse(nameStringSize.begin(), nameStringSize.end());
         int len = Utils::lenTwoBytes(nameStringSize) * 2;   // Unicode chars
         std::copy(nameStringSize.begin(), nameStringSize.end(),
@@ -34,8 +32,6 @@ void StringData::fillStringData(ReadStream *readStream, int readFrom) {
     }
     if(ShellLinkHeader::HasRelativePathIsSet()) {
         vector<unsigned char> RelativePathSize  = readStream->read(tmpReadFrom,2);
-//        for(int i = 0; i < 2 ; ++i)
-//            cout <<  hex << (int)RelativePathSize[i] << ' ';
         reverse(RelativePathSize.begin(), RelativePathSize.end());
         int len = Utils::lenTwoBytes(RelativePathSize) * 2;   // Unicode chars
         std::copy(RelativePathSize.begin(), RelativePathSize.end(),
@@ -51,8 +47,6 @@ void StringData::fillStringData(ReadStream *readStream, int readFrom) {
     }
     if(ShellLinkHeader::HasWorkingDirIsSet()) {
         vector<unsigned char> WorkingDirSize  = readStream->read(tmpReadFrom,2);
-//        for(int i = 0; i < 2 ; ++i)
-//            cout <<  hex << (int)WorkingDirSize[i] << ' ';
         reverse(WorkingDirSize.begin(), WorkingDirSize.end());
         int len = Utils::lenTwoBytes(WorkingDirSize) * 2;   // Unicode chars
         std::copy(WorkingDirSize.begin(), WorkingDirSize.end(),
@@ -67,8 +61,6 @@ void StringData::fillStringData(ReadStream *readStream, int readFrom) {
     }
     if(ShellLinkHeader::HasArgumentsIsSet()) {
         vector<unsigned char> argumentsSize  = readStream->read(tmpReadFrom,2);
-//        for(int i = 0; i < 2 ; ++i)
-//            cout <<  hex << (int)argumentsSize[i] << ' ';
         reverse(argumentsSize.begin(), argumentsSize.end());
         int len = Utils::lenTwoBytes(argumentsSize) * 2;   // Unicode chars
         std::copy(argumentsSize.begin(), argumentsSize.end(),
@@ -84,8 +76,6 @@ void StringData::fillStringData(ReadStream *readStream, int readFrom) {
     }
     if(ShellLinkHeader::HasIconLocationIsSet()) {
         vector<unsigned char> IconLocationSize  = readStream->read(tmpReadFrom,2);
-//        for(int i = 0; i < 2 ; ++i)
-//            cout <<  hex << (int)IconLocationSize[i] << ' ';
         reverse(IconLocationSize.begin(), IconLocationSize.end());
         int len = Utils::lenTwoBytes(IconLocationSize) * 2;   // Unicode chars
         std::copy(IconLocationSize.begin(), IconLocationSize.end(),

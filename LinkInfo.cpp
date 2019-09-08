@@ -13,6 +13,7 @@ LinkInfo::LinkInfo(std::vector<unsigned char> linkInfo) {
     fillLinkInfo(linkInfo);
 }
 
+// TODO: убрать лишнее
 void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
     auto it = linkInfo.begin();
    /* mandatory fields */

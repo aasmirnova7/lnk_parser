@@ -13,6 +13,7 @@ LinkTargetIDList::LinkTargetIDList(std::vector<unsigned char> linkTargetIdList){
     fillLinkTargetIDList(linkTargetIdList);
 }
 
+// TODO: убрать лишнее
 void LinkTargetIDList::fillLinkTargetIDList(std::vector<unsigned char> linkTargetIdList) {
     auto it_begin = linkTargetIdList.begin();
     auto it_end = linkTargetIdList.end() - 2;

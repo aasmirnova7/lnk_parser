@@ -65,11 +65,12 @@ int Utils::lenTwoBytes(std::vector<unsigned int> vec) {
     return result;//std::strtoul(to_string(result).c_str(), 0, 16);
 }
 
+// TODO: подравнять вывод
 void Utils::print_vec(std::vector<unsigned int>& vec) {
     int count = 0;
     for (int x: vec) {
         if(count >= 25) {
-            std::cout << endl << "                    ";
+            std::cout << endl << "                        ";
             count = 0;
         }
         std::cout << hex << x << ' ';
@@ -95,11 +96,9 @@ int Utils::getCountOfBytesBeforeNullTerminator(std::vector<unsigned char>::const
     return countBytesBeforeNullTerminated + 3;  // Правильно, но нужно подумать, почему
 }
 
-void Utils::fillItemIdList(std::vector<LinkTargetIDList::ItemIDList> IDList, int count,
-                           std::vector<unsigned char>::const_iterator it) {
-    int countTmp = 0;
-    while (count > 0 && countTmp < 2) {
-        cout << "\nfillItemIdList_______" << count << endl;
+std::vector<LinkTargetIDList::ItemIDList> Utils::fillItemIdList(int count, std::vector<unsigned char>::const_iterator it) {
+    std::vector<LinkTargetIDList::ItemIDList> IDList;
+    while (count > 0) {
         LinkTargetIDList::ItemIDList itemIdList;
         copy(it, it + 2, std::back_inserter(itemIdList.ItemIDSize));          // 2 byte
         it = it + 2;
@@ -115,6 +114,6 @@ void Utils::fillItemIdList(std::vector<LinkTargetIDList::ItemIDList> IDList, int
 
         IDList.push_back(itemIdList);
         count = count - itemIDSize;
-        ++countTmp;
     }
+    return IDList;
 }

@@ -134,7 +134,7 @@ private:
         std::vector<unsigned int> BlockSize;                // 4 bytes
         std::vector<unsigned int> BlockSignature;           // 4 bytes
         std::vector<LinkTargetIDList::ItemIDList> IDList;   //  IDList structure (section 2.2.1)
-        std::vector<unsigned int> TerminalID;               // 2 bytes
+        std::vector<unsigned int> TerminalID;               // 4 bytes - ?????
     };
 
     ConsolePropsStruct CONSOLE_PROPS;
@@ -164,6 +164,15 @@ private:
 
     void fillExtraData(ReadStream *readStream, int readFrom);
     void reverseAllFields();
+    void parseFillAttributes(bool popupFillAttributes);
+    void parseFontFamily();
+    void parseFontWeight();
+    void parseCursorSize();
+    void parseFullScreen();
+    void parseQuickEdit();
+    void parseInsertMode();
+    void parseAutoPosition();
+    void parseHistoryNoDup();
 
 public:
     ExtraData(ReadStream *readStream, int readFrom);

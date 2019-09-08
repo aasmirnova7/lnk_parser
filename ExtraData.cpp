@@ -273,9 +273,10 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
             auto it = vistaStruct.begin() + 4;
             std::copy(it, it + 4, std::back_inserter(VISTA_AND_ABOVE_IDLIST_PROPS.BlockSignature));
             it = it + 4;
-            Utils::fillItemIdList(VISTA_AND_ABOVE_IDLIST_PROPS.IDList,  lenTmp - 10, it);
-            it = it + lenTmp - 10;
-            std::copy(it, it + 2, std::back_inserter(VISTA_AND_ABOVE_IDLIST_PROPS.TerminalID));
+            // TODO:  TerminalID как 4 байта???
+            VISTA_AND_ABOVE_IDLIST_PROPS.IDList = Utils::fillItemIdList(lenTmp - 12, it);
+            it = it + lenTmp - 12;
+            std::copy(it, it + 4, std::back_inserter(VISTA_AND_ABOVE_IDLIST_PROPS.TerminalID));
 
             tmpReadFrom = tmpReadFrom + lenTmp;
             vistaAndAboveIDListPropsIsSet = true;
@@ -385,62 +386,187 @@ void ExtraData::reverseAllFields() {
         reverse(VISTA_AND_ABOVE_IDLIST_PROPS.IDList.begin(), VISTA_AND_ABOVE_IDLIST_PROPS.IDList.end());
     }
 }
+void ExtraData::parseFillAttributes(bool popupFillAttributes) {
+    // std::cout << "LinkFlags:
+    if (popupFillAttributes) {
+        for (int i = 0; i < CONSOLE_PROPS.PopupFillAttributes.size(); ++i) {
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & FOREGROUND_BLUE) cout << "FOREGROUND_BLUE, ";
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & FOREGROUND_GREEN) cout << "FOREGROUND_GREEN, ";
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & FOREGROUND_RED) cout << "FOREGROUND_RED, ";
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & FOREGROUND_INTENSITY) cout << "FOREGROUND_INTENSITY, ";
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & BACKGROUND_BLUE) cout << "BACKGROUND_BLUE, ";
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & BACKGROUND_GREEN) cout << "BACKGROUND_GREEN, ";
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & BACKGROUND_RED) cout << "BACKGROUND_RED, ";
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & BACKGROUND_INTENSITY) cout << "BACKGROUND_INTENSITY, ";
+        }
+    } else {
+        for (int i = 0; i < CONSOLE_PROPS.FillAttributes.size(); ++i) {
+            if (CONSOLE_PROPS.FillAttributes[i] & FOREGROUND_BLUE) cout << "FOREGROUND_BLUE, ";
+            if (CONSOLE_PROPS.FillAttributes[i] & FOREGROUND_GREEN) cout << "FOREGROUND_GREEN, ";
+            if (CONSOLE_PROPS.FillAttributes[i] & FOREGROUND_RED) cout << "FOREGROUND_RED, ";
+            if (CONSOLE_PROPS.FillAttributes[i] & FOREGROUND_INTENSITY) cout << "FOREGROUND_INTENSITY, ";
+            if (CONSOLE_PROPS.FillAttributes[i] & BACKGROUND_BLUE) cout << "BACKGROUND_BLUE, ";
+            if (CONSOLE_PROPS.FillAttributes[i] & BACKGROUND_GREEN) cout << "BACKGROUND_GREEN, ";
+            if (CONSOLE_PROPS.FillAttributes[i] & BACKGROUND_RED) cout << "BACKGROUND_RED, ";
+            if (CONSOLE_PROPS.FillAttributes[i] & BACKGROUND_INTENSITY) cout << "BACKGROUND_INTENSITY, ";
+        }
+    }
+}
+// TODO: Дописать
+void ExtraData::parseFontFamily() {
 
+}
+void ExtraData::parseFontWeight() {
+    int len = Utils::lenFourBytes(CONSOLE_PROPS.FontWeight);
+    if (len >= 700)
+        cout << "A bold font." << endl;
+    else
+        cout << "A regular-weight font." << endl;
+}
+void ExtraData::parseCursorSize() {
+    int len = Utils::lenFourBytes(CONSOLE_PROPS.CursorSize);
+    cout << dec << len;
+    if (len <= 25)
+        cout << " pixels. A small cursor." << endl;
+    if (len > 25 && len < 51)
+        cout << "A medium cursor." << endl;
+    if (len > 50)
+        cout << "A large cursor." << endl;
+}
+void ExtraData::parseFullScreen() {
+    if (Utils::lenFourBytes(CONSOLE_PROPS.FullScreen) > 0x00000000)
+        cout << "Full-screen mode is on." << endl;
+    else
+        cout << "Full-screen mode is off." << endl;
+}
+void ExtraData::parseQuickEdit() {
+    if (Utils::lenFourBytes(CONSOLE_PROPS.QuickEdit) > 0x00000000)
+        cout << "QuickEdit mode is on." << endl;
+    else
+        cout << "QuickEdit mode is off." << endl;
+}
+void ExtraData::parseInsertMode() {
+    if (Utils::lenFourBytes(CONSOLE_PROPS.InsertMode) > 0x00000000)
+        cout << "Insert mode is enabled." << endl;
+    else
+        cout << "Insert mode is disabled." << endl;
+}
+void ExtraData::parseAutoPosition() {
+    if (Utils::lenFourBytes(CONSOLE_PROPS.AutoPosition) > 0x00000000)
+        cout << "The console window is positioned automatically." << endl;
+    else
+        cout << "The values of the WindowOriginX and WindowOriginY fields are used to position the console window." << endl;
+}
+void ExtraData::parseHistoryNoDup() {
+    if (Utils::lenFourBytes(CONSOLE_PROPS.HistoryNoDup) > 0x00000000)
+        cout << "Duplicates are allowed." << endl;
+    else
+        cout << "Duplicates are not allowed." << endl;
+}
+
+// TODO: рассмотреть ещё не распаршенные структуры в полях (цвета, шрифты...)
 void ExtraData::printExtraData() {
     cout << "_______________________ExtraData_________________________" << endl;
 
     if (consolePropsIsSet) {
         /* CONSOLE_PROPS struct*/
         cout << "CONSOLE_PROP:               " << endl;
+        cout << "   BlockSize:                " << dec << Utils::lenFourBytes(CONSOLE_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSignature:           "; Utils::print_vec(CONSOLE_PROPS.BlockSignature);
+        cout << "   FillAttributes:           "; parseFillAttributes(false); cout << endl;
+        cout << "   PopupFillAttributes:      "; parseFillAttributes(true); cout << endl;
+        cout << "   ScreenBufferSizeX:        " << dec << Utils::lenTwoBytes(CONSOLE_PROPS.ScreenBufferSizeX) << " characters" << endl;
+        cout << "   ScreenBufferSizeY:        " << dec << Utils::lenTwoBytes(CONSOLE_PROPS.ScreenBufferSizeY) << " characters" << endl;
+        cout << "   WindowSizeX:              " << dec << Utils::lenTwoBytes(CONSOLE_PROPS.WindowSizeX) << " characters" << endl;
+        cout << "   WindowSizeY:              " << dec << Utils::lenTwoBytes(CONSOLE_PROPS.WindowSizeY) << " characters" << endl;
+        cout << "   WindowOriginX:            " << dec << Utils::lenTwoBytes(CONSOLE_PROPS.WindowOriginX) << " pixels" << endl;
+        cout << "   WindowOriginY:            " << dec << Utils::lenTwoBytes(CONSOLE_PROPS.WindowOriginY) << " pixels" << endl;
+        cout << "   UNUSED1:                  "; Utils::print_vec(CONSOLE_PROPS.UNUSED1);
+        cout << "   UNUSED2:                  "; Utils::print_vec(CONSOLE_PROPS.UNUSED2);
+        cout << "   FontSize:                 " << dec << Utils::lenFourBytes(CONSOLE_PROPS.FontSize) << " pixels" << endl;
+        cout << "   FontFamily:               "; parseFontFamily();
+        cout << "   FontWeight:               "; Utils::print_vec(CONSOLE_PROPS.FontWeight);
+        cout << "   FaceName:                 "; Utils::print_vec_unicode(CONSOLE_PROPS.FaceName);
+        cout << "   CursorSize:               "; parseCursorSize();
+        cout << "   FullScreen:               "; parseFullScreen();
+        cout << "   QuickEdit:                "; parseQuickEdit();
+        cout << "   InsertMode:               "; parseInsertMode();
+        cout << "   AutoPosition:             "; parseAutoPosition();
+        cout << "   HistoryBufferSize:        " << dec << Utils::lenFourBytes(CONSOLE_PROPS.HistoryBufferSize) << " characters" << endl;
+        cout << "   NumberOfHistoryBuffers:   " << dec << Utils::lenFourBytes(CONSOLE_PROPS.NumberOfHistoryBuffers) << endl;
+        cout << "   HistoryNoDup:             "; parseHistoryNoDup();
+        cout << "   ColorTable:               "; Utils::print_vec(CONSOLE_PROPS.ColorTable);
     }
     if (consoleFEIsSet) {
         /* CONSOLE_FE_PROPS struct*/
         cout << "CONSOLE_FE_PROPS:               " << endl;
-
+        cout << "   BlockSize:                " << dec << Utils::lenFourBytes(CONSOLE_FE_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSignature:           "; Utils::print_vec(CONSOLE_FE_PROPS.BlockSignature);
+        cout << "   CodePage:                 "; Utils::print_vec(CONSOLE_FE_PROPS.CodePage);
     }
     if (drownPropsIsSet) {
         /* DARWIN_PROPS struct*/
         cout << "DARWIN_PROPS:               " << endl;
-
+        cout << "   BlockSize:                " << dec << Utils::lenFourBytes(DARWIN_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSignature:           "; Utils::print_vec(DARWIN_PROPS.BlockSignature);
+        cout << "   DarwinDataAnsi:           "; Utils::print_vec(DARWIN_PROPS.DarwinDataAnsi);
+        cout << "   DarwinDataUnicode:        "; Utils::print_vec_unicode(DARWIN_PROPS.DarwinDataUnicode);
     }
     if (environmentPropsIsSet) {
         /* ENVIRONMENT_PROPS struct*/
         cout << "ENVIRONMENT_PROPS:               " << endl;
-
+        cout << "   BlockSize:                " << dec << Utils::lenFourBytes(ENVIRONMENT_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSignature:           "; Utils::print_vec(ENVIRONMENT_PROPS.BlockSignature);
+        cout << "   TargetAnsi:               "; Utils::print_vec_unicode(ENVIRONMENT_PROPS.TargetAnsi);
+        cout << "   TargetUnicode:            "; Utils::print_vec_unicode(ENVIRONMENT_PROPS.TargetUnicode);
     }
     if (iconEnvironmentPropsIsSet) {
         /* ICON_ENVIRONMENT_PROPS struct*/
         cout << "ICON_ENVIRONMENT_PROPS:               " << endl;
-
+        cout << "   BlockSize:                " << dec << Utils::lenFourBytes(ICON_ENVIRONMENT_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSignature:           "; Utils::print_vec(ICON_ENVIRONMENT_PROPS.BlockSignature);
+        cout << "   TargetAnsi:               "; Utils::print_vec_unicode(ICON_ENVIRONMENT_PROPS.TargetAnsi);
+        cout << "   TargetUnicode:            "; Utils::print_vec_unicode(ICON_ENVIRONMENT_PROPS.TargetUnicode);
     }
     if (knownFolderPropsIsSet) {
         /* KNOWN_FOLDER_PROPS struct*/
         cout << "KNOWN_FOLDER_PROPS:               " << endl;
-
+        cout << "KNOWN_FOLDER_PROPS:               " << endl;
+        cout << "   BlockSize:                " << dec << Utils::lenFourBytes(KNOWN_FOLDER_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSignature:           "; Utils::print_vec(KNOWN_FOLDER_PROPS.BlockSignature);
+        cout << "   KnownFolderID:            "; Utils::print_vec(KNOWN_FOLDER_PROPS.KnownFolderID);
+        cout << "   Offset:                   "; Utils::print_vec(KNOWN_FOLDER_PROPS.Offset);
     }
     if (propertyStorePropsIsSet) {
         /* PROPERTY_STORE_PROPS struct*/
         cout << "PROPERTY_STORE_PROPS:               " << endl;
-
+        cout << "   BlockSize:                " << dec << Utils::lenFourBytes(PROPERTY_STORE_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSignature:           "; Utils::print_vec(PROPERTY_STORE_PROPS.BlockSignature);
+        cout << "   PropertyStore:            "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore);
     }
     if (shimPropsIsSet) {
         /* SHIM_PROPS struct*/
         cout << "SHIM_PROPS:               " << endl;
-
+        cout << "   BlockSize:                " << dec << Utils::lenFourBytes(SHIM_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSignature:           "; Utils::print_vec(SHIM_PROPS.BlockSignature);
+        cout << "   LayerName:                "; Utils::print_vec_unicode(SHIM_PROPS.LayerName);
     }
     if (sFolderPropsIsSet) {
         /* SPECIAL_FOLDER_PROPS struct*/
         cout << "SPECIAL_FOLDER_PROPS:               " << endl;
-
+        cout << "   BlockSize:                " << dec << Utils::lenFourBytes(SPECIAL_FOLDER_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSignature:           "; Utils::print_vec(SPECIAL_FOLDER_PROPS.BlockSignature);
+        cout << "   SpecialFolderID:          "; Utils::print_vec(SPECIAL_FOLDER_PROPS.SpecialFolderID);
+        cout << "   Offset:                   "; Utils::print_vec(SPECIAL_FOLDER_PROPS.Offset);
     }
     if (trackerPropsIsSet) {
         /* TRACKER_PROPS struct*/
         cout << "TRACKER_PROPS:               " << endl;
-        cout << "   BlockSize:                "  << dec << Utils::lenFourBytes(TRACKER_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSize:                " << dec << Utils::lenFourBytes(TRACKER_PROPS.BlockSize) << " bytes" << endl;
         cout << "   BlockSignature:           "; Utils::print_vec(TRACKER_PROPS.BlockSignature);
         cout << "   Length:                   "  << dec << Utils::lenFourBytes(TRACKER_PROPS.Length) << " bytes" << endl;
         cout << "   Version:                  "; Utils::print_vec(TRACKER_PROPS.Version);
-        cout << "   MachineID:                "; Utils::print_vec(TRACKER_PROPS.MachineID);
+        cout << "   MachineID:                "; Utils::print_vec_unicode(TRACKER_PROPS.MachineID);
         cout << "   Droid:                    "; Utils::print_vec(TRACKER_PROPS.Droid);
         cout << "   DroidBirth:               "; Utils::print_vec(TRACKER_PROPS.DroidBirth);
     }
@@ -449,19 +575,18 @@ void ExtraData::printExtraData() {
         cout << "VISTA_AND_ABOVE_IDLIST_PROPS:               " << endl;
         cout << "   BlockSize:                " << dec << Utils::lenFourBytes(VISTA_AND_ABOVE_IDLIST_PROPS.BlockSize) << " bytes" << endl;
         cout << "   BlockSignature:           "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.BlockSignature);
-        cout << "   IDList:" << endl;
+        cout << "   IDList:" <<  endl;
         for(int i = 0; i < VISTA_AND_ABOVE_IDLIST_PROPS.IDList.size(); ++i){
-            cout << "   ItemID " << i + 1 << endl;
-            cout << "       ItemIDSize:           "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.IDList[i].ItemIDSize);
-            cout << "       Data:                 "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.IDList[i].Data);
+            cout << "       ItemID " << i + 1 << endl;
+            cout << "           ItemIDSize:           " << dec
+                 << Utils::lenTwoBytes(VISTA_AND_ABOVE_IDLIST_PROPS.IDList[i].ItemIDSize) << " bytes" << endl;
+            cout << "           Data:                 "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.IDList[i].Data);
         }
-        cout << "       TerminalID:         "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.TerminalID);
+        cout << "           TerminalID:         "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.TerminalID);
     }
     cout << "TerminalBlock:                "; Utils::print_vec(TerminalBlock);
     cout << "_________________________________________________________" << endl;
 }
-
-
 
 void ExtraData::printExtraDataInHexStyle() {
     cout << "________________ExtraData in HEX style___________________" << endl;
@@ -574,14 +699,13 @@ void ExtraData::printExtraDataInHexStyle() {
         cout << "VISTA_AND_ABOVE_IDLIST_PROPS:               " << endl;
         cout << "   BlockSize:                "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.BlockSize);
         cout << "   BlockSignature:           "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.BlockSignature);
-        cout << "   IDList:" << endl;
+        cout << "   IDList:" <<  endl;
         for(int i = 0; i < VISTA_AND_ABOVE_IDLIST_PROPS.IDList.size(); ++i){
-            cout << "   ItemID " << i + 1 << endl;
-            cout << "       ItemIDSize:           " << dec
-                << Utils::lenTwoBytes(VISTA_AND_ABOVE_IDLIST_PROPS.IDList[i].ItemIDSize) << " bytes" << endl;
-            cout << "       Data:                 "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.IDList[i].Data);
+            cout << "       ItemID " << i + 1 << endl;
+            cout << "           ItemIDSize:           "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.IDList[i].ItemIDSize);
+            cout << "           Data:                 "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.IDList[i].Data);
         }
-        cout << "       TerminalID:         "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.TerminalID);
+        cout << "           TerminalID:         "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.TerminalID);
     }
     cout << "TerminalBlock:                "; Utils::print_vec(TerminalBlock);
     cout << "_________________________________________________________" << endl;
