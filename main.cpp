@@ -41,7 +41,7 @@ int main() {
     for(int i = 0; i < 76 ; ++i)
         cout <<  hex << (int)header[i] << ' '; */
 
-    ShellLink shellLink = ShellLink("C:\\Users\\user\\Desktop\\IDA Freeware.lnk");
+    ShellLink shellLink = ShellLink("C:\\Users\\ann19\\OneDrive\\Desktop\\Opera.lnk");
 
    /* vector<unsigned char> time = {1 , 0xd4 , 0xfe, 0x80, 0x30,  0xca, 0x73, 0xc};
 

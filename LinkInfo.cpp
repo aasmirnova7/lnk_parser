@@ -94,9 +94,9 @@ void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
 
         /* LocalBasePathOffset specifies the location of the LocalBasePath field */
         //NULL–terminated string
-        int countBytesBeforeNullTerminated  = getCountOfBytesBeforeNullTerminatorForLBP(it);
-        copy(it, it + countBytesBeforeNullTerminated, std::back_inserter(LocalBasePath));                   // не понятно, сколько занимает
-        it = it + countBytesBeforeNullTerminated;
+        int countBytesBeforeNullTerminated  = Utils::getCountOfBytesBeforeNullTerminator(it);
+        copy(it, it + countBytesBeforeNullTerminated - 1, std::back_inserter(LocalBasePath));                   // не понятно, сколько занимает
+        it = it + countBytesBeforeNullTerminated - 1;
         //cout << "LocalBasePath: "; Utils::print_vec(LocalBasePath);
     }
 
@@ -156,9 +156,11 @@ void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
     }
 
     //NULL–terminated string
-    int countBytesBeforeNullTerminated = Utils::getCountOfBytesBeforeNullTerminator(it);
-    copy(it, it + countBytesBeforeNullTerminated, std::back_inserter(CommonPathSuffix));                         // не понятно сколько
-    it = it + countBytesBeforeNullTerminated;
+    reverse(LinkInfoSize.begin(), LinkInfoSize.end());
+    reverse(CommonPathSuffixOffset.begin(), CommonPathSuffixOffset.end());
+    int len = Utils::lenFourBytes(LinkInfoSize) - Utils::lenFourBytes(CommonPathSuffixOffset);
+    copy(it, it + len, std::back_inserter(CommonPathSuffix));                         // не понятно сколько
+    it = it + len;
     //cout << "CommonPathSuffix: "; Utils::print_vec(CommonPathSuffix);
 
     /* optional fields */
@@ -177,7 +179,6 @@ void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
         copy(it, it + countBytesBeforeNullTerminated, std::back_inserter(CommonPathSuffixUnicode));                         // не понятно сколько
     //    cout << "CommonPathSuffixUnicode: "; Utils::print_vec(CommonPathSuffixUnicode);
     }
-
     reverseAllFields();
 }
 
@@ -199,13 +200,13 @@ int LinkInfo::getCountOfBytesBeforeNullTerminatorForLBP(std::vector<unsigned cha
 
 /* Reverse All field (read left -> rigth) */
 void LinkInfo::reverseAllFields() {
-    reverse(LinkInfoSize.begin(), LinkInfoSize.end());
+    //reverse(LinkInfoSize.begin(), LinkInfoSize.end());
    // reverse(LinkInfoHeaderSize.begin(), LinkInfoHeaderSize.end());
    // reverse(LinkInfoFlags.begin(), LinkInfoFlags.end());
     reverse(VolumeIDOffset.begin(), VolumeIDOffset.end());
     reverse(LocalBasePathOffset.begin(), LocalBasePathOffset.end());
     reverse(CommonNetworkRelativeLinkOffset.begin(), CommonNetworkRelativeLinkOffset.end());
-    reverse(CommonPathSuffixOffset.begin(), CommonPathSuffixOffset.end());
+    //reverse(CommonPathSuffixOffset.begin(), CommonPathSuffixOffset.end());
     reverse(LocalBasePathOffsetUnicode.begin(), LocalBasePathOffsetUnicode.end());
     reverse(CommonPathSuffixOffsetUnicode.begin(), CommonPathSuffixOffsetUnicode.end());
     /* reverse for VolumeID struct */

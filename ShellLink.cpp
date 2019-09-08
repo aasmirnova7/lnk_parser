@@ -21,14 +21,10 @@ public:
         startPosition = 76;
 
         ShellLinkHeader shellLinkHeader = ShellLinkHeader(header);
-        //shellLinkHeader.printHeaderInHexStyle();
+//        shellLinkHeader.printHeaderInHexStyle();
+//        shellLinkHeader.printHeader();
         bool valid = shellLinkHeader.isHeaderValid();
-       /* shellLinkHeader.parseLinkFlags();
-        shellLinkHeader.parseFileAttributesFlags();
-        shellLinkHeader.parseHotKeyFlags();
-        shellLinkHeader.parseShowCommand(); */
 
-//       shellLinkHeader.printHeader();
        shellLinkHeader.parseLinkFlags();
        if(valid) {
             if (shellLinkHeader.HasLinkTargetIDListIsSet()) {
@@ -37,44 +33,40 @@ public:
                 reverse(LTIDListSize.begin(), LTIDListSize.end());
                 int linkTargetIDListSize = Utils::lenTwoBytes(LTIDListSize);
 
-                vector<unsigned char> linkTargetIdListVect = rs->read(startPosition, linkTargetIDListSize);
+                vector<unsigned char> linkTargetIdListVect = rs->read(startPosition, linkTargetIDListSize + 2);
 //
 //               /* for(int i = 0; i < linkTargetIDListSize; ++i)
 //                    cout <<  hex << (int)linkTargetIdListVect[i] << ' ';
 //                cout << "\nTest " <<   linkTargetIDListSize << endl; */
 //
                 LinkTargetIDList linkTargetIdList = LinkTargetIDList(linkTargetIdListVect);
-                //linkTargetIdList.printLinkTargetIdList();
+//                linkTargetIdList.printLinkTargetIdListInHexStyle();
+//                linkTargetIdList.printLinkTargetIdList();
                 startPosition = startPosition + linkTargetIDListSize + 2; // учитываем заголовок
             }
 
             if(shellLinkHeader.HasLinkInfoIsSet()) {
                 /* Determine LinkInfo size before creation */
                 vector<unsigned char> LIS =  rs->read(startPosition,4);
-//                for(int i = 0; i < 4; ++i)
-//                    cout <<  hex << (int)LIS[i] << ' ';
-//                cout << endl;
-
                 reverse(LIS.begin(), LIS.end());
                 int linkInfoSize = Utils::lenFourBytes(LIS);
 
                 vector<unsigned char> linkInfoSizeVect =  rs->read(startPosition, linkInfoSize);
 
-                 for(int i = 0; i < linkInfoSizeVect.size(); ++i)
-                    cout <<  hex << (int)linkInfoSizeVect[i] << ' ';
-                 cout << endl;
+//                 for(int i = 0; i < linkInfoSizeVect.size(); ++i)
+//                    cout <<  hex << (int)linkInfoSizeVect[i] << ' ';
+//                 cout << endl;
 
                  LinkInfo linkInfo = LinkInfo(linkInfoSizeVect);
-               //  linkInfo.printLinkInfoInHexStyle();
-                // linkInfo.printLinkInfo();
+//                 linkInfo.printLinkInfoInHexStyle();
+//                 linkInfo.printLinkInfo();
                  startPosition = startPosition + linkInfoSize; // +4
             }
 
             if(shellLinkHeader.HasStringDataIsSet()) {
                 StringData stringData = StringData(rs, startPosition);
-               // stringData.printStringDataInHexStyle();
-               // stringData.printStringData();
-                //cout << "stringData.getStringDataStructureSize() = " << dec << stringData.getStringDataStructureSize()  << endl;
+//                stringData.printStringDataInHexStyle();
+//                stringData.printStringData();
                 startPosition = startPosition + stringData.getStringDataStructureSize();
             }
 
@@ -86,7 +78,7 @@ public:
 
                ExtraData extraData = ExtraData(rs, startPosition);
                extraData.printExtraDataInHexStyle();
-               extraData.printExtraData();
+              // extraData.printExtraData();
            }
 
 

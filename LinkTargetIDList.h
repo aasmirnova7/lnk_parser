@@ -24,6 +24,7 @@ public:
 
     LinkTargetIDList(std::vector<unsigned char> linkTargetIdList);
 
+    void printLinkTargetIdListInHexStyle();
     void printLinkTargetIdList();
 };
 

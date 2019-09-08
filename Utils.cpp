@@ -79,15 +79,8 @@ void Utils::print_vec(std::vector<unsigned int>& vec) {
 }
 
 void Utils::print_vec_unicode(std::vector<unsigned int>& vec) {
-    int count = 0;
-    for (int x: vec) {
-        if(count > 25) {
-            std::cout << endl << "                    ";
-            count = 0;
-        }
-        std::cout  << (char)x ;
-        ++count;
-    }
+    for (int x: vec)
+        std::cout << (char)x;
     std::cout << endl;
 }
 
@@ -104,8 +97,9 @@ int Utils::getCountOfBytesBeforeNullTerminator(std::vector<unsigned char>::const
 
 void Utils::fillItemIdList(std::vector<LinkTargetIDList::ItemIDList> IDList, int count,
                            std::vector<unsigned char>::const_iterator it) {
-    while (count > 0) {
-         cout << "\n_______" << count << endl;
+    int countTmp = 0;
+    while (count > 0 && countTmp < 2) {
+        cout << "\nfillItemIdList_______" << count << endl;
         LinkTargetIDList::ItemIDList itemIdList;
         copy(it, it + 2, std::back_inserter(itemIdList.ItemIDSize));          // 2 byte
         it = it + 2;
@@ -121,5 +115,6 @@ void Utils::fillItemIdList(std::vector<LinkTargetIDList::ItemIDList> IDList, int
 
         IDList.push_back(itemIdList);
         count = count - itemIDSize;
+        ++countTmp;
     }
 }
