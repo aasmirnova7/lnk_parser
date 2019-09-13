@@ -356,7 +356,8 @@ void LinkInfo::parseNetworkProviderType() {
 void LinkInfo::printLinkInfo() {
     cout << "________________________LinkInfo_________________________" << endl;
     cout << "LinkInfoSize:                       " << dec << Utils::lenFourBytes(LinkInfoSize) << " bytes" << endl;
-    cout << "LinkInfoHeaderSize:                 "<< dec << Utils::lenFourBytes(LinkInfoHeaderSize) << " bytes" << endl;
+    // TODO: дописать  Meaning Value
+    cout << "LinkInfoHeaderSize:                 " << dec << Utils::lenFourBytes(LinkInfoHeaderSize) << " bytes" << endl;
     cout << "LinkFlags:                          "; parseLinkInfoFlags();
     cout << "VolumeIDOffset:                     " << dec <<
         Utils::lenFourBytes(VolumeIDOffset) << " bytes (offset, in bytes). " <<

@@ -85,20 +85,20 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
 
     void ShellLinkHeader::printHeaderInHexStyle() {
         cout << "_____________ShellLinkHeader in HEX style________________" << endl;
-        cout << "HeaderSize:           "; Utils::print_vec(HeaderSize);
-        cout << "LinkCLSID:            "; Utils::print_vec(LinkCLSID);
-        cout << "LinkFlags:            "; Utils::print_vec(LinkFlags);
-        cout << "FileAttributes:       "; Utils::print_vec(FileAttributes);
-        cout << "CreationTime:         "; Utils::print_vec(CreationTime);
-        cout << "AccessTime:           "; Utils::print_vec(AccessTime);
-        cout << "WriteTime:            "; Utils::print_vec(WriteTime);
-        cout << "FileSize:             "; Utils::print_vec(FileSize);
-        cout << "IconIndex:            "; Utils::print_vec(IconIndex);
-        cout << "ShowCommand:          "; Utils::print_vec(ShowCommand);
-        cout << "HotKey:               "; Utils::print_vec(HotKey);
-        cout << "Reserved1:            "; Utils::print_vec(Reserved1);
-        cout << "Reserved2:            "; Utils::print_vec(Reserved2);
-        cout << "Reserved3:            "; Utils::print_vec(Reserved3);
+        cout << "HeaderSize:                         "; Utils::print_vec(HeaderSize);
+        cout << "LinkCLSID:                          "; Utils::print_vec(LinkCLSID);
+        cout << "LinkFlags:                          "; Utils::print_vec(LinkFlags);
+        cout << "FileAttributes:                     "; Utils::print_vec(FileAttributes);
+        cout << "CreationTime:                       "; Utils::print_vec(CreationTime);
+        cout << "AccessTime:                         "; Utils::print_vec(AccessTime);
+        cout << "WriteTime:                          "; Utils::print_vec(WriteTime);
+        cout << "FileSize:                           "; Utils::print_vec(FileSize);
+        cout << "IconIndex:                          "; Utils::print_vec(IconIndex);
+        cout << "ShowCommand:                        "; Utils::print_vec(ShowCommand);
+        cout << "HotKey:                             "; Utils::print_vec(HotKey);
+        cout << "Reserved1:                          "; Utils::print_vec(Reserved1);
+        cout << "Reserved2:                          "; Utils::print_vec(Reserved2);
+        cout << "Reserved3:                          "; Utils::print_vec(Reserved3);
         cout << "_________________________________________________________" << endl;
     }
 
@@ -280,20 +280,20 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
     // TODO: Дописать парсинг времени + странный FileSize:
     void ShellLinkHeader::printHeader(){
         cout << "____________________ShellLinkHeader______________________" << endl;
-        cout << "HeaderSize:           " << dec << Utils::lenFourBytes(HeaderSize) << " bytes" << endl;
-        cout << "LinkCLSID:            "; Utils::print_vec(LinkCLSID);
-        cout << "LinkFlags:            "; parseLinkFlags();
-        cout << "FileAttributes:       "; parseFileAttributesFlags();
-        cout << "CreationTime:         "; getDate(CreationTime);
-        cout << "AccessTime:           "; getDate(AccessTime);
-        cout << "WriteTime:            "; getDate(WriteTime);
-        cout << "FileSize:             " << dec << Utils::lenFourBytes(FileSize) << " bytes" << endl;
-        cout << "IconIndex:            "; Utils::print_vec(IconIndex);
-        cout << "ShowCommand:          "; parseShowCommand();
-        cout << "HotKey:               "; parseHotKeyFlags();
-        cout << "Reserved1:            "; Utils::print_vec(Reserved1);
-        cout << "Reserved2:            "; Utils::print_vec(Reserved2);
-        cout << "Reserved3:            "; Utils::print_vec(Reserved3);
+        cout << "HeaderSize:                         " << dec << Utils::lenFourBytes(HeaderSize) << " bytes" << endl;
+        cout << "LinkCLSID:                          "; Utils::print_vec(LinkCLSID);
+        cout << "LinkFlags:                          "; parseLinkFlags();
+        cout << "FileAttributes:                     "; parseFileAttributesFlags();
+        cout << "CreationTime:                       "; getDate(CreationTime);
+        cout << "AccessTime:                         "; getDate(AccessTime);
+        cout << "WriteTime:                          "; getDate(WriteTime);
+        cout << "FileSize:                           " << dec << Utils::lenFourBytes(FileSize) << " bytes" << endl;
+        cout << "IconIndex:                          "; Utils::print_vec(IconIndex);
+        cout << "ShowCommand:                        "; parseShowCommand();
+        cout << "HotKey:                             "; parseHotKeyFlags();
+        cout << "Reserved1:                          "; Utils::print_vec(Reserved1);
+        cout << "Reserved2:                          "; Utils::print_vec(Reserved2);
+        cout << "Reserved3:                          "; Utils::print_vec(Reserved3);
         cout << "_________________________________________________________" << endl;
     }
 

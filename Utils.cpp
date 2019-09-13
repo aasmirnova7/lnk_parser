@@ -11,29 +11,14 @@
 using namespace std;
 
 int Utils::lenFourBytes(std::vector<unsigned int> vec) {
-    /* for (int i = 0; i < vec.size(); ++i){
-         cout << " " << vec[i];
-     }
-     unsigned int s1  = 0x0;
-     unsigned int s2  = 0x0;
-     unsigned int s3  = 0x0;
-     unsigned int s4  = 0x4c; */
-
     unsigned int result = (vec[0] << 8) | vec[1];
     unsigned int result2 = (vec[2] << 8) | vec[3];
     unsigned int result3 = (result << 16) | result2;
 
-    // cout <<"\nstr = " << hex << result << endl; // оставить как есть
-    // cout <<" str = " << hex << result2 << endl;
-    // cout <<" str = " << hex << result3  << endl;
     return result3;
 }
 
 int Utils::lenFourBytes(std::vector<unsigned char> vec) {
-    /* for (int i = 0; i < vec.size(); ++i){
-         cout << " " << vec[i];
-     }
-    */
     unsigned int result = (vec[0] << 8) | vec[1];
     unsigned int result2 = (vec[2] << 8) | vec[3];
     unsigned int result3 = (result << 16) | result2;
@@ -42,10 +27,6 @@ int Utils::lenFourBytes(std::vector<unsigned char> vec) {
 }
 
 int Utils::lenTwoBytes(std::vector<unsigned char> vec) {
-   /* for (int i = 0; i < vec.size(); ++i){
-        cout << " " << (int)vec[i];
-    } */
-
     unsigned int result = (vec[0] << 8) | vec[1];
     std::string r = to_string(result);
 
@@ -54,10 +35,6 @@ int Utils::lenTwoBytes(std::vector<unsigned char> vec) {
 }
 
 int Utils::lenTwoBytes(std::vector<unsigned int> vec) {
-    /* for (int i = 0; i < vec.size(); ++i){
-         cout << " " << (int)vec[i];
-     } */
-
     unsigned int result = (vec[0] << 8) | vec[1];
     std::string r = to_string(result);
 
@@ -65,12 +42,11 @@ int Utils::lenTwoBytes(std::vector<unsigned int> vec) {
     return result;//std::strtoul(to_string(result).c_str(), 0, 16);
 }
 
-// TODO: подравнять вывод
 void Utils::print_vec(std::vector<unsigned int>& vec) {
     int count = 0;
     for (int x: vec) {
         if(count >= 25) {
-            std::cout << endl << "                        ";
+            std::cout << endl << "                                    ";
             count = 0;
         }
         std::cout << hex << x << ' ';

@@ -39,7 +39,7 @@
 #define FF_SWISS         0x0020      // The font is variable-width without serifs; for example, "Arial".
 #define FF_MODERN        0x0030      // The font is fixed-width, with or without serifs; for example, "Courier New".
 #define FF_SCRIPT        0x0040      // The font is designed to look like handwriting; for example, "Cursive".
-#define FF_DECORATIVE    0x0050      // TThe font is a novelty font; for example, "Old English".
+#define FF_DECORATIVE    0x0050      // The font is a novelty font; for example, "Old English".
 // font-pitch
 #define TMPF_NONE          0x0000      // A font pitch does not apply.
 #define TMPF_FIXED_PITCH   0x0001      // The font is a fixed-pitch font.
