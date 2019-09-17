@@ -13,36 +13,27 @@ LinkInfo::LinkInfo(std::vector<unsigned char> linkInfo) {
     fillLinkInfo(linkInfo);
 }
 
-// TODO: убрать лишнее
 void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
     auto it = linkInfo.begin();
    /* mandatory fields */
     copy(it, it + 4, std::back_inserter(LinkInfoSize));                         // 4 byte
     it = it + 4;
-    //cout << "LinkInfoSize: "; Utils::print_vec(LinkInfoSize);
     copy(it, it + 4, std::back_inserter(LinkInfoHeaderSize));                   // 4 byte
     it = it + 4;
     reverse(LinkInfoHeaderSize.begin(), LinkInfoHeaderSize.end());                              // Нужно для дальнейшей проверки
 
-    //cout << "LinkInfoHeaderSize: "; Utils::print_vec(LinkInfoHeaderSize);
     copy(it, it + 4, std::back_inserter(LinkInfoFlags));                        // 4 byte
     it = it + 4;
     reverse(LinkInfoFlags.begin(), LinkInfoFlags.end());                                        // Нужно для дальнейшей проверки
 
-    //cout << "LinkInfoFlags: "; Utils::print_vec(LinkInfoFlags);
     copy(it, it + 4, std::back_inserter(VolumeIDOffset));                       // 4 byte
     it = it + 4;
-    //cout << "VolumeIDOffset: "; Utils::print_vec(VolumeIDOffset);
     copy(it, it + 4, std::back_inserter(LocalBasePathOffset));                  // 4 byte
     it = it + 4;
-    //cout << "LocalBasePathOffset: "; Utils::print_vec(LocalBasePathOffset);
     copy(it, it+ 4, std::back_inserter(CommonNetworkRelativeLinkOffset));      // 4 byte
     it = it + 4;
-    //cout << "CommonNetworkRelativeLinkOffset: "; Utils::print_vec(CommonNetworkRelativeLinkOffset);
     copy(it, it + 4, std::back_inserter(CommonPathSuffixOffset));               // 4 byte
     it = it + 4;
-    //cout << "CommonPathSuffixOffset: "; Utils::print_vec(CommonPathSuffixOffset);
-    //cout << "Before optional fields: " << endl;
 
     /* optional fields */
     // if the value of the LinkInfoHeaderSize field is greater than or equal to 0x00000024.
@@ -51,12 +42,9 @@ void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
         //from the start of the LinkInfo structure; otherwise, this value MUST be zero
         copy(it, it + 4, std::back_inserter(LocalBasePathOffsetUnicode));       // 4 byte
         it = it + 4;
-      //  Utils::print_vec(LocalBasePathOffsetUnicode);
         copy(it, it + 4, std::back_inserter(CommonPathSuffixOffsetUnicode));    // 4 byte
         it = it + 4;
-      //  Utils::print_vec(CommonPathSuffixOffsetUnicode);
     }
-   // cout << "VolumeID structure: " << endl;
 
     //  if the VolumeIDAndLocalBasePath flag is set.
     if (LinkInfoFlags[3] == VolumeIDAndLocalBasePath) {
@@ -65,32 +53,25 @@ void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
         copy(it, it + 4, std::back_inserter(VolumeID.VolumeIDSize));                    // 4 byte
         it = it + 4;
         reverse(VolumeID.VolumeIDSize.begin(), VolumeID.VolumeIDSize.end());
-       // cout<< "VolumeID.VolumeIDSize: "; Utils::print_vec(VolumeID.VolumeIDSize);
 
         int count = Utils::lenFourBytes(VolumeID.VolumeIDSize);
         copy(it, it + 4, std::back_inserter(VolumeID.DriveType));                       // 4 byte
         it = it + 4;
-       // cout << "VolumeID.DriveType: "; Utils::print_vec(VolumeID.DriveType);
         copy(it, it + 4, std::back_inserter(VolumeID.DriveSerialNumber));               // 4 byte
         it = it + 4;
-       // cout << "VolumeID.DriveSerialNumber: " ; Utils::print_vec(VolumeID.DriveSerialNumber);
         copy(it, it + 4, std::back_inserter(VolumeID.VolumeLabelOffset));               // 4 byte
         it = it + 4;
         reverse(VolumeID.VolumeLabelOffset.begin(), VolumeID.VolumeLabelOffset.end());                              // Нужно для дальнейшей проверки
 
-
-       // cout << "VolumeID.VolumeLabelOffset: "; Utils::print_vec(VolumeID.VolumeLabelOffset);
         /* optional fields */
         if (VolumeID.VolumeLabelOffset[3] != 0x00000010) {   // По документации 14
             copy(it, it + 4, std::back_inserter(VolumeID.VolumeLabelOffsetUnicode));    // 4 byte
-           // cout << "VolumeID.VolumeLabelOffsetUnicode: "; Utils::print_vec(VolumeID.VolumeLabelOffsetUnicode);
             it = it + 4;
             count = count - 4;
         }
 
         copy(it, it + count - 16, std::back_inserter(VolumeID.Data));                   // 4 byte
         it = it + count - 16;
-       // cout << "VolumeID.Data: "; Utils::print_vec(VolumeID.Data);
         /* end of VolumeID structure*/
 
         /* LocalBasePathOffset specifies the location of the LocalBasePath field */
@@ -98,7 +79,6 @@ void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
         int countBytesBeforeNullTerminated  = Utils::getCountOfBytesBeforeNullTerminator(it);
         copy(it, it + countBytesBeforeNullTerminated - 1, std::back_inserter(LocalBasePath));                   // не понятно, сколько занимает
         it = it + countBytesBeforeNullTerminated - 1;
-        //cout << "LocalBasePath: "; Utils::print_vec(LocalBasePath);
     }
 
     /* if LinkInfoFlags  = CommonNetworkRelativeLinkAndPathSuffix (gj CommonNetworkRelativeLinkOffset ) */
@@ -160,25 +140,22 @@ void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
     reverse(LinkInfoSize.begin(), LinkInfoSize.end());
     reverse(CommonPathSuffixOffset.begin(), CommonPathSuffixOffset.end());
     int len = Utils::lenFourBytes(LinkInfoSize) - Utils::lenFourBytes(CommonPathSuffixOffset);
-    copy(it, it + len, std::back_inserter(CommonPathSuffix));                         // не понятно сколько
+    copy(it, it + len, std::back_inserter(CommonPathSuffix));
     it = it + len;
-    //cout << "CommonPathSuffix: "; Utils::print_vec(CommonPathSuffix);
 
     /* optional fields */
     //VolumeIDAndLocalBasePath flag is set and the value of the LinkInfoHeaderSize
     // field is greater than or equal to 0x00000024.
     if (LinkInfoFlags[3] == VolumeIDAndLocalBasePath && Utils::lenFourBytes(LinkInfoHeaderSize) >= 0x00000024) {
         int countBytesBeforeNullTerminated  = getCountOfBytesBeforeNullTerminatorForLBP(it);
-        copy(it, it + countBytesBeforeNullTerminated, std::back_inserter(LocalBasePathUnicode));                         // не понятно сколько
+        copy(it, it + countBytesBeforeNullTerminated, std::back_inserter(LocalBasePathUnicode));
         it = it + countBytesBeforeNullTerminated;
-     //   cout << "LocalBasePathUnicode: "; Utils::print_vec(LocalBasePathUnicode);
     }
 
     //if the value of the LinkInfoHeaderSize field is greater than or equal to 0x00000024.
     if (Utils::lenFourBytes(LinkInfoHeaderSize) >= 0x00000024) {
         int countBytesBeforeNullTerminated  = Utils::getCountOfBytesBeforeNullTerminator(it);
-        copy(it, it + countBytesBeforeNullTerminated, std::back_inserter(CommonPathSuffixUnicode));                         // не понятно сколько
-    //    cout << "CommonPathSuffixUnicode: "; Utils::print_vec(CommonPathSuffixUnicode);
+        copy(it, it + countBytesBeforeNullTerminated, std::back_inserter(CommonPathSuffixUnicode));
     }
     reverseAllFields();
 }
@@ -198,7 +175,7 @@ int LinkInfo::getCountOfBytesBeforeNullTerminatorForLBP(std::vector<unsigned cha
     return countBytesBeforeNullTerminated + 1;
 }
 
-
+// TODO: убрать лишнее
 /* Reverse All field (read left -> rigth) */
 void LinkInfo::reverseAllFields() {
     //reverse(LinkInfoSize.begin(), LinkInfoSize.end());
@@ -353,11 +330,20 @@ void LinkInfo::parseNetworkProviderType() {
         cout << "WNNC_NET_GOOGLE" << endl;
 }
 
+void LinkInfo::parseLinkInfoHeaderSize() {
+    int len = Utils::lenFourBytes(LinkInfoHeaderSize);
+    cout << dec << len << " bytes. ";
+    if (len == 0x0000001C)
+        cout << "Offsets to the optional fields are not specified." << endl;
+    else if(len >= 0x00000024) {
+        cout << "Offsets to the optional fields are specified." << endl;
+    }
+}
+
 void LinkInfo::printLinkInfo() {
     cout << "________________________LinkInfo_________________________" << endl;
     cout << "LinkInfoSize:                       " << dec << Utils::lenFourBytes(LinkInfoSize) << " bytes" << endl;
-    // TODO: дописать  Meaning Value
-    cout << "LinkInfoHeaderSize:                 " << dec << Utils::lenFourBytes(LinkInfoHeaderSize) << " bytes" << endl;
+    cout << "LinkInfoHeaderSize:                 "; parseLinkInfoHeaderSize();
     cout << "LinkFlags:                          "; parseLinkInfoFlags();
     cout << "VolumeIDOffset:                     " << dec <<
         Utils::lenFourBytes(VolumeIDOffset) << " bytes (offset, in bytes). " <<

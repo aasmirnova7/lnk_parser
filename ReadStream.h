@@ -15,11 +15,7 @@
 class ReadStream {
 private:
     //Приватное поле - файл
-    //ifstream f;
     std::ifstream f;
-    /* reverse for one byte (change figures in byte) */
-    unsigned int reverse_LE_To_BE(std::string str);
-
 public:
     //Конструктор, открывающий файл
     ReadStream(const char *filePath);

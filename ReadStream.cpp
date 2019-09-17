@@ -40,7 +40,5 @@ using namespace std;
             ivector.push_back(ch);
             --count;
         }
-       // f.close();
-
         return ivector;
     }

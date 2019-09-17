@@ -120,6 +120,7 @@ private:
     void reverseAllFields();
     int getCountOfBytesBeforeNullTerminatorForLBP(std::vector<unsigned char>::const_iterator it);
     void fillLinkInfo(std::vector<unsigned char> linkInfo);
+    void parseLinkInfoHeaderSize();
 
 public:
     LinkInfo(std::vector<unsigned char> linkInfo);
