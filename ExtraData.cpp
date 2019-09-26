@@ -227,8 +227,8 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
                 tmpIt = tmpIt + 2;
                 std::copy(tmpIt, tmpIt + 2, std::back_inserter(tmpStringOrIntegerName.Value.Padding));
                 tmpIt = tmpIt + 2;
-                std::copy(tmpIt, tmpIt + 2, std::back_inserter(tmpStringOrIntegerName.Value.Value));
-                tmpIt = tmpIt + 2;
+                std::copy(tmpIt, tmpIt + 4, std::back_inserter(tmpStringOrIntegerName.Value.Value));
+                tmpIt = tmpIt + 4;
 
                 PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue.push_back(tmpStringOrIntegerName);
             } while (len > 0);
@@ -551,12 +551,372 @@ void ExtraData::parseHistoryNoDup() {
     else
         cout << "Duplicates are not allowed." << endl;
 }
-// TODO: дописать
 void  ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType,
             PropertyStorePropsStruct::StringOrIntegerName::TypedPropertyValue tpv) {
-    if ((tpv.Type[0] & FF_DONTCARE) && (tpv.Type[1] & FF_DONTCARE)) {
-        if (parseType) cout << "FF_DONTCARE, ";
-        else cout << "FF_DONTCARE, ";
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x0) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_EMPTY: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be zero bytes in length." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is undefined, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x1) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_NULL: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be zero bytes in length." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is null, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x2) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_I2: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a 16-bit signed integer, followed by zero padding to 4 bytes." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is 16-bit signed integer, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x3) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_I4: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a 32-bit signed integer." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is 32-bit signed integer, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x4) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_R4: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a 4-byte (single-precision) IEEE floating-point number." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is 4-byte (single-precision) IEEE floating-point number, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x5) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_R8: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an 8-byte (double-precision) IEEE floating-point number." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is 8-byte (double-precision) IEEE floating-point number, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x6) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_CY: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a CURRENCY (Packet Version)." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is CURRENCY, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x7) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_DATE: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a DATE (Packet Version)." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is DATE, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x8)) {
+        cout << Utils::defaultOffset << "VT_BSTR: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a CodePageString." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is CodePageString, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0xA)) {
+        cout << Utils::defaultOffset << "VT_ERROR: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a 32-bit unsigned integer representing an HRESULT, as specified in [MS-DTYP]." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is HRESULT, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0xB)) {
+        cout << Utils::defaultOffset << "VT_BOOL: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VARIANT_BOOL as specified in [MS-OAUT], followed by zero padding to 4 bytes." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is VARIANT_BOOL, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0xE)) {
+        cout << Utils::defaultOffset << "VT_DECIMAL: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a DECIMAL (Packet Version)." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is DECIMAL, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x0) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_I1: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a 1-byte signed integer, followed by zero padding to 4 bytes." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is 1-byte unsigned integer, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x1) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_UI1: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a 1-byte unsigned integer, followed by zero padding to 4 bytes." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is null, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x2) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_UI2: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a 2-byte unsigned integer, followed by zero padding to 4 bytes." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is 2-byte unsigned integer, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x3) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_UI4: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a 4-byte unsigned integer." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is 4-byte unsigned integer, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x4) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_I8: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an 8-byte signed integer." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is 8-byte signed integer, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x5) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_UI8: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an 8-byte unsigned integer." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is 8-byte unsigned integer, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x6) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_INT: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a 4-byte signed integer." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is 4-byte signed integer, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x7) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_UINT: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a 4-byte unsigned integer." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is 4-byte unsigned integer, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0xE) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_LPSTR: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a CodePageString." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is CodePageString, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0xF) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_LPWSTR: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a UnicodeString." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is UnicodeString, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x0) && (tpv.Type[2] == 0x4)) {
+        cout << Utils::defaultOffset << "VT_FILETIME: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a FILETIME (Packet Version)." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is FILETIME, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x1) && (tpv.Type[2] == 0x4)) {
+        cout << Utils::defaultOffset << "VT_BLOB: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a BLOB." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is binary large object (BLOB), and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x2) && (tpv.Type[2] == 0x4)) {
+        cout << Utils::defaultOffset << "VT_STREAM: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an IndirectPropertyName. " <<
+                               Utils::defaultOffsetDocInfo << "The storage representing the (non-simple) property set MUST have a stream element with this name." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Stream, and the minimum property set version is 0. VT_STREAM is not allowed in a simple property set." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x3) && (tpv.Type[2] == 0x4)) {
+        cout << Utils::defaultOffset << "VT_STORAGE: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an IndirectPropertyName. " <<
+                               Utils::defaultOffsetDocInfo << "The storage representing the (non-simple) property set MUST have a storage element with this name." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Storage, and the minimum property set version is 0. VT_STORAGE is not allowed in a simple property set." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x4) && (tpv.Type[2] == 0x4)) {
+        cout << Utils::defaultOffset << "VT_STREAMED_Object: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an IndirectPropertyName. " <<
+                            Utils::defaultOffsetDocInfo << "The storage representing the (non-simple) property set MUST have a stream element with this name." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Stream representing an Object in an application-specific manner, and the minimum property set version is 0. " <<
+                     Utils::defaultOffsetDocInfo << "VT_STREAMED_Object is not allowed in a simple property set." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x5) && (tpv.Type[2] == 0x4)) {
+        cout << Utils::defaultOffset << "VT_STORED_Object: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an IndirectPropertyName. " <<
+                               Utils::defaultOffsetDocInfo << "The storage representing the (non-simple) property set MUST have a storage element with this name." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Storage representing an Object in an application-specific manner, and the minimum property set version is 0. " <<
+                     Utils::defaultOffsetDocInfo << "VT_STORED_Object is not allowed in a simple property set." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x6) && (tpv.Type[2] == 0x4)) {
+        cout << Utils::defaultOffset << "VT_BLOB_Object: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a BLOB." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is BLOB representing an object in an application-specific manner. The minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x7) && (tpv.Type[2] == 0x4)) {
+        cout << Utils::defaultOffset << "VT_CF: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a ClipboardData." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is PropertyIdentifier, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x8) && (tpv.Type[2] == 0x4)) {
+        cout << Utils::defaultOffset << "VT_CLSID: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a GUID (Packet Version)." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is CLSID, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x0) && (tpv.Type[3] == 0x9) && (tpv.Type[2] == 0x4)) {
+        cout << Utils::defaultOffset << "VT_VERSIONED_STREAM: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VersionedStream. The storage representing the (non-simple) property set MUST have a stream element with the name in the StreamName field." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Stream with application-specific version GUID (VersionedStream). " <<
+                     Utils::defaultOffsetDocInfo << "The minimum property set version is 0. VT_VERSIONED_STREAM is not allowed in a simple property set." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x2) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_I2: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 16-bit signed integers, " <<
+                               Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of 16-bit signed integers, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x3) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_I4: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo<< "MUST be a VectorHeader followed by a sequence of 32-bit signed integers." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of 32-bit signed integers, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x4) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_R4: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 4-byte (single-precision) IEEE floating-point numbers." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of 4-byte (single-precision) IEEE floating-point numbers, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x5) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_R8: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 8-byte (double-precision) IEEE floating-point numbers." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of 8-byte (double-precision) IEEE floating-point numbers, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x6) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_CY: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of CURRENCY (Packet Version) packets." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of CURRENCY, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x7) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_DATE: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of DATE (Packet Version) packets." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of DATE, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x8) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_BSTR: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of CodePageString packets." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of CodePageString, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0xA)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_ERROR: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 32-bit unsigned integers representing HRESULTs, as specified in [MS-DTYP]." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of HRESULT, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0xB)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_BOOL: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of VARIANT_BOOL as specified in [MS-OAUT], followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of VARIANT_BOOL, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0xC) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_VARIANT: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of TypedPropertyValue packets." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of variable-typed properties, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x0) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_I1: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 1-byte signed integers, " <<
+                               Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of 1-byte signed integers and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x1) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_UI1: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 1-byte unsigned integers, " <<
+                               Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of 1-byte unsigned integers, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x2) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_UI2: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 2-byte unsigned integers, " <<
+                               Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of 2-byte unsigned integers, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x3) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_UI4: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 4-byte unsigned integers." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of 4-byte unsigned integers, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x4) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_I8: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 8-byte signed integers." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of 8-byte signed integers, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x5) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_UI8: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 8-byte unsigned integers." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of 8-byte unsigned integers and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0xE) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_LPSTR: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of CodePageString packets." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of CodePageString, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0xF) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_LPWSTR: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of UnicodeString packets." << endl;
+        else cout << Utils::defaultOffset << "Type is Vector of UnicodeString, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x0) && (tpv.Type[2] == 0x4)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_FILETIME: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of FILETIME (Packet Version) packets." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of FILETIME, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x7) && (tpv.Type[2] == 0x4)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_CF: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of ClipboardData packets." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of PropertyIdentifier, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x1) && (tpv.Type[3] == 0x8) && (tpv.Type[2] == 0x4)) {
+        cout << Utils::defaultOffset << "VT_VECTOR_VT_CLSID: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of GUID (Packet Version) packets." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Vector of CLSID, and the minimum property set version is 0." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0x2) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_I2: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 16-bit signed integers, " <<
+                               Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of 16-bit signed integers, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0x3) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_I4: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 32-bit signed integers." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of 32-bit signed integers, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0x4) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_R4: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 4-byte (single-precision) IEEE floating-point numbers." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of 4-byte (single-precision) IEEE floating-point numbers, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0x5) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_R8: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 8-byte (double-precision) IEEE floating-point numbers." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is IEEE floating-point numbers, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0x6) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_CY: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of CURRENCY (Packet Version) packets." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of CURRENCY, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0x7) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_DATE: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of DATE (Packet Version) packets." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of DATE, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0x8)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_BSTR: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of CodePageString packets." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of CodePageString, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0xA)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_ERROR: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 32-bit unsigned integers representing HRESULTs, as specified in [MS-DTYP]." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of HRESULT, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0xB)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_BOOL: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of VARIANT_BOOL as specified in [MS-OAUT], followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of VARIANT_BOOL, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0xC) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_VARIANT: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of TypedPropertyValue packets." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of variable-typed properties, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0xE) && (tpv.Type[2] == 0x0)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_DECIMAL: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of DECIMAL (Packet Version) packets." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of DECIMAL, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0x0) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_I1: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 1-byte signed integers, " <<
+                            Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of 1-byte signed integers, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0x1) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_UI1: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 1-byte unsigned integers, " <<
+                            Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of 1-byte unsigned integers, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0x2) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_UI2: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 2-byte unsigned integers, " <<
+                            Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of 2-byte unsigned integers, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0x3) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_UI4: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 4-byte unsigned integers." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of 4-byte unsigned integers, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0x6) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_INT: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 4-byte signed integers." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of 4-byte signed integers, and the minimum property set version is 1." << endl;
+    }
+    if ((tpv.Type[0] == 0x2) && (tpv.Type[3] == 0x7) && (tpv.Type[2] == 0x1)) {
+        cout << Utils::defaultOffset << "VT_ARRAY_VT_UINT: " << endl;
+        if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 4-byte unsigned integers." << endl;
+        else cout << Utils::defaultOffsetDocInfo << "Type is Array of 4-byte unsigned integers, and the minimum property set version is 1." << endl;
     }
 }
 
@@ -643,9 +1003,7 @@ void ExtraData::printExtraData() {
         cout << "PROPERTY_STORE_PROPS: " << endl;
         cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(PROPERTY_STORE_PROPS.BlockSize) << " bytes" << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(PROPERTY_STORE_PROPS.BlockSignature);
-        // TODO: дописать парсинг
-        // A serialized property storage structure ([MS-PROPSTORE] section 2.2).
-        cout << "   PropertyStore:                   ";
+        cout << "   PropertyStore:                   ";                             // A serialized property storage structure ([MS-PROPSTORE] section 2.2).
         cout << "       StorageSize:                 " << dec << Utils::lenFourBytes(PROPERTY_STORE_PROPS.PropertyStore.StorageSize)
                                                        << " bytes" << endl;
         cout << "       Version:                     "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.Version);
@@ -673,7 +1031,6 @@ void ExtraData::printExtraData() {
                 cout << "           Name                 ";
                     Utils::print_vec_unicode(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Name);
             }
-            // TODO: дописать парсинг  TypedPropertyValue
             cout << "           Value: A TypedPropertyValue structure";
             cout << "              Type:                 ";
                 parseTypedPropertyValueTypeAndValue(true, PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value);

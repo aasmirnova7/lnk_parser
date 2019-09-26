@@ -107,11 +107,11 @@ private:
     };
     struct PropertyStorePropsStruct {
         struct StringOrIntegerName {
-            // TODO: дописать [MS-OLEPS] section 2.15.
+            // [MS-OLEPS] section 2.15.
             struct TypedPropertyValue {
                 std::vector<unsigned int> Type;                 // 2 bytes
                 std::vector<unsigned int> Padding;              // 2 bytes
-                std::vector<unsigned int> Value;
+                std::vector<unsigned int> Value;                // 4 bytes
             };
 
             std::vector<unsigned int> ValueSize;                // 4 bytes
