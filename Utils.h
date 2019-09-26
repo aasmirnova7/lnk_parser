@@ -12,6 +12,9 @@
 
 class Utils {
 public:
+    static std::string defaultOffset;
+    static std::string defaultOffsetDocInfo;
+
     static int lenFourBytes(std::vector<unsigned int> vec);
     static int lenFourBytes(std::vector<unsigned char> vec);
     static int lenTwoBytes(std::vector<unsigned char> vec);

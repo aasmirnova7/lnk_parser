@@ -106,9 +106,34 @@ private:
         std::vector<unsigned int> Offset;               // 4 bytes
     };
     struct PropertyStorePropsStruct {
+        struct StringOrIntegerName {
+            // TODO: дописать [MS-OLEPS] section 2.15.
+            struct TypedPropertyValue {
+                std::vector<unsigned int> Type;                 // 2 bytes
+                std::vector<unsigned int> Padding;              // 2 bytes
+                std::vector<unsigned int> Value;
+            };
+
+            std::vector<unsigned int> ValueSize;                // 4 bytes
+            std::vector<unsigned int> NameSizeOrId;             // 4 bytes
+            std::vector<unsigned int> Reserved;                 // 1 byte (Has to be 0x00.)
+            std::vector<unsigned int> Name;                     // A null-terminated Unicode string - presents just for StringName
+            TypedPropertyValue Value;                           // A TypedPropertyValue structure, as specified in [MS-OLEPS] section 2.15.
+        };
+
+        struct SerializedPropertyStorage {
+            std::vector<unsigned int> StorageSize;              // 4 bytes
+            std::vector<unsigned int> Version;                  // 4 bytes (Has to be equal to 0x53505331.)
+            std::vector<unsigned int> FormatID;                 // 16 bytes
+            // If the Format ID field is equal to the GUID {D5CDD505-2E9C-101B-9397-08002B2CF9AE},
+            // then all values in the sequence MUST be Serialized Property Value (String Name) structures;
+            // otherwise, all values MUST be Serialized Property Value (Integer Name) structures
+            std::vector<StringOrIntegerName> SerializedPropertyValue;
+        };
+
         std::vector<unsigned int> BlockSize;            // 4 bytes
         std::vector<unsigned int> BlockSignature;       // 4 bytes
-        std::vector<unsigned int> PropertyStore ;
+        SerializedPropertyStorage PropertyStore;
     };
     struct ShimPropsStruct {
         std::vector<unsigned int> BlockSize;            // 4 bytes
@@ -161,6 +186,7 @@ private:
     bool sFolderPropsIsSet = false;
     bool trackerPropsIsSet = false;
     bool vistaAndAboveIDListPropsIsSet = false;
+    bool isStringNameStructInPropsStorage = false;
 
     void fillExtraData(ReadStream *readStream, int readFrom);
     void reverseAllFields();
@@ -173,6 +199,9 @@ private:
     void parseInsertMode();
     void parseAutoPosition();
     void parseHistoryNoDup();
+    void parseTypedPropertyValueTypeAndValue(bool parseType,
+                PropertyStorePropsStruct::StringOrIntegerName::TypedPropertyValue tpv);
+    void setStringNameStructInPropsStorage();
 
 public:
     ExtraData(ReadStream *readStream, int readFrom);

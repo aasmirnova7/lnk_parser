@@ -190,7 +190,48 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
             auto it = propertyStorePropsStruct.begin() + 4;
             std::copy(it, it + 4, std::back_inserter(PROPERTY_STORE_PROPS.BlockSignature));
             it = it + 4;
-            std::copy(it, it + lenTmp - 8, std::back_inserter(PROPERTY_STORE_PROPS.PropertyStore));
+            /* Parsing of PropertyStore struct */
+            std::vector<unsigned char> tmpPropertyStore;
+            std::copy(it, it + lenTmp - 8, std::back_inserter(tmpPropertyStore));
+            auto tmpIt = tmpPropertyStore.begin();
+            std::copy(tmpIt, tmpIt + 4, std::back_inserter(PROPERTY_STORE_PROPS.PropertyStore.StorageSize));
+            tmpIt = tmpIt + 4;
+            std::copy(tmpIt, tmpIt + 4, std::back_inserter(PROPERTY_STORE_PROPS.PropertyStore.Version));
+            tmpIt = tmpIt + 4;
+            std::copy(tmpIt, tmpIt + 16, std::back_inserter(PROPERTY_STORE_PROPS.PropertyStore.FormatID));
+            tmpIt = tmpIt + 16;
+
+            int len = 0;
+            do {
+                PropertyStorePropsStruct::StringOrIntegerName tmpStringOrIntegerName;
+                std::copy(tmpIt, tmpIt + 4, std::back_inserter(tmpStringOrIntegerName.ValueSize));
+                tmpIt = tmpIt + 4;
+                std::reverse(tmpStringOrIntegerName.ValueSize.begin(), tmpStringOrIntegerName.ValueSize.end());
+                len = Utils::lenFourBytes(tmpStringOrIntegerName.ValueSize);
+                std::copy(tmpIt, tmpIt + 4, std::back_inserter(tmpStringOrIntegerName.NameSizeOrId));
+                tmpIt = tmpIt + 4;
+                std::copy(tmpIt, tmpIt + 1, std::back_inserter(tmpStringOrIntegerName.Reserved));
+                tmpIt = tmpIt + 1;
+
+                setStringNameStructInPropsStorage();
+                if (isStringNameStructInPropsStorage) {
+                    /* for StringName */
+                    std::reverse(tmpStringOrIntegerName.NameSizeOrId.begin(), tmpStringOrIntegerName.NameSizeOrId.end());
+                    int count  = Utils::lenFourBytes(tmpStringOrIntegerName.NameSizeOrId);
+                    std::copy(tmpIt, tmpIt + count, std::back_inserter(tmpStringOrIntegerName.Name));
+                    tmpIt = tmpIt + count;
+                }
+
+                /* for TypedPropertyValue */
+                std::copy(tmpIt, tmpIt + 2, std::back_inserter(tmpStringOrIntegerName.Value.Type));
+                tmpIt = tmpIt + 2;
+                std::copy(tmpIt, tmpIt + 2, std::back_inserter(tmpStringOrIntegerName.Value.Padding));
+                tmpIt = tmpIt + 2;
+                std::copy(tmpIt, tmpIt + 2, std::back_inserter(tmpStringOrIntegerName.Value.Value));
+                tmpIt = tmpIt + 2;
+
+                PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue.push_back(tmpStringOrIntegerName);
+            } while (len > 0);
 
             tmpReadFrom = tmpReadFrom + lenTmp;
             propertyStorePropsIsSet = true;
@@ -285,6 +326,17 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
 
     reverseAllFields();
 }
+void ExtraData::setStringNameStructInPropsStorage() {
+    if (PROPERTY_STORE_PROPS.PropertyStore.FormatID[0] == 0xD5 && PROPERTY_STORE_PROPS.PropertyStore.FormatID[1] == 0xCD &&
+        PROPERTY_STORE_PROPS.PropertyStore.FormatID[2] == 0xD5 && PROPERTY_STORE_PROPS.PropertyStore.FormatID[3] == 0x05 &&
+        PROPERTY_STORE_PROPS.PropertyStore.FormatID[4] == 0x2E && PROPERTY_STORE_PROPS.PropertyStore.FormatID[5] == 0x9C &&
+        PROPERTY_STORE_PROPS.PropertyStore.FormatID[6] == 0x10 && PROPERTY_STORE_PROPS.PropertyStore.FormatID[7] == 0x1B &&
+        PROPERTY_STORE_PROPS.PropertyStore.FormatID[8] == 0x93 && PROPERTY_STORE_PROPS.PropertyStore.FormatID[9] == 0x97 &&
+        PROPERTY_STORE_PROPS.PropertyStore.FormatID[10] == 0x08 && PROPERTY_STORE_PROPS.PropertyStore.FormatID[11] == 0x00 &&
+        PROPERTY_STORE_PROPS.PropertyStore.FormatID[12] == 0x2B && PROPERTY_STORE_PROPS.PropertyStore.FormatID[13] == 0x2C &&
+        PROPERTY_STORE_PROPS.PropertyStore.FormatID[14] == 0xF9 && PROPERTY_STORE_PROPS.PropertyStore.FormatID[15] == 0xAE
+        ) { isStringNameStructInPropsStorage = true;}
+}
 
 /* Reverse All field (read left -> rigth) */
 void ExtraData::reverseAllFields() {
@@ -354,7 +406,27 @@ void ExtraData::reverseAllFields() {
         /* PROPERTY_STORE_PROPS struct*/
         reverse(PROPERTY_STORE_PROPS.BlockSize.begin(), PROPERTY_STORE_PROPS.BlockSize.end());
         reverse(PROPERTY_STORE_PROPS.BlockSignature.begin(), PROPERTY_STORE_PROPS.BlockSignature.end());
-        reverse(PROPERTY_STORE_PROPS.PropertyStore.begin(), PROPERTY_STORE_PROPS.PropertyStore.end());
+        /* parse of SerializedPropertyStorage */
+        reverse(PROPERTY_STORE_PROPS.PropertyStore.StorageSize.begin(), PROPERTY_STORE_PROPS.PropertyStore.StorageSize.end());
+        reverse(PROPERTY_STORE_PROPS.PropertyStore.Version.begin(), PROPERTY_STORE_PROPS.PropertyStore.Version.end());
+        reverse(PROPERTY_STORE_PROPS.PropertyStore.FormatID.begin(), PROPERTY_STORE_PROPS.PropertyStore.FormatID.end());
+        for (int i = 0; i <  PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue.size(); ++i) {
+            if (!isStringNameStructInPropsStorage)
+                reverse(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].NameSizeOrId.begin(),
+                        PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].NameSizeOrId.end());
+            reverse(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Reserved.begin(),
+                    PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Reserved.end());
+            if (isStringNameStructInPropsStorage)
+                reverse(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Name.begin(),
+                        PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Name.end());
+            /* parse of TypedPropertyValue */
+            reverse(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Type.begin(),
+                    PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Type.end());
+            reverse(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Padding.begin(),
+                    PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Padding.end());
+            reverse(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Value.begin(),
+                    PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Value.end());
+        }
     }
     if (shimPropsIsSet) {
         /* SHIM_PROPS struct*/
@@ -479,6 +551,14 @@ void ExtraData::parseHistoryNoDup() {
     else
         cout << "Duplicates are not allowed." << endl;
 }
+// TODO: дописать
+void  ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType,
+            PropertyStorePropsStruct::StringOrIntegerName::TypedPropertyValue tpv) {
+    if ((tpv.Type[0] & FF_DONTCARE) && (tpv.Type[1] & FF_DONTCARE)) {
+        if (parseType) cout << "FF_DONTCARE, ";
+        else cout << "FF_DONTCARE, ";
+    }
+}
 
 // TODO: рассмотреть ещё не распаршенные структуры в полях (цвета, шрифты...)
 void ExtraData::printExtraData() {
@@ -565,7 +645,44 @@ void ExtraData::printExtraData() {
         cout << "   BlockSignature:                  "; Utils::print_vec(PROPERTY_STORE_PROPS.BlockSignature);
         // TODO: дописать парсинг
         // A serialized property storage structure ([MS-PROPSTORE] section 2.2).
-        cout << "   PropertyStore:                   "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore);
+        cout << "   PropertyStore:                   ";
+        cout << "       StorageSize:                 " << dec << Utils::lenFourBytes(PROPERTY_STORE_PROPS.PropertyStore.StorageSize)
+                                                       << " bytes" << endl;
+        cout << "       Version:                     "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.Version);
+        cout << "       FormatID:                    "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.FormatID);
+            cout << " Has to be equal to 0x53505331." <<  endl;
+
+        for (int i = 0; i < PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue.size(); ++i) {
+            cout << "     SerializedPropertyValue " << i << ":" << endl;
+            cout << "           ValueSize                " << dec <<
+                Utils::lenFourBytes(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].ValueSize)  << " bytes" << endl;
+            if (isStringNameStructInPropsStorage) {
+                /* for StringName */
+                cout << "           NameSize                 "  << dec <<
+                    Utils::lenFourBytes(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].NameSizeOrId) << " bytes" << endl;
+            } else {
+                /* for IntegerName */
+                cout << "           Id                       " << dec <<
+                     Utils::lenFourBytes(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].NameSizeOrId) << endl;
+            }
+            cout << "           Reserved                 ";
+                Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Reserved);
+                cout << " MUST be 0x00." << endl;
+            if (isStringNameStructInPropsStorage) {
+                /* for StringName */
+                cout << "           Name                 ";
+                    Utils::print_vec_unicode(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Name);
+            }
+            // TODO: дописать парсинг  TypedPropertyValue
+            cout << "           Value: A TypedPropertyValue structure";
+            cout << "              Type:                 ";
+                parseTypedPropertyValueTypeAndValue(true, PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value);
+            cout << "              Padding:              ";
+                Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Padding);
+                cout << "MUST be set to zero, and any nonzero value SHOULD be rejected." << endl;
+            cout << "              Value:                ";
+                parseTypedPropertyValueTypeAndValue(false, PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value);
+        }
     }
     if (shimPropsIsSet) {
         /* SHIM_PROPS struct*/
@@ -594,7 +711,7 @@ void ExtraData::printExtraData() {
         // For more information, see [RFC1001] and [RFC1002].
         cout << "   MachineID:                       "; Utils::print_vec_unicode(TRACKER_PROPS.MachineID);
         // TODO: дописать парсинг
-        //Two values in GUID packet representation ([MS-DTYP]
+        //Two values in GUID packet representation ([MS-DTYP] section 2.3.4.2)
         cout << "   Droid:                           "; Utils::print_vec(TRACKER_PROPS.Droid);
         cout << "   DroidBirth:                      "; Utils::print_vec(TRACKER_PROPS.DroidBirth);
     }
@@ -694,7 +811,43 @@ void ExtraData::printExtraDataInHexStyle() {
         cout << "PROPERTY_STORE_PROPS: " << endl;
         cout << "   BlockSize:                       "; Utils::print_vec(PROPERTY_STORE_PROPS.BlockSize);
         cout << "   BlockSignature:                  "; Utils::print_vec(PROPERTY_STORE_PROPS.BlockSignature);
-        cout << "   PropertyStore:                   "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore);
+        // TODO: дописать парсинг
+        // A serialized property storage structure ([MS-PROPSTORE] section 2.2).
+        cout << "   PropertyStore:                   ";
+        cout << "       StorageSize:                 "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.StorageSize);
+        cout << "       Version:                     "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.Version);
+        cout << "       FormatID:                    "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.FormatID);
+            cout << " Has to be equal to 0x53505331." <<  endl;
+
+        for (int i = 0; i < PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue.size(); ++i) {
+            cout << "     SerializedPropertyValue " << i << ":" << endl;
+            cout << "           ValueSize                ";
+                Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].ValueSize);
+            if (isStringNameStructInPropsStorage) {
+                /* for StringName */
+                cout << "           NameSize                 ";
+                    Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].NameSizeOrId);
+            } else {
+                /* for IntegerName */
+                cout << "           Id                       ";
+                    Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].NameSizeOrId);
+            }
+            cout << "           Reserved                 ";
+            Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Reserved);
+                cout << " MUST be 0x00." << endl;
+            if (isStringNameStructInPropsStorage) {
+                /* for StringName */
+                cout << "           Name                 ";
+                    Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Name);
+            }
+            cout << "           Value: A TypedPropertyValue structure";
+            cout << "              Type:                 ";
+                Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Type);
+            cout << "              Padding:              ";
+                Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Padding);
+            cout << "              Value:                ";
+                Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Value);
+        }
     }
     if (shimPropsIsSet) {
         /* SHIM_PROPS struct*/

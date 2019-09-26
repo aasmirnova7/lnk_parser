@@ -25,7 +25,6 @@ public:
         shellLinkHeader.printHeader();
         bool valid = shellLinkHeader.isHeaderValid();
 
-       shellLinkHeader.parseLinkFlags();
        if(valid) {
             if (shellLinkHeader.HasLinkTargetIDListIsSet()) {
                 /* Determine linkTargetIDListSize before creation of LinkTargetIDList structure */
@@ -71,8 +70,5 @@ public:
                extraData.printExtraData();
            }
        }
-
-        //ShellLinkHeader_Test slhHeader = ShellLinkHeader_Test(rs);
     }
-
 };

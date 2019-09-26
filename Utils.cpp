@@ -10,6 +10,9 @@
 
 using namespace std;
 
+std::string Utils::defaultOffset = "                                    ";
+std::string Utils::defaultOffsetDocInfo = "                                      ";
+
 int Utils::lenFourBytes(std::vector<unsigned int> vec) {
     unsigned int result = (vec[0] << 8) | vec[1];
     unsigned int result2 = (vec[2] << 8) | vec[3];
