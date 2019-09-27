@@ -218,9 +218,9 @@ private:
 
 
     void fillShellLinkHeader(std::vector<unsigned char> header);
-    /* Reverse All field (read left -> rigth) */
+    /* Reverse All field (read left -> right) */
     void reverseAllFields();
-    void getDate(std::vector<unsigned int> vec);
+    void printLinkCLSID();
 
 public:
     ShellLinkHeader(std::vector<unsigned char> header);

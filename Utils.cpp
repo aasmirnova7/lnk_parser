@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <w32api/timezoneapi.h>
 
 using namespace std;
 
@@ -95,4 +96,23 @@ std::vector<LinkTargetIDList::ItemIDList> Utils::fillItemIdList(int count, std::
         count = count - itemIDSize;
     }
     return IDList;
+}
+
+unsigned int Utils::getPartOfFileTime(std::vector<unsigned int> vec, int pos) {
+    unsigned int result = (vec[pos] << 8) | vec[pos+1];
+    unsigned int result2 = (vec[pos+2] << 8) | vec[pos+3];
+    unsigned int result3 = (result << 16) | result2;
+    return result3;
+}
+
+// TODO: время отличается на 3 часа + для WriteTime неверная дата + у AccessTime неверно секунды
+void Utils::getDate(std::vector<unsigned int> vec) {
+    FILETIME a;
+    a.dwHighDateTime = getPartOfFileTime(vec, 0);
+    a.dwLowDateTime = getPartOfFileTime(vec, 4);
+
+    SYSTEMTIME b;
+    FileTimeToSystemTime(&a, &b);  // Перевод из FILETIME в SYSTEMTIME
+    cout << dec << b.wHour + 3 << ":" << dec << b.wMinute   << ":" << dec << b.wSecond << "   " <<
+         b.wDay << "." << dec << b.wMonth << "." << dec << b.wYear << endl;
 }

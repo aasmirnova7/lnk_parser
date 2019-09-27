@@ -11,6 +11,8 @@
 #include "LinkTargetIDList.h"
 
 class Utils {
+private:
+    static unsigned int getPartOfFileTime(std::vector<unsigned int> vec, int pos);
 public:
     static std::string defaultOffset;
     static std::string defaultOffsetDocInfo;
@@ -25,6 +27,7 @@ public:
                                std::vector<unsigned char>::const_iterator it);
 
     static int getCountOfBytesBeforeNullTerminator(std::vector<unsigned char>::const_iterator it);
+    static void getDate(std::vector<unsigned int> vec);
 
 };
 

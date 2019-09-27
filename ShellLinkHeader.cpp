@@ -4,9 +4,6 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
-#include <sstream>
-#include <iterator>
-#include <cmath>
 #include <bitset>
 #include "ShellLinkHeader.h"
 #include "Utils.h"
@@ -26,7 +23,6 @@ static bool EnableTargetMetadataSet = false;    // PROPERTY_STORE_PROPS
 static bool RunWithShimLayerSet = false;        // SHIM_PROPS
 static bool ForceNoLinkTrackSet = false;        // TRACKER_PROPS - The TrackerDataBlock (section 2.5.10) is ignored.
 
-// TODO:  подумать над LinkCLSID
 ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
         fillShellLinkHeader(header);
     }
@@ -68,7 +64,6 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
     /* Reverse All field (read left -> rigth) */
     void ShellLinkHeader::reverseAllFields(){
         reverse(HeaderSize.begin(), HeaderSize.end());
-        reverse(LinkCLSID.begin(), LinkCLSID.end());            //????????
         reverse(LinkFlags.begin(), LinkFlags.end());
         reverse(FileAttributes.begin(), FileAttributes.end());
         reverse(CreationTime.begin(), CreationTime.end());
@@ -86,15 +81,9 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
     void ShellLinkHeader::printHeaderInHexStyle() {
         cout << "_____________ShellLinkHeader in HEX style________________" << endl;
         cout << "HeaderSize:                         "; Utils::print_vec(HeaderSize);
-        cout << "LinkCLSID:                          "; Utils::print_vec(LinkCLSID);
+        cout << "LinkCLSID:                          "; printLinkCLSID();
         cout << "LinkFlags:                          "; Utils::print_vec(LinkFlags);
         cout << "FileAttributes:                     "; Utils::print_vec(FileAttributes);
-        // 1 sec = 1 000 000 000 nano sec = 10 000 000‬ intervals
-        // 1 час = 3 600 sec
-        // 1 day = 24 часа = 86 400 sec = 864 000 000 000  intervals
-        // дней с 1 января 1961 года = 21 443 дня =
-        // 132 123 525 833 671 773 ==
-        // FILETIME structure is a 64-bit value that represents the number of 100-nanosecond intervals that have elapsed since January 1, 1601
         cout << "CreationTime:                       "; Utils::print_vec(CreationTime);
         cout << "AccessTime:                         "; Utils::print_vec(AccessTime);
         cout << "WriteTime:                          "; Utils::print_vec(WriteTime);
@@ -108,6 +97,15 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
         cout << "_________________________________________________________" << endl;
     }
 
+    void ShellLinkHeader::printLinkCLSID() {
+        //00 02 14 01 -00 00-00 00-C0 00-00 00 00 00 00 46.
+        cout << LinkCLSID[3] <<  " " << LinkCLSID[2] << " " << LinkCLSID[1] << " " << LinkCLSID[0] << " " << "-" << " " <<
+             LinkCLSID[5]  << " " << LinkCLSID[4] << " " << "-" << " " << LinkCLSID[7] << " " << LinkCLSID[6] << " " << "-"  << " " <<
+             LinkCLSID[8] << " " << LinkCLSID[9] << " " << "-" << " " <<
+             LinkCLSID[10] << " " << LinkCLSID[11] << " " << LinkCLSID[12] << " " <<
+             LinkCLSID[13] << " " << LinkCLSID[14] << " " <<LinkCLSID[15] << endl;
+    }
+
     bool ShellLinkHeader::isHeaderValid() {
         /* Check HeaderSize */
         if(HeaderSize[0] != 0 && HeaderSize[1] != 0 && HeaderSize[2] != 0 && HeaderSize[3] != 76) {
@@ -115,7 +113,10 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
             return false;
         }
         /* Check LinkCLSID */
-        if(false) { // TODO ДОДЕЛАТЬ!!!!!!!!!!!!!!
+        if(!(LinkCLSID[3] == 0x00 && LinkCLSID[2] == 0x02 && LinkCLSID[1] == 0x14 && LinkCLSID[0] == 0x01 &&
+             LinkCLSID[5] == 0x00 && LinkCLSID[4] == 0x00 &&  LinkCLSID[7] == 0x00 && LinkCLSID[6] == 0x00 &&
+             LinkCLSID[8] == 0xC0 && LinkCLSID[9] == 0x00 && LinkCLSID[10] == 0x00 && LinkCLSID[11] == 0x00 &&
+             LinkCLSID[12] == 0x00 && LinkCLSID[13] == 0x00 && LinkCLSID[14] == 0x00 && LinkCLSID[15] == 0x46)) {
             cout << "Invalid LinkCLSID value. It MUST be 00021401-0000-0000-C000-000000000046" << endl;
             return false;
         }
@@ -144,7 +145,6 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
             cout << "Invalid Reserved3 value. It MUST  be 0x00000000" << endl;
             return false;
         }
-        cout << "ShellLinkHeader is Valid" << endl;
         return true;
     }
 
@@ -420,16 +420,16 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
             cout << "SW_SHOWMINNOACTIVE" << endl << Utils::defaultOffsetDocInfo << "The application is open, but its window is not shown. It is not given the keyboard focus." << endl;
     }
 
-    // TODO: Дописать парсинг времени + подумать над LinkCLSID:
+    // TODO: Дописать парсинг времени НЕ через winApi (некорректно работает)
     void ShellLinkHeader::printHeader(){
         cout << "____________________ShellLinkHeader______________________" << endl;
         cout << "HeaderSize:                         " << dec << Utils::lenFourBytes(HeaderSize) << " bytes" << endl;
-        cout << "LinkCLSID:                          "; Utils::print_vec(LinkCLSID);
+        cout << "LinkCLSID:                          "; printLinkCLSID();
         cout << "LinkFlags:                          " << endl; parseLinkFlags();
         cout << "FileAttributes:                     " << endl; parseFileAttributesFlags();
-        cout << "CreationTime:                       "; getDate(CreationTime);
-        cout << "AccessTime:                         "; getDate(AccessTime);
-        cout << "WriteTime:                          "; getDate(WriteTime);
+        cout << "CreationTime:                       "; Utils::getDate(CreationTime);
+        cout << "AccessTime:                         "; Utils::getDate(AccessTime);
+        cout << "WriteTime:                          "; Utils::getDate(WriteTime);
         cout << "FileSize:                           " << dec << Utils::lenFourBytes(FileSize) << " bytes" << endl;
         cout << "IconIndex:                          "; Utils::print_vec(IconIndex);
         cout << "ShowCommand:                        "; parseShowCommand();
@@ -438,11 +438,6 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
         cout << "Reserved2:                          "; Utils::print_vec(Reserved2);
         cout << "Reserved3:                          "; Utils::print_vec(Reserved3);
         cout << "_________________________________________________________" << endl;
-    }
-
-    void ShellLinkHeader::getDate(std::vector<unsigned int> vec){
-        cout << endl;
-
     }
 
     bool ShellLinkHeader::HasLinkTargetIDListIsSet() {
@@ -475,22 +470,22 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
     }
 
     /* For ExtraData structure */
-bool ShellLinkHeader::HasDarwinIDIsSet(){
+    bool ShellLinkHeader::HasDarwinIDIsSet(){
     return HasDarwinIDSet;
 }
-bool ShellLinkHeader::HasExpStringIsSet(){
+    bool ShellLinkHeader::HasExpStringIsSet(){
     return HasExpStringSet;
 }
-bool ShellLinkHeader::HasExpIconIsSet(){
+    bool ShellLinkHeader::HasExpIconIsSet(){
     return HasExpIconSet;
 }
-bool ShellLinkHeader::EnableTargetMetadataIsSet(){
+    bool ShellLinkHeader::EnableTargetMetadataIsSet(){
     return EnableTargetMetadataSet;
 }
-bool ShellLinkHeader::RunWithShimLayerIsSet(){
+    bool ShellLinkHeader::RunWithShimLayerIsSet(){
     return RunWithShimLayerSet;
 }
-bool ShellLinkHeader::ForceNoLinkTrackIsSet(){
+    bool ShellLinkHeader::ForceNoLinkTrackIsSet(){
     return ForceNoLinkTrackSet;
 }
 

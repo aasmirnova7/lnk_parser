@@ -2,7 +2,6 @@
 // Created by user on 29.08.2019.
 //
 
-#include "ShellLinkHeader_Test.cpp"
 #include "ReadStream.h"
 #include "ShellLinkHeader.h"
 #include "LinkTargetIDList.h"
@@ -17,7 +16,7 @@ public:
     ShellLink(const char * filePath) {
         int startPosition = 0;
         ReadStream *rs = new ReadStream(filePath);
-        vector<unsigned char> header =  rs->read(startPosition,76);
+        std::vector<unsigned char> header =  rs->read(startPosition,76);
         startPosition = 76;
 
         ShellLinkHeader shellLinkHeader = ShellLinkHeader(header);
@@ -28,11 +27,11 @@ public:
        if(valid) {
             if (shellLinkHeader.HasLinkTargetIDListIsSet()) {
                 /* Determine linkTargetIDListSize before creation of LinkTargetIDList structure */
-                vector<unsigned char> LTIDListSize =  rs->read(startPosition,2);
+                std::vector<unsigned char> LTIDListSize =  rs->read(startPosition,2);
                 reverse(LTIDListSize.begin(), LTIDListSize.end());
                 int linkTargetIDListSize = Utils::lenTwoBytes(LTIDListSize);
 
-                vector<unsigned char> linkTargetIdListVect = rs->read(startPosition, linkTargetIDListSize + 2);
+                std::vector<unsigned char> linkTargetIdListVect = rs->read(startPosition, linkTargetIDListSize + 2);
                 LinkTargetIDList linkTargetIdList = LinkTargetIDList(linkTargetIdListVect);
                 linkTargetIdList.printLinkTargetIdListInHexStyle();
                 linkTargetIdList.printLinkTargetIdList();
@@ -41,11 +40,11 @@ public:
 
             if(shellLinkHeader.HasLinkInfoIsSet()) {
                 /* Determine LinkInfo size before creation */
-                vector<unsigned char> LIS =  rs->read(startPosition,4);
+                std::vector<unsigned char> LIS =  rs->read(startPosition,4);
                 reverse(LIS.begin(), LIS.end());
                 int linkInfoSize = Utils::lenFourBytes(LIS);
 
-                vector<unsigned char> linkInfoSizeVect =  rs->read(startPosition, linkInfoSize);
+                std::vector<unsigned char> linkInfoSizeVect =  rs->read(startPosition, linkInfoSize);
                  LinkInfo linkInfo = LinkInfo(linkInfoSizeVect);
                  linkInfo.printLinkInfoInHexStyle();
                  linkInfo.printLinkInfo();

@@ -10,19 +10,6 @@
 #include "ReadStream.h"
 #include "LinkTargetIDList.h"
 
-// EXTRA_DATA signatures
-/*#define ENVIRONMENT_PROPS				0xA0000001
-#define CONSOLE_PROPS					0xA0000002
-#define TRACKER_PROPS					0xA0000003
-#define CONSOLE_FE_PROPS				0xA0000004
-#define SPECIAL_FOLDER_PROPS			0xA0000005
-#define DARWIN_PROPS					0xA0000006
-#define ICON_ENVIRONMENT_PROPS			0xA0000007
-#define SHIM_PROPS						0xA0000008
-#define PROPERTY_STORE_PROPS			0xA0000009
-#define KNOWN_FOLDER_PROPS				0xA000000B
-#define VISTA_AND_ABOVE_IDLIST_PROPS	0xA000000C */
-
 // FillAttributes for ConsolePropsStruct
 #define FOREGROUND_BLUE         0x0001      // The foreground text color contains blue.
 #define FOREGROUND_GREEN        0x0002      // The foreground text color contains green.
@@ -207,7 +194,6 @@ public:
     ExtraData(ReadStream *readStream, int readFrom);
     void printExtraData();
     void printExtraDataInHexStyle();
-
 };
 
 
