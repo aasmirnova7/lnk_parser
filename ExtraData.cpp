@@ -29,7 +29,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         // Но что, если обе структуры должны быть?????
         if (len == 0x000000CC && !ShellLinkHeader::EnableTargetMetadataIsSet() && !consolePropsIsSet) { // чтобы пройти дальше в случе ошибки
             /* CONSOLE_PROPS struct*/
-            std::cout << "CONSOLE_PROPS struct" << endl;
             vector<unsigned char> consolePropsStruct  = readStream->read(tmpReadFrom,204);
             auto it = consolePropsStruct.begin();
 
@@ -89,7 +88,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (len == 0x0000000C && !ShellLinkHeader::EnableTargetMetadataIsSet() && !consoleFEIsSet) {
             /* CONSOLE_FE_PROPS struct*/
-            std::cout << "CONSOLE_FE_PROPS struct" << endl;
             vector<unsigned char> consoleFEPropsStruct  = readStream->read(tmpReadFrom,12);
             auto it = consoleFEPropsStruct.begin();
 
@@ -105,7 +103,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (ShellLinkHeader::HasDarwinIDIsSet() && len ==  0x00000314 && !drownPropsIsSet) {
             /* DARWIN_PROPS struct*/
-            std::cout << "DARWIN_PROPS struct" << endl;
             vector<unsigned char> darwinPropsStruct  = readStream->read(tmpReadFrom,788);
             auto it = darwinPropsStruct.begin();
 
@@ -123,7 +120,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (ShellLinkHeader::HasExpStringIsSet() && len ==  0x00000314 && !environmentPropsIsSet) {
             /* ENVIRONMENT_PROPS struct*/
-            std::cout << "ENVIRONMENT_PROPS struct" << endl;
             vector<unsigned char> environmentPropsStruct  = readStream->read(tmpReadFrom,788);
             auto it = environmentPropsStruct.begin();
 
@@ -141,7 +137,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (ShellLinkHeader::HasExpIconIsSet() && len ==  0x00000314 && !iconEnvironmentPropsIsSet) {
             /* ICON_ENVIRONMENT_PROPS struct*/
-            std::cout << "ICON_ENVIRONMENT_PROPS struct" << endl;
             vector<unsigned char> iconEnvironmentPropsStruct  = readStream->read(tmpReadFrom,788);
             auto it = iconEnvironmentPropsStruct.begin();
 
@@ -160,7 +155,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         // Но что, если обе структуры должны быть?????
         if (len ==  0x0000001C && !ShellLinkHeader::EnableTargetMetadataIsSet() && !knownFolderPropsIsSet) {
             /* KNOWN_FOLDER_PROPS struct*/
-            std::cout << "KNOWN_FOLDER_PROP struct" << endl;
             vector<unsigned char> knownFolderPropsStruct  = readStream->read(tmpReadFrom,28);
             auto it = knownFolderPropsStruct.begin();
 
@@ -178,7 +172,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (ShellLinkHeader::EnableTargetMetadataIsSet() && len >=  0x0000000C && !propertyStorePropsIsSet) {
             /* PROPERTY_STORE_PROPS struct*/
-            std::cout << "PROPERTY_STORE_PROPS struct" << endl;
             vector<unsigned char> propertyStoreBlockSize  = readStream->read(tmpReadFrom,4);
             std::copy(propertyStoreBlockSize.begin(), propertyStoreBlockSize.end(),
                       std::back_inserter(PROPERTY_STORE_PROPS.BlockSize));
@@ -239,7 +232,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (ShellLinkHeader::RunWithShimLayerIsSet() && len >= 0x00000088 && !shimPropsIsSet) {
             /* SHIM_PROPS struct*/
-            std::cout << "SHIM_PROPS struct" << endl;
             vector<unsigned char> shimPropsBlockSize  = readStream->read(tmpReadFrom,4);
             std::copy(shimPropsBlockSize.begin(), shimPropsBlockSize.end(),
                       std::back_inserter(SHIM_PROPS.BlockSize));
@@ -259,7 +251,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (len == 0x00000010 && !sFolderPropsIsSet) {
             /* SPECIAL_FOLDER_PROPS struct*/
-            std::cout << "SPECIAL_FOLDER_PROPS struct" << endl;
             vector<unsigned char> specialFolderPropsStruct  = readStream->read(tmpReadFrom,16);
             auto it = specialFolderPropsStruct.begin();
 
@@ -277,7 +268,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (!ShellLinkHeader::ForceNoLinkTrackIsSet() && len == 0x00000060 && !trackerPropsIsSet) {
             /* TRACKER_PROPS struct*/
-            std::cout << "TRACKER_PROPS struct" << endl;
             vector<unsigned char> trackerPropsStruct  = readStream->read(tmpReadFrom,96);
             auto it = trackerPropsStruct.begin();
 
@@ -302,7 +292,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (len >= 0x0000000A && !vistaAndAboveIDListPropsIsSet) {
             /* VISTA_AND_ABOVE_IDLIST_PROPS struct*/
-            std::cout << "VISTA_AND_ABOVE_IDLIST_PROPS struct" << endl;
             vector<unsigned char> vistaBlockSize  = readStream->read(tmpReadFrom,4);
             std::copy(vistaBlockSize.begin(), vistaBlockSize.end(),
                       std::back_inserter(VISTA_AND_ABOVE_IDLIST_PROPS.BlockSize));

@@ -226,24 +226,49 @@ void LinkInfo::reverseAllFields() {
 }
 
 void LinkInfo::parseLinkInfoFlags() {
-    if (LinkInfoFlags[3] == VolumeIDAndLocalBasePath) cout << "VolumeIDAndLocalBasePath" << endl;
-    if (LinkInfoFlags[3] == CommonNetworkRelativeLinkAndPathSuffix)
+    if (LinkInfoFlags[3] == VolumeIDAndLocalBasePath) {
+        cout << "VolumeIDAndLocalBasePath" << endl;
+        cout << Utils::defaultOffsetDocInfo << "If set, the VolumeID and LocalBasePath fields are present, " << endl <<
+                Utils::defaultOffsetDocInfo << "and their locations are specified by the values of the VolumeIDOffset and LocalBasePathOffset fields, respectively. " << endl <<
+                Utils::defaultOffsetDocInfo << "If the value of the LinkInfoHeaderSize field is greater than or equal to 0x00000024, the LocalBasePathUnicode field is present, " << endl <<
+                Utils::defaultOffsetDocInfo << "and its location is specified by the value of the LocalBasePathOffsetUnicode field." << endl;
+    }
+    if (LinkInfoFlags[3] == CommonNetworkRelativeLinkAndPathSuffix) {
         cout << "CommonNetworkRelativeLinkAndPathSuffix" << endl;
+        cout << Utils::defaultOffsetDocInfo << "If set, the CommonNetworkRelativeLink field is present, " << endl <<
+                Utils::defaultOffsetDocInfo << "and its location is specified by the value of the CommonNetworkRelativeLinkOffset field." << endl;
+    }
 }
 void LinkInfo::parseDriveType() {
-    if (VolumeID.DriveType[3] == DRIVE_UNKNOWN) cout << "DRIVE_UNKNOWN" << endl;
-    if (VolumeID.DriveType[3] == DRIVE_NO_ROOT_DIR) cout << "DRIVE_NO_ROOT_DIR" << endl;
-    if (VolumeID.DriveType[3] == DRIVE_REMOVABLE) cout << "DRIVE_REMOVABLE" << endl;
-    if (VolumeID.DriveType[3] == DRIVE_FIXED) cout << "DRIVE_FIXED" << endl;
-    if (VolumeID.DriveType[3] == DRIVE_REMOTE) cout << "DRIVE_REMOTE" << endl;
-    if (VolumeID.DriveType[3] == DRIVE_CDROM) cout << "DRIVE_CDROM" << endl;
-    if (VolumeID.DriveType[3] == DRIVE_RAMDISK) cout << "DRIVE_RAMDISK" << endl;
+    if (VolumeID.DriveType[3] == DRIVE_UNKNOWN)
+        cout << "DRIVE_UNKNOWN" << endl << Utils::defaultOffsetDocInfo <<
+            "The drive type cannot be determined." << endl;
+    if (VolumeID.DriveType[3] == DRIVE_NO_ROOT_DIR)
+        cout << "DRIVE_NO_ROOT_DIR" << endl << Utils::defaultOffsetDocInfo <<
+            "The root path is invalid; for example, there is no volume mounted at the path." << endl;
+    if (VolumeID.DriveType[3] == DRIVE_REMOVABLE)
+        cout << "DRIVE_REMOVABLE" << endl << Utils::defaultOffsetDocInfo <<
+            "The drive has removable media, such as a floppy drive, thumb drive, or flash card reader." << endl;
+    if (VolumeID.DriveType[3] == DRIVE_FIXED)
+        cout << "DRIVE_FIXED" << endl << Utils::defaultOffsetDocInfo <<
+            "The drive has fixed media, such as a hard drive or flash drive." << endl;
+    if (VolumeID.DriveType[3] == DRIVE_REMOTE)
+        cout << "DRIVE_REMOTE" << endl << Utils::defaultOffsetDocInfo <<
+            "The drive is a remote (network) drive." << endl;
+    if (VolumeID.DriveType[3] == DRIVE_CDROM)
+        cout << "DRIVE_CDROM" << endl << Utils::defaultOffsetDocInfo <<
+            "The drive is a CD-ROM drive." << endl;
+    if (VolumeID.DriveType[3] == DRIVE_RAMDISK)
+        cout << "DRIVE_RAMDISK" << endl << Utils::defaultOffsetDocInfo <<
+            "The drive is a RAM disk." << endl;
 }
 void LinkInfo::parseCommonNetworkRelativeLinkFlags() {
     if (CommonNetworkRelativeLink.CommonNetworkRelativeLinkFlags[3] == ValidDevice)
-        cout << "ValidDevice" << endl;
+        cout << "ValidDevice" << endl << Utils::defaultOffsetDocInfo <<
+            "If set, the DeviceNameOffset field contains an offset to the device name." << endl;
     if (CommonNetworkRelativeLink.CommonNetworkRelativeLinkFlags[3] == ValidNetType)
-        cout << "ValidNetType" << endl;
+        cout << "ValidNetType" << endl << Utils::defaultOffsetDocInfo <<
+            "If set, the NetProviderType field contains the network provider type." << endl;
 }
 void LinkInfo::parseNetworkProviderType() {
     if (CommonNetworkRelativeLink.NetworkProviderType[3] == WNNC_NET_AVID)
@@ -346,21 +371,21 @@ void LinkInfo::printLinkInfo() {
     cout << "LinkInfoHeaderSize:                 "; parseLinkInfoHeaderSize();
     cout << "LinkFlags:                          "; parseLinkInfoFlags();
     cout << "VolumeIDOffset:                     " << dec <<
-        Utils::lenFourBytes(VolumeIDOffset) << " bytes (offset, in bytes). " <<
-        "If the VolumeIDAndLocalBasePath flag is NOT set, this value MUST be zero." << endl;
+        Utils::lenFourBytes(VolumeIDOffset) << " bytes (offset in bytes from the start of the LinkInfo structure). " << endl <<
+        Utils::defaultOffsetDocInfo << "If the VolumeIDAndLocalBasePath flag is NOT set, this value MUST be zero." << endl;
     cout << "LocalBasePathOffset:                " << dec <<
-         Utils::lenFourBytes(LocalBasePathOffset) << " bytes (offset, in bytes). " <<
-          "If the VolumeIDAndLocalBasePath flag is NOT set, this value MUST be zero."<< endl;
+         Utils::lenFourBytes(LocalBasePathOffset) << " bytes (offset in bytes from the start of the LinkInfo structure). " << endl <<
+         Utils::defaultOffsetDocInfo << "If the VolumeIDAndLocalBasePath flag is NOT set, this value MUST be zero."<< endl;
     cout << "CommonNetworkRelativeLinkOffset:    " << dec <<
-         Utils::lenFourBytes(CommonNetworkRelativeLinkOffset) << " bytes (offset, in bytes). " <<
-         "If the CommonNetworkRelativeLinkAndPathSuffix flag is NOT set, this value MUST be zero." << endl;
+         Utils::lenFourBytes(CommonNetworkRelativeLinkOffset) << " bytes (offset in bytes from the start of the LinkInfo structure). " << endl <<
+         Utils::defaultOffsetDocInfo << "If the CommonNetworkRelativeLinkAndPathSuffix flag is NOT set, this value MUST be zero." << endl;
     cout << "CommonPathSuffixOffset:             " << dec <<
-         Utils::lenFourBytes(CommonPathSuffixOffset) << " bytes (offset, in bytes)" << endl;
+         Utils::lenFourBytes(CommonPathSuffixOffset) << " bytes (offset in bytes from the start of the LinkInfo structure)" << endl;
     if (Utils::lenFourBytes(LinkInfoHeaderSize) >= 0x00000024) {
         cout << "LocalBasePathOffsetUnicode:             " << dec <<
-             Utils::lenFourBytes(LocalBasePathOffsetUnicode) << " bytes (offset, in bytes)" << endl;
+             Utils::lenFourBytes(LocalBasePathOffsetUnicode) << " bytes (offset in bytes from the start of the LinkInfo structure)" << endl;
         cout << "CommonPathSuffixOffsetUnicode:            " << dec <<
-             Utils::lenFourBytes(CommonPathSuffixOffsetUnicode) << " bytes (offset, in bytes)" << endl;
+             Utils::lenFourBytes(CommonPathSuffixOffsetUnicode) << " bytes (offset in bytes from the start of the LinkInfo structure)" << endl;
     }
     if (LinkInfoFlags[3] == VolumeIDAndLocalBasePath) {
         cout << "VolumeID:" << endl;
@@ -370,10 +395,10 @@ void LinkInfo::printLinkInfo() {
         cout << "      DriveSerialNumber:            "; Utils::print_vec(VolumeID.DriveSerialNumber);
         if(VolumeID.VolumeLabelOffset[3] == 0x00000010) {  // По документации 0x00000014
             cout << "      VolumeLabelOffset:            " << dec <<
-                 Utils::lenFourBytes(VolumeID.VolumeLabelOffset) << " bytes (offset, in bytes)" << endl;
+                 Utils::lenFourBytes(VolumeID.VolumeLabelOffset) << " bytes (offset in bytes from the start of the VolumeID structure)" << endl;
         } else {
             cout << "      VolumeLabelOffsetUnicode:     " << dec <<
-                 Utils::lenFourBytes(VolumeID.VolumeLabelOffsetUnicode) << " bytes (offset, in bytes)" << endl;
+                 Utils::lenFourBytes(VolumeID.VolumeLabelOffsetUnicode) << " bytes (offset in bytes from the start of the VolumeID structure)" << endl;
         }
         reverse(VolumeID.Data.begin(), VolumeID.Data.end());   // чтобы читать
         cout << "      Data:                         "; Utils::print_vec_unicode(VolumeID.Data);
@@ -389,17 +414,20 @@ void LinkInfo::printLinkInfo() {
         cout << "           CommonNetworkRelativeLinkSize:         " << dec <<
              Utils::lenFourBytes(CommonNetworkRelativeLink.CommonNetworkRelativeLinkSize) << " bytes" << endl;
         cout << "           CommonNetworkRelativeLinkFlags:         "; parseCommonNetworkRelativeLinkFlags();
-        cout << "           NetNameOffset:                          ";
-            Utils::print_vec(CommonNetworkRelativeLink.NetNameOffset);
-        cout << "           DeviceNameOffset:                       ";
-            Utils::print_vec(CommonNetworkRelativeLink.DeviceNameOffset);
+        cout << "           NetNameOffset:                          " <<
+            Utils::lenFourBytes(CommonNetworkRelativeLink.NetNameOffset) <<
+            " bytes (offset in bytes from the start of the CommonNetworkRelativeLink structure)" << endl;
+        cout << "           DeviceNameOffset:                       " <<
+            Utils::lenFourBytes(CommonNetworkRelativeLink.DeviceNameOffset) <<
+            " bytes (offset in bytes from the start of the CommonNetworkRelativeLink structure)" << endl;
         cout << "           NetworkProviderType:                    "; parseNetworkProviderType();
-
         if (CommonNetworkRelativeLink.NetNameOffset[3] > 0x00000014) {
-            cout << "           NetNameOffsetUnicode:             ";
-            Utils::print_vec(CommonNetworkRelativeLink.NetNameOffsetUnicode);
-            cout << "           DeviceNameOffsetUnicode:          ";
-            Utils::print_vec(CommonNetworkRelativeLink.DeviceNameOffsetUnicode);
+            cout << "           NetNameOffsetUnicode:             " <<
+                Utils::lenFourBytes(CommonNetworkRelativeLink.NetNameOffsetUnicode) <<
+                " bytes (offset in bytes from the start of the CommonNetworkRelativeLink structure)" << endl;
+            cout << "           DeviceNameOffsetUnicode:          " <<
+                Utils::lenFourBytes(CommonNetworkRelativeLink.DeviceNameOffsetUnicode) <<
+                " bytes (offset in bytes from the start of the CommonNetworkRelativeLink structure)" << endl;
         }
         cout << "           NetName:                                 ";
         reverse(CommonNetworkRelativeLink.NetName.begin(),
@@ -417,9 +445,9 @@ void LinkInfo::printLinkInfo() {
 
         if (CommonNetworkRelativeLink.NetNameOffset[3] > 0x00000014) {
             cout << "           NetNameUnicode:                   ";
-            Utils::print_vec(CommonNetworkRelativeLink.NetNameUnicode);
+            Utils::print_vec_unicode(CommonNetworkRelativeLink.NetNameUnicode);
             cout << "           DeviceNameOffsetUnicode:          ";
-            Utils::print_vec(CommonNetworkRelativeLink.DeviceNameUnicode);
+            Utils::print_vec_unicode(CommonNetworkRelativeLink.DeviceNameUnicode);
         }
     }
     reverse(CommonPathSuffix.begin(), CommonPathSuffix.end());    // чтобы ситать
@@ -428,11 +456,11 @@ void LinkInfo::printLinkInfo() {
 
     if (LinkInfoFlags[3] == VolumeIDAndLocalBasePath && Utils::lenFourBytes(LinkInfoHeaderSize) >= 0x00000024) {
         cout << "LocalBasePathUnicode:                               ";
-        Utils::print_vec(LocalBasePathUnicode);
+        Utils::print_vec_unicode(LocalBasePathUnicode);
     }
     if (Utils::lenFourBytes(LinkInfoHeaderSize) >= 0x00000024) {
         cout << "CommonPathSuffixUnicode:                            ";
-        Utils::print_vec(CommonPathSuffixUnicode);
+        Utils::print_vec_unicode(CommonPathSuffixUnicode);
     }
     cout << "_________________________________________________________" << endl;
 }

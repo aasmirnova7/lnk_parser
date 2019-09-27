@@ -9,6 +9,7 @@
 
 using namespace std;
 
+// TODO: Нужно распарсить каждый IdList, но в документаци я не нахожу
 LinkTargetIDList::LinkTargetIDList(std::vector<unsigned char> linkTargetIdList){
     fillLinkTargetIDList(linkTargetIdList);
 }
