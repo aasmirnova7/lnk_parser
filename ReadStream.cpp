@@ -29,11 +29,11 @@ using namespace std;
         vector<unsigned char> ivector;
 
         if(!f.is_open())
-            return ivector;    // TODO: что-то придумать
+            return ivector;
 
         f.seekg(position);
         if(f.eof())
-            return ivector;     // TODO: что-то придумать
+            return ivector;
 
         char ch;
         while (f.get(ch) && count > 0) {

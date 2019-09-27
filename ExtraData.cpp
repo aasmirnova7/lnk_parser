@@ -2,15 +2,88 @@
 // Created by user on 30.08.2019.
 //
 
+#include <cstring>
 #include "ExtraData.h"
 #include "ShellLinkHeader.h"
 #include "Utils.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++11-narrowing"
 using namespace std;
 
 ExtraData::ExtraData(ReadStream *readStream, int readFrom) {
     fillExtraData(readStream, readFrom);
 }
+const ExtraData::clsid_type clsid_list[] = {{ GUID_AddNewPrograms, "AddNewPrograms" }, { GUID_AdminTools, "AdminTools" },
+                                 { GUID_AppDataLow, "AppDataLow" }, { GUID_ApplicationShortcuts, "ApplicationShortcuts" },
+                                 { GUID_AppsFolder, "AppsFolder" }, { GUID_AppUpdates, "AppUpdates" },
+                                 { GUID_CDBurning, "CDBurning" }, { GUID_ChangeRemovePrograms, "ChangeRemovePrograms" },
+                                 { GUID_CommonAdminTools, "CommonAdminTools" }, { GUID_CommonOEMLinks, "CommonOEMLinks" },
+                                 { GUID_CommonPrograms, "CommonPrograms" }, { GUID_CommonStartMenu, "CommonStartMenu" },
+                                 { GUID_CommonStartup, "CommonStartup" }, { GUID_CommonTemplates, "CommonTemplates" },
+                                 { GUID_ComputerFolder, "ComputerFolder" }, { GUID_ConflictFolder, "ConflictFolder" },
+                                 { GUID_ConnectionsFolder, "ConnectionsFolder" }, { GUID_Contacts, "Contacts" },
+                                 { GUID_ControlPanelFolder, "ControlPanelFolder" }, { GUID_Cookies, "Cookies" },
+                                 { GUID_Desktop, "Desktop" }, { GUID_DeviceMetadataStore, "DeviceMetadataStore" },
+                                 { GUID_Documents, "Documents" }, { GUID_DocumentsLibrary, "DocumentsLibrary" },
+                                 { GUID_Downloads, "Downloads" }, { GUID_Favorites, "Favorites" },
+                                 { GUID_Fonts, "Fonts" }, { GUID_Games, "Games" },
+                                 { GUID_GameTasks, "GameTasks" }, { GUID_History, "History" },
+                                 { GUID_HomeGroup, "HomeGroup" }, { GUID_HomeGroupCurrentUser, "HomeGroupCurrentUser" },
+                                 { GUID_ImplicitAppShortcuts, "ImplicitAppShortcuts" }, { GUID_InternetCache, "InternetCache" },
+                                 { GUID_InternetFolder, "InternetFolder" }, { GUID_Libraries, "Libraries" },
+                                 { GUID_Links, "Links" }, { GUID_LocalAppData, "LocalAppData" },
+                                 { GUID_LocalAppDataLow, "LocalAppDataLow" }, { GUID_LocalizedResourcesDir, "LocalizedResourcesDir" },
+                                 { GUID_Music, "Music" }, { GUID_MusicLibrary, "MusicLibrary" },
+                                 { GUID_NetHood, "NetHood" }, { GUID_NetworkFolder, "NetworkFolder" },
+                                 { GUID_OriginalImages, "OriginalImages" }, { GUID_PhotoAlbums, "PhotoAlbums" },
+                                 { GUID_Pictures, "Pictures" }, { GUID_PicturesLibrary, "PicturesLibrary" },
+                                 { GUID_Playlists, "Playlists" }, { GUID_PrintersFolder, "PrintersFolder" },
+                                 { GUID_PrintHood, "PrintHood" }, { GUID_Profile, "Profile" },
+                                 { GUID_ProgramData, "ProgramData" }, { GUID_ProgramFiles, "ProgramFiles" },
+                                 { GUID_ProgramFilesCommon, "ProgramFilesCommon" }, { GUID_ProgramFilesCommonX64, "ProgramFilesCommonX64" },
+                                 { GUID_ProgramFilesCommonX86, "ProgramFilesCommonX86" }, { GUID_ProgramFilesX64, "ProgramFilesX64" },
+                                 { GUID_ProgramFilesX86, "ProgramFilesX86" }, { GUID_Programs, "Programs" },
+                                 { GUID_Public, "Public" }, { GUID_PublicDesktop, "PublicDesktop" },
+                                 { GUID_PublicDocuments, "PublicDocuments" }, { GUID_PublicDownloads, "PublicDownloads" },
+                                 { GUID_PublicGameTasks, "PublicGameTasks" }, { GUID_PublicLibraries, "PublicLibraries" },
+                                 { GUID_PublicMusic, "PublicMusic" }, { GUID_PublicPictures, "PublicPictures" },
+                                 { GUID_PublicRingtones, "PublicRingtones" }, { GUID_PublicUserTiles, "PublicUserTiles" },
+                                 { GUID_PublicVideos, "PublicVideos" }, { GUID_QuickLaunch, "QuickLaunch" },
+                                 { GUID_Recent, "Recent" }, { GUID_RecordedTV, "RecordedTV" },
+                                 { GUID_RecordedTVLibrary, "RecordedTVLibrary" }, { GUID_RecycleBin, "RecycleBin" },
+                                 { GUID_ResourceDir, "ResourceDir" }, { GUID_Ringtones, "Ringtones" },
+                                 { GUID_RoamingAppData, "RoamingAppData" }, { GUID_RoamingTiles, "RoamingTiles" },
+                                 { GUID_SampleMusic, "SampleMusic" }, { GUID_SamplePictures, "SamplePictures" },
+                                 { GUID_SamplePlaylists, "SamplePlaylists" }, { GUID_SampleVideos, "SampleVideos" },
+                                 { GUID_SavedGames, "SavedGames" }, { GUID_SavedSearches, "SavedSearches" },
+                                 { GUID_SEARCH_CSC, "SEARCH_CSC" }, { GUID_SEARCH_MAPI, "SEARCH_MAPI" },
+                                 { GUID_SearchHome, "SearchHome" }, { GUID_SendTo, "SendTo" },
+                                 { GUID_SidebarDefaultParts, "SidebarDefaultParts" }, { GUID_SidebarParts, "SidebarParts" },
+                                 { GUID_StartMenu, "StartMenu" }, { GUID_Startup, "Startup" },
+                                 { GUID_SyncManagerFolder, "SyncManagerFolder" }, { GUID_SyncResults, "SyncResults" },
+                                 { GUID_SyncSetupFolder, "SyncSetupFolder" }, { GUID_System, "System" },
+                                 { GUID_SystemX86, "SystemX86" }, { GUID_Templates, "Templates" },
+                                 { GUID_TreeProperties, "TreeProperties" }, { GUID_UserPinned, "UserPinned" },
+                                 { GUID_UserProfiles, "UserProfiles" }, { GUID_UserProgramFiles, "UserProgramFiles" },
+                                 { GUID_UserProgramFilesCommon, "UserProgramFilesCommon" }, { GUID_UsersFiles, "UsersFiles" },
+                                 { GUID_UsersLibraries, "UsersLibraries" }, { GUID_UsersLibrariesFolder, "UsersLibrariesFolder" },
+                                 { GUID_UserTiles, "UserTiles" }, { GUID_Videos, "Videos" },
+                                 { GUID_VideosLibrary, "VideosLibrary" }, { GUID_Windows, "Windows" },
+
+                                 { GUID_My_Computer, "My Computer" }, { GUID_My_Documents, "My Documents" },
+                                 { GUID_Control_Panel, "Control Panel" }, { GUID_Control_Panel2, "Control Panel" },
+                                 { GUID_Internet_Explorer, "Internet Explorer" }, { GUID_My_Games, "My Games" },
+                                 { GUID_My_Network_Places, "My Network Places" }, { GUID_Network_Connections, "Network Connections" },
+                                 { GUID_Printers_and_Faxes, "Printers and Faxes" }, { GUID_Dial_up_Connection, "Dial-up Connection" },
+                                 { GUID_Show_Desktop, "Show Desktop" }, { GUID_Users, "Users" },
+                                 { GUID_Window_Switcher, "Window Switcher" }, { GUID_CD_Burner, "CD Burner" },
+                                 { GUID_CSC_Folder, "CSC Folder" }, { GUID_Search, "Search" },
+                                 { GUID_Help_and_Support, "Help and Support" }, { GUID_Windows_Security, "Windows Security" },
+                                 { GUID_Run, "Run..." }, { GUID_Email, "E-mail" },
+                                 { GUID_Set_Program_Access, "Set Program Access and Defaults" }, { GUID_Start_Menu_Provider, "StartMenuProviderFolder" },
+                                 { GUID_Start_Menu, "Start Menu" }, { GUID_Search_Results, "Search Results" },
+                                 { GUID_Unknown, "GUID_Unknown" }};
 
 void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
     int tmpReadFrom = readFrom;
@@ -388,7 +461,7 @@ void ExtraData::reverseAllFields() {
         /* KNOWN_FOLDER_PROPS struct*/
         reverse(KNOWN_FOLDER_PROPS.BlockSize.begin(), KNOWN_FOLDER_PROPS.BlockSize.end());
         reverse(KNOWN_FOLDER_PROPS.BlockSignature.begin(), KNOWN_FOLDER_PROPS.BlockSignature.end());
-        reverse(KNOWN_FOLDER_PROPS.KnownFolderID.begin(), KNOWN_FOLDER_PROPS.KnownFolderID.end());
+        //reverse(KNOWN_FOLDER_PROPS.KnownFolderID.begin(), KNOWN_FOLDER_PROPS.KnownFolderID.end());
         reverse(KNOWN_FOLDER_PROPS.Offset.begin(), KNOWN_FOLDER_PROPS.Offset.end());
     }
     if (propertyStorePropsIsSet) {
@@ -436,7 +509,7 @@ void ExtraData::reverseAllFields() {
         reverse(TRACKER_PROPS.BlockSignature.begin(), TRACKER_PROPS.BlockSignature.end());
         reverse(TRACKER_PROPS.Length.begin(), TRACKER_PROPS.Length.end());
         reverse(TRACKER_PROPS.Version.begin(), TRACKER_PROPS.Version.end());
-        reverse(TRACKER_PROPS.MachineID.begin(), TRACKER_PROPS.MachineID.end());
+        //reverse(TRACKER_PROPS.MachineID.begin(), TRACKER_PROPS.MachineID.end());
         reverse(TRACKER_PROPS.Droid.begin(), TRACKER_PROPS.Droid.end());
         reverse(TRACKER_PROPS.DroidBirth.begin(), TRACKER_PROPS.DroidBirth.end());
     }
@@ -448,28 +521,43 @@ void ExtraData::reverseAllFields() {
     }
 }
 void ExtraData::parseFillAttributes(bool popupFillAttributes) {
-    // std::cout << "LinkFlags:
     if (popupFillAttributes) {
         for (int i = 0; i < CONSOLE_PROPS.PopupFillAttributes.size(); ++i) {
-            if (CONSOLE_PROPS.PopupFillAttributes[i] & FOREGROUND_BLUE) cout << "FOREGROUND_BLUE, ";
-            if (CONSOLE_PROPS.PopupFillAttributes[i] & FOREGROUND_GREEN) cout << "FOREGROUND_GREEN, ";
-            if (CONSOLE_PROPS.PopupFillAttributes[i] & FOREGROUND_RED) cout << "FOREGROUND_RED, ";
-            if (CONSOLE_PROPS.PopupFillAttributes[i] & FOREGROUND_INTENSITY) cout << "FOREGROUND_INTENSITY, ";
-            if (CONSOLE_PROPS.PopupFillAttributes[i] & BACKGROUND_BLUE) cout << "BACKGROUND_BLUE, ";
-            if (CONSOLE_PROPS.PopupFillAttributes[i] & BACKGROUND_GREEN) cout << "BACKGROUND_GREEN, ";
-            if (CONSOLE_PROPS.PopupFillAttributes[i] & BACKGROUND_RED) cout << "BACKGROUND_RED, ";
-            if (CONSOLE_PROPS.PopupFillAttributes[i] & BACKGROUND_INTENSITY) cout << "BACKGROUND_INTENSITY, ";
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & FOREGROUND_BLUE) cout << "FOREGROUND_BLUE: " <<
+                Utils::defaultOffsetDocInfo << "The foreground text color contains blue." << endl;
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & FOREGROUND_GREEN) cout << "FOREGROUND_GREEN: "<<
+                Utils::defaultOffsetDocInfo << "The foreground text color contains green." << endl;
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & FOREGROUND_RED) cout << "FOREGROUND_RED: "<<
+                Utils::defaultOffsetDocInfo << "The foreground text color contains red." << endl;
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & FOREGROUND_INTENSITY) cout << "FOREGROUND_INTENSITY: "<<
+                Utils::defaultOffsetDocInfo << "The foreground text color is intensified." << endl;
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & BACKGROUND_BLUE) cout << "BACKGROUND_BLUE: "<<
+                Utils::defaultOffsetDocInfo << "The background text color contains blue." << endl;
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & BACKGROUND_GREEN) cout << "BACKGROUND_GREEN; "<<
+                Utils::defaultOffsetDocInfo << "The background text color contains green." << endl;
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & BACKGROUND_RED) cout << "BACKGROUND_RED: "<<
+                Utils::defaultOffsetDocInfo << "The background text color contains red." << endl;
+            if (CONSOLE_PROPS.PopupFillAttributes[i] & BACKGROUND_INTENSITY) cout << "BACKGROUND_INTENSITY: "<<
+                Utils::defaultOffsetDocInfo << "The background text color is intensified." << endl;
         }
     } else {
         for (int i = 0; i < CONSOLE_PROPS.FillAttributes.size(); ++i) {
-            if (CONSOLE_PROPS.FillAttributes[i] & FOREGROUND_BLUE) cout << "FOREGROUND_BLUE, ";
-            if (CONSOLE_PROPS.FillAttributes[i] & FOREGROUND_GREEN) cout << "FOREGROUND_GREEN, ";
-            if (CONSOLE_PROPS.FillAttributes[i] & FOREGROUND_RED) cout << "FOREGROUND_RED, ";
-            if (CONSOLE_PROPS.FillAttributes[i] & FOREGROUND_INTENSITY) cout << "FOREGROUND_INTENSITY, ";
-            if (CONSOLE_PROPS.FillAttributes[i] & BACKGROUND_BLUE) cout << "BACKGROUND_BLUE, ";
-            if (CONSOLE_PROPS.FillAttributes[i] & BACKGROUND_GREEN) cout << "BACKGROUND_GREEN, ";
-            if (CONSOLE_PROPS.FillAttributes[i] & BACKGROUND_RED) cout << "BACKGROUND_RED, ";
-            if (CONSOLE_PROPS.FillAttributes[i] & BACKGROUND_INTENSITY) cout << "BACKGROUND_INTENSITY, ";
+            if (CONSOLE_PROPS.FillAttributes[i] & FOREGROUND_BLUE) cout << "FOREGROUND_BLUE: " <<
+                Utils::defaultOffsetDocInfo << "The foreground text color contains blue." << endl;
+            if (CONSOLE_PROPS.FillAttributes[i] & FOREGROUND_GREEN) cout << "FOREGROUND_GREEN: "<<
+                Utils::defaultOffsetDocInfo << "The foreground text color contains green." << endl;
+            if (CONSOLE_PROPS.FillAttributes[i] & FOREGROUND_RED) cout << "FOREGROUND_RED: "<<
+                Utils::defaultOffsetDocInfo << "The foreground text color contains red." << endl;
+            if (CONSOLE_PROPS.FillAttributes[i] & FOREGROUND_INTENSITY) cout << "FOREGROUND_INTENSITY: "<<
+                Utils::defaultOffsetDocInfo << "The foreground text color is intensified." << endl;
+            if (CONSOLE_PROPS.FillAttributes[i] & BACKGROUND_BLUE) cout << "BACKGROUND_BLUE: "<<
+                Utils::defaultOffsetDocInfo << "The background text color contains blue." << endl;
+            if (CONSOLE_PROPS.FillAttributes[i] & BACKGROUND_GREEN) cout << "BACKGROUND_GREEN; "<<
+                Utils::defaultOffsetDocInfo << "The background text color contains green." << endl;
+            if (CONSOLE_PROPS.FillAttributes[i] & BACKGROUND_RED) cout << "BACKGROUND_RED: "<<
+                Utils::defaultOffsetDocInfo << "The background text color contains red." << endl;
+            if (CONSOLE_PROPS.FillAttributes[i] & BACKGROUND_INTENSITY) cout << "BACKGROUND_INTENSITY: "<<
+                Utils::defaultOffsetDocInfo << "The background text color is intensified." << endl;
         }
     }
 }
@@ -477,20 +565,31 @@ void ExtraData::parseFillAttributes(bool popupFillAttributes) {
 void ExtraData::parseFontFamily() {
     // Первые 2 байта - font family
     for (int i = 0; i < CONSOLE_PROPS.PopupFillAttributes.size() - 2; ++i) {
-        if (CONSOLE_PROPS.FontFamily[i] & FF_DONTCARE) cout << "FF_DONTCARE, ";
-        if (CONSOLE_PROPS.FontFamily[i] & FF_ROMAN) cout << "FF_ROMAN, ";
-        if (CONSOLE_PROPS.FontFamily[i] & FF_SWISS) cout << "FF_SWISS, ";
-        if (CONSOLE_PROPS.FontFamily[i] & FF_MODERN) cout << "FF_MODERN, ";
-        if (CONSOLE_PROPS.FontFamily[i] & FF_SCRIPT) cout << "FF_SCRIPTE, ";
-        if (CONSOLE_PROPS.FontFamily[i] & FF_DECORATIVE) cout << "FF_DECORATIVE, ";
+        if (CONSOLE_PROPS.FontFamily[i] & FF_DONTCARE) cout << "FF_DONTCARE: "<<
+            Utils::defaultOffsetDocInfo << "The font family is unknown." << endl;
+        if (CONSOLE_PROPS.FontFamily[i] & FF_ROMAN) cout << "FF_ROMAN: "<<
+            Utils::defaultOffsetDocInfo << "The font is variable-width with serifs; for example, \"Times New Roman\"." << endl;
+        if (CONSOLE_PROPS.FontFamily[i] & FF_SWISS) cout << "FF_SWISS: "<<
+            Utils::defaultOffsetDocInfo << "The font is variable-width without serifs; for example, \"Arial\"." << endl;
+        if (CONSOLE_PROPS.FontFamily[i] & FF_MODERN) cout << "FF_MODERN: "<<
+            Utils::defaultOffsetDocInfo << "The font is fixed-width, with or without serifs; for example, \"Courier New\"." << endl;
+        if (CONSOLE_PROPS.FontFamily[i] & FF_SCRIPT) cout << "FF_SCRIPTE: "<<
+            Utils::defaultOffsetDocInfo << "The font is designed to look like handwriting; for example, \"Cursive\"." << endl;
+        if (CONSOLE_PROPS.FontFamily[i] & FF_DECORATIVE) cout << "FF_DECORATIVE: "<<
+            Utils::defaultOffsetDocInfo << "The font is a novelty font; for example, \"Old English\"." << endl;
     }
     // Последние 2 байта - font pitch (A bitwise OR of one or more of the following font-pitch bits ?)
     for (int i = 2; i < CONSOLE_PROPS.PopupFillAttributes.size(); ++i) {
-        if (CONSOLE_PROPS.FontFamily[i] & TMPF_NONE) cout << "TMPF_NONE, ";
-        if (CONSOLE_PROPS.FontFamily[i] & TMPF_FIXED_PITCH) cout << "TMPF_FIXED_PITCH, ";
-        if (CONSOLE_PROPS.FontFamily[i] & TMPF_VECTOR) cout << "TMPF_VECTOR, ";
-        if (CONSOLE_PROPS.FontFamily[i] & TMPF_TRUETYPE) cout << "TMPF_TRUETYPE, ";
-        if (CONSOLE_PROPS.FontFamily[i] & TMPF_DEVICE) cout << "TMPF_DEVICE, ";
+        if (CONSOLE_PROPS.FontFamily[i] & TMPF_NONE) cout << "TMPF_NONE: "<<
+            Utils::defaultOffsetDocInfo << "A font pitch does not apply." << endl;
+        if (CONSOLE_PROPS.FontFamily[i] & TMPF_FIXED_PITCH) cout << "TMPF_FIXED_PITCH: "<<
+            Utils::defaultOffsetDocInfo << "The font is a fixed-pitch font." << endl;
+        if (CONSOLE_PROPS.FontFamily[i] & TMPF_VECTOR) cout << "TMPF_VECTOR: "<<
+            Utils::defaultOffsetDocInfo << "The font is a vector font." << endl;
+        if (CONSOLE_PROPS.FontFamily[i] & TMPF_TRUETYPE) cout << "TMPF_TRUETYPE: "<<
+            Utils::defaultOffsetDocInfo << "The font is a true-type font." << endl;
+        if (CONSOLE_PROPS.FontFamily[i] & TMPF_DEVICE) cout << "TMPF_DEVICE: "<<
+            Utils::defaultOffsetDocInfo << "The font is specific to the device." << endl;
     }
 }
 void ExtraData::parseFontWeight() {
@@ -908,8 +1007,19 @@ void  ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType,
         else cout << Utils::defaultOffsetDocInfo << "Type is Array of 4-byte unsigned integers, and the minimum property set version is 1." << endl;
     }
 }
+void ExtraData::parseColorTableUtils(int posStart) {
+    cout << Utils::defaultOffset << CONSOLE_PROPS.ColorTable[posStart] << " " << CONSOLE_PROPS.ColorTable[posStart + 1] << " " <<
+         CONSOLE_PROPS.ColorTable[posStart + 2] << " " << CONSOLE_PROPS.ColorTable[posStart + 3] << endl;
+}
+void ExtraData::parseColorTable() {
+    for(int i = 0 ; i < 15; ++i){
+        cout << Utils::defaultOffset << i << ":" << endl;
+        parseColorTableUtils(4*i);
+    }
+    cout << Utils::defaultOffsetDocInfo << "A table of 16 32-bit, unsigned integers specifying the RGB colors" <<
+        Utils::defaultOffsetDocInfo << " RGB(Red, Green, Blue) format: #RR GG BB" << endl;
+}
 
-// TODO: рассмотреть ещё не распаршенные структуры в полях (цвета, шрифты...)
 void ExtraData::printExtraData() {
     cout << "_______________________ExtraData_________________________" << endl;
 
@@ -940,64 +1050,80 @@ void ExtraData::printExtraData() {
         cout << "   HistoryBufferSize:               " << dec << Utils::lenFourBytes(CONSOLE_PROPS.HistoryBufferSize) << " characters" << endl;
         cout << "   NumberOfHistoryBuffers:          " << dec << Utils::lenFourBytes(CONSOLE_PROPS.NumberOfHistoryBuffers) << endl;
         cout << "   HistoryNoDup:                    "; parseHistoryNoDup();
-        // TODO: дописать парсинг RGB colors - red (R), green (G), and blue (B) intensities in a color.
-        cout << "   ColorTable:                      "; Utils::print_vec(CONSOLE_PROPS.ColorTable);
+        // Сделан просто вывод в hex формате без перевода в название цвета (не понятно, почему 16 записеё и по 4 байта)
+        cout << "   ColorTable:                      "; parseColorTable();
     }
     if (consoleFEIsSet) {
         /* CONSOLE_FE_PROPS struct*/
         cout << "CONSOLE_FE_PROPS: " << endl;
-        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(CONSOLE_FE_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(CONSOLE_FE_PROPS.BlockSize) << " bytes" << endl <<
+            Utils::defaultOffsetDocInfo << "This value MUST be 0x0000000C." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(CONSOLE_FE_PROPS.BlockSignature);
-        // TODO: дописать парсинг:
+            cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000004." << endl;
+        // TODO: дописать парсинг: (очень много значений) - нужен ли детальный парсинг?
         // For details concerning the structure and meaning of language code identifiers, see [MS-LCID].
-        // For additional background information, see [MSCHARSET], [MSDN-CS], and [MSDOCS-CodePage].
         cout << "   CodePage:                        "; Utils::print_vec(CONSOLE_FE_PROPS.CodePage);
     }
     if (drownPropsIsSet) {
         /* DARWIN_PROPS struct*/
         cout << "DARWIN_PROPS: " << endl;
-        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(DARWIN_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(DARWIN_PROPS.BlockSize) << " bytes" << endl <<
+            Utils::defaultOffsetDocInfo << "This value MUST be 0x00000314." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(DARWIN_PROPS.BlockSignature);
+            cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000006." << endl;
         cout << "   DarwinDataAnsi:                  "; Utils::print_vec(DARWIN_PROPS.DarwinDataAnsi);
         cout << "   DarwinDataUnicode:               "; Utils::print_vec_unicode(DARWIN_PROPS.DarwinDataUnicode);
     }
     if (environmentPropsIsSet) {
         /* ENVIRONMENT_PROPS struct*/
         cout << "ENVIRONMENT_PROPS: " << endl;
-        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(ENVIRONMENT_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(ENVIRONMENT_PROPS.BlockSize) << " bytes" << endl <<
+            Utils::defaultOffsetDocInfo << "This value MUST be 0x00000314." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(ENVIRONMENT_PROPS.BlockSignature);
+            cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000001." << endl;
         cout << "   TargetAnsi:                      "; Utils::print_vec_unicode(ENVIRONMENT_PROPS.TargetAnsi);
         cout << "   TargetUnicode:                   "; Utils::print_vec_unicode(ENVIRONMENT_PROPS.TargetUnicode);
     }
     if (iconEnvironmentPropsIsSet) {
         /* ICON_ENVIRONMENT_PROPS struct*/
         cout << "ICON_ENVIRONMENT_PROPS: " << endl;
-        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(ICON_ENVIRONMENT_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(ICON_ENVIRONMENT_PROPS.BlockSize) << " bytes" << endl <<
+            Utils::defaultOffsetDocInfo << "This value MUST be 0x00000314." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(ICON_ENVIRONMENT_PROPS.BlockSignature);
+            cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000007." << endl;
         cout << "   TargetAnsi:                      "; Utils::print_vec_unicode(ICON_ENVIRONMENT_PROPS.TargetAnsi);
         cout << "   TargetUnicode:                   "; Utils::print_vec_unicode(ICON_ENVIRONMENT_PROPS.TargetUnicode);
     }
     if (knownFolderPropsIsSet) {
         /* KNOWN_FOLDER_PROPS struct*/
         cout << "KNOWN_FOLDER_PROPS: " << endl;
-        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(KNOWN_FOLDER_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(KNOWN_FOLDER_PROPS.BlockSize) << " bytes" << endl <<
+            Utils::defaultOffsetDocInfo << "This value MUST be 0x0000001C." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(KNOWN_FOLDER_PROPS.BlockSignature);
-        // TODO: дописать парсинг
-        // A value in GUID packet representation ([MS-DTYP] section 2.3.4.2) that specifies the folder GUID ID.
-        cout << "   KnownFolderID:                   "; Utils::print_vec(KNOWN_FOLDER_PROPS.KnownFolderID);
-        cout << "   Offset:                          "; Utils::print_vec(KNOWN_FOLDER_PROPS.Offset);
+            cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA000000B." << endl;
+        cout << "   KnownFolderID:                   "; Utils::printSid(Utils::getSidForComparing(KNOWN_FOLDER_PROPS.KnownFolderID));
+            cout << endl << "TEST: " << Utils::getSidForComparing(KNOWN_FOLDER_PROPS.KnownFolderID).data() << endl;
+            cout << " : " << getClsidType(KNOWN_FOLDER_PROPS.KnownFolderID) << endl;
+        cout << "   Offset:                          " << dec << Utils::lenFourBytes(KNOWN_FOLDER_PROPS.Offset) << " bytes." << endl <<
+            Utils::defaultOffsetDocInfo << "Specifies the location of the ItemID of the first child segment of the IDList specified by KnownFolderID. " << endl <<
+            Utils::defaultOffsetDocInfo << "This value is the offset, in bytes, into the link target IDList." << endl;
     }
     if (propertyStorePropsIsSet) {
         /* PROPERTY_STORE_PROPS struct*/
+        // TODO: в другой программе есть PROPERTY_STORE_PROPS, понять, почему тут её нет
         cout << "PROPERTY_STORE_PROPS: " << endl;
-        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(PROPERTY_STORE_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(PROPERTY_STORE_PROPS.BlockSize) << " bytes" << endl <<
+        Utils::defaultOffsetDocInfo << "This value MUST be greater than or equal to 0x0000000C." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(PROPERTY_STORE_PROPS.BlockSignature);
+            cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000009." << endl;
         cout << "   PropertyStore:                   ";                             // A serialized property storage structure ([MS-PROPSTORE] section 2.2).
         cout << "       StorageSize:                 " << dec << Utils::lenFourBytes(PROPERTY_STORE_PROPS.PropertyStore.StorageSize)
                                                        << " bytes" << endl;
         cout << "       Version:                     "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.Version);
-        cout << "       FormatID:                    "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.FormatID);
-            cout << " Has to be equal to 0x53505331." <<  endl;
+            cout << Utils::defaultOffsetDocInfo << " Has to be equal to 0x53505331." << endl;
+        cout << "       FormatID:                    "; Utils::printSid(PROPERTY_STORE_PROPS.PropertyStore.FormatID);
+        // TODO: сделать getClsidType - Нужно ли тут?
+            cout << " : " << getClsidType(KNOWN_FOLDER_PROPS.KnownFolderID) << endl;
 
         for (int i = 0; i < PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue.size(); ++i) {
             cout << "     SerializedPropertyValue " << i << ":" << endl;
@@ -1033,31 +1159,47 @@ void ExtraData::printExtraData() {
     if (shimPropsIsSet) {
         /* SHIM_PROPS struct*/
         cout << "SHIM_PROPS: " << endl;
-        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(SHIM_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(SHIM_PROPS.BlockSize) << " bytes" << endl <<
+            Utils::defaultOffsetDocInfo << "This value MUST be greater than or equal to 0x00000088." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(SHIM_PROPS.BlockSignature);
+            cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000008." << endl;
         cout << "   LayerName:                       "; Utils::print_vec_unicode(SHIM_PROPS.LayerName);
     }
     if (sFolderPropsIsSet) {
         /* SPECIAL_FOLDER_PROPS struct*/
         cout << "SPECIAL_FOLDER_PROPS: " << endl;
-        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(SPECIAL_FOLDER_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(SPECIAL_FOLDER_PROPS.BlockSize) << " bytes" << endl <<
+            Utils::defaultOffsetDocInfo << "This value MUST be 0x00000010." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(SPECIAL_FOLDER_PROPS.BlockSignature);
-        cout << "   SpecialFolderID:                 "; Utils::print_vec(SPECIAL_FOLDER_PROPS.SpecialFolderID);
-        cout << "   Offset:                          "; Utils::print_vec(SPECIAL_FOLDER_PROPS.Offset);
+            cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000005." << endl;
+        cout << "   SpecialFolderID:                 " << dec << Utils::lenFourBytes(SPECIAL_FOLDER_PROPS.SpecialFolderID) <<  " : " <<
+            getSpecialFolderType(Utils::vectFourBytesToUnsignedInt(SPECIAL_FOLDER_PROPS.SpecialFolderID, 0)) << endl;
+        cout << "   Offset:                          " << dec << Utils::lenFourBytes(SPECIAL_FOLDER_PROPS.Offset) << " bytes." << endl <<
+            Utils::defaultOffsetDocInfo << "Specifies the location of the ItemID of the first child segment of the IDList specified by SpecialFolderID. " << endl <<
+            Utils::defaultOffsetDocInfo << "This value is the offset, in bytes, into the link target IDList." << endl;
     }
     if (trackerPropsIsSet) {
         /* TRACKER_PROPS struct*/
         cout << "TRACKER_PROPS: " << endl;
-        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(TRACKER_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(TRACKER_PROPS.BlockSize) << " bytes" << endl <<
+            Utils::defaultOffsetDocInfo << "This value MUST be 0x00000060." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(TRACKER_PROPS.BlockSignature);
-        cout << "   Length:                          "  << dec << Utils::lenFourBytes(TRACKER_PROPS.Length) << " bytes" << endl;
+            cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000003." << endl;
+        cout << "   Length:                          "  << dec << Utils::lenFourBytes(TRACKER_PROPS.Length) << " bytes" << endl <<
+            Utils::defaultOffsetDocInfo << "This value MUST be 88 bytes." << endl;
         cout << "   Version:                         "; Utils::print_vec(TRACKER_PROPS.Version);
-        // TODO: дописать парсинг
-        // NetBIOS name: A 16-byte address that is used to identify a NetBIOS resource on the network.
-        // For more information, see [RFC1001] and [RFC1002].
-        cout << "   MachineID:                       "; Utils::print_vec_unicode(TRACKER_PROPS.MachineID);
-        // TODO: дописать парсинг
+            cout << Utils::defaultOffsetDocInfo << "This value MUST be 0x00000000." << endl;
+        cout << "   MachineID (NetBIOS name):         "; Utils::print_vec_unicode(TRACKER_PROPS.MachineID);
+        // TODO: дописать парсинг - структуры не понятны
         //Two values in GUID packet representation ([MS-DTYP] section 2.3.4.2)
+        /*  Droid volume identifier:                62f99ac8-036c-41b6-a702-330552879fa8
+            Droid file identifier:                  83d94e89-d171-11e9-bbda-ace01058c2c5
+            Birth droid volume identifier:          62f99ac8-036c-41b6-a702-330552879fa8
+            Birth droid file identifier:            83d94e89-d171-11e9-bbda-ace01058c2c5
+            MAC address:                            ac:e0:10:58:c2:c5
+            UUID timestamp:                         09/07/2019 (13:15:08.507) [UTC]
+            UUID sequence number:                   15322
+         */
         cout << "   Droid:                           "; Utils::print_vec(TRACKER_PROPS.Droid);
         cout << "   DroidBirth:                      "; Utils::print_vec(TRACKER_PROPS.DroidBirth);
     }
@@ -1065,8 +1207,11 @@ void ExtraData::printExtraData() {
         /* VISTA_AND_ABOVE_IDLIST_PROPS struct*/
         cout << "VISTA_AND_ABOVE_IDLIST_PROPS: " << endl;
         cout << "   BlockSize:                       " << dec
-            << Utils::lenFourBytes(VISTA_AND_ABOVE_IDLIST_PROPS.BlockSize) << " bytes" << endl;
+            << Utils::lenFourBytes(VISTA_AND_ABOVE_IDLIST_PROPS.BlockSize) << " bytes" << endl <<
+            Utils::defaultOffsetDocInfo << "This value MUST be greater than or equal to 0x0000000A." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.BlockSignature);
+            cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA000000C." << endl;
+        //TODO: РАСПАРСИТЬ Data в IDList
         cout << "   IDList: " <<  endl;
         for(int i = 0; i < VISTA_AND_ABOVE_IDLIST_PROPS.IDList.size(); ++i){
             cout << "       ItemID " << i + 1 << endl;
@@ -1078,6 +1223,35 @@ void ExtraData::printExtraData() {
     }
     cout << "TerminalBlock:                      "; Utils::print_vec(TerminalBlock);
     cout << "_________________________________________________________" << endl;
+}
+
+// TODO: Исправить поиск папок: попробавать сделать вектор как hex и сравнивать
+std::string ExtraData::getClsidType(std::vector<unsigned int> vec) {
+//    for ( int i = 0; clsid_list[i].clsid != GUID_Unknown; i++) {
+//        if (compareClsidType(vec, clsid_list[i].clsid)) { //memcmp(clsid.data(), clsid_list[i].clsid, 16) == 0
+//            return clsid_list[i].name;
+//        }
+//    }
+
+    //GUID_UsersFiles
+    if (compareClsidType(vec, GUID_UsersFiles)) { //memcmp(clsid.data(), clsid_list[i].clsid, 16) == 0
+        return clsid_list[0].name;
+    }
+    return "Not found";
+}
+bool ExtraData::compareClsidType(std::vector<unsigned int> vec, std::string clsid) {
+    for(int i = 0 ; i < 16; ++i ) {
+        //TODO: ПОЧЕМУ  symb :ce ffffffce
+        cout << " symb :" << vec[i] << " " << hex << (short)clsid.at(i) << endl;
+    }
+    cout << endl;
+    for(int i = 0 ; i < 16; ++i ){
+        //TODO: ПОЧЕМУ  symb :ce ffffffce
+        cout << " symb :" << vec[i] << " " << hex << (unsigned int)clsid.at(i) << endl;
+        if(vec[i] != clsid.at(i))
+            return false;
+    }
+    return true;
 }
 
 void ExtraData::printExtraDataInHexStyle() {
@@ -1149,7 +1323,7 @@ void ExtraData::printExtraDataInHexStyle() {
         cout << "KNOWN_FOLDER_PROPS: " << endl;
         cout << "   BlockSize:                       "; Utils::print_vec(KNOWN_FOLDER_PROPS.BlockSize);
         cout << "   BlockSignature:                  "; Utils::print_vec(KNOWN_FOLDER_PROPS.BlockSignature);
-        cout << "   KnownFolderID:                   "; Utils::print_vec(KNOWN_FOLDER_PROPS.KnownFolderID);
+        cout << "   KnownFolderID:                   "; Utils::printSid(KNOWN_FOLDER_PROPS.KnownFolderID); cout << endl;
         cout << "   Offset:                          "; Utils::print_vec(KNOWN_FOLDER_PROPS.Offset);
     }
     if (propertyStorePropsIsSet) {
@@ -1157,13 +1331,11 @@ void ExtraData::printExtraDataInHexStyle() {
         cout << "PROPERTY_STORE_PROPS: " << endl;
         cout << "   BlockSize:                       "; Utils::print_vec(PROPERTY_STORE_PROPS.BlockSize);
         cout << "   BlockSignature:                  "; Utils::print_vec(PROPERTY_STORE_PROPS.BlockSignature);
-        // TODO: дописать парсинг
-        // A serialized property storage structure ([MS-PROPSTORE] section 2.2).
         cout << "   PropertyStore:                   ";
         cout << "       StorageSize:                 "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.StorageSize);
         cout << "       Version:                     "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.Version);
-        cout << "       FormatID:                    "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.FormatID);
             cout << " Has to be equal to 0x53505331." <<  endl;
+        cout << "       FormatID:                    "; Utils::printSid(PROPERTY_STORE_PROPS.PropertyStore.FormatID); cout << endl;
 
         for (int i = 0; i < PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue.size(); ++i) {
             cout << "     SerializedPropertyValue " << i << ":" << endl;
@@ -1239,3 +1411,74 @@ void ExtraData::printExtraDataInHexStyle() {
     cout << "_________________________________________________________" << endl;
 }
 
+std::string ExtraData::getSpecialFolderType(unsigned int type) {
+    switch (type) {
+        case SF_Desktop:				{ return "Desktop"; } break;
+        case SF_Internet:				{ return "Internet"; } break;
+        case SF_Programs:				{ return "Programs"; } break;
+        case SF_Controls:				{ return "Controls"; } break;
+        case SF_Printers:				{ return "Printers"; } break;
+        case SF_Personal:				{ return "Personal"; } break;
+        case SF_Favorites:				{ return "Favorites"; } break;
+        case SF_Startup:				{ return "Startup"; } break;
+        case SF_Recent:					{ return "Recent"; } break;
+        case SF_SendTo:					{ return "SendTo"; } break;
+        case SF_BitBucket:				{ return "BitBucket"; } break;
+        case SF_StartMenu:				{ return "StartMenu"; } break;
+        case SF_MyDocuments:			{ return "MyDocuments"; } break;
+        case SF_MyMusic:				{ return "MyMusic"; } break;
+        case SF_MyVideo:				{ return "MyVideo"; } break;
+        case SF_DesktopDirectory:		{ return "DesktopDirectory"; } break;
+        case SF_Drives:					{ return "Drives"; } break;
+        case SF_Network:				{ return "Network"; } break;
+        case SF_Nethood:				{ return "Nethood"; } break;
+        case SF_Fonts:					{ return "Fonts"; } break;
+        case SF_Templates:				{ return "Templates"; } break;
+        case SF_CommonStartMenu:		{ return "CommonStartMenu"; } break;
+        case SF_CommonPrograms:			{ return "CommonPrograms"; } break;
+        case SF_CommonStartup:			{ return "CommonStartup"; } break;
+        case SF_CommonDesktopDirectory:	{ return "CommonDesktopDirectory"; } break;
+        case SF_AppData:				{ return "AppData"; } break;
+        case SF_PrintHood:				{ return "PrintHood"; } break;
+        case SF_LocalAppData:			{ return "LocalAppData"; } break;
+        case SF_AltStartup:				{ return "AltStartup"; } break;
+        case SF_CommonAltStartup:		{ return "CommonAltStartup"; } break;
+        case SF_CommonFavorites:		{ return "CommonFavorites"; } break;
+        case SF_InternetCache:			{ return "InternetCache"; } break;
+        case SF_Cookies:				{ return "Cookies"; } break;
+        case SF_History:				{ return "History"; } break;
+        case SF_CommonAppData:			{ return "CommonAppData"; } break;
+        case SF_Windows:				{ return "Windows"; } break;
+        case SF_System:					{ return "System"; } break;
+        case SF_ProgramFiles:			{ return "ProgramFiles"; } break;
+        case SF_MyPictures:				{ return "MyPictures"; } break;
+        case SF_Profile:				{ return "Profile"; } break;
+        case SF_SystemX86:				{ return "SystemX86"; } break;
+        case SF_ProgramFilesX86:		{ return "ProgramFilesX86"; } break;
+        case SF_ProgramFilesCommon:		{ return "ProgramFilesCommon"; } break;
+        case SF_ProgramFilesCommonX86:	{ return "ProgramFilesCommonX86"; } break;
+        case SF_CommonTemplates:		{ return "CommonTemplates"; } break;
+        case SF_CommonDocuments:		{ return "CommonDocuments"; } break;
+        case SF_CommonAdminTools:		{ return "CommonAdminTools"; } break;
+        case SF_AdminTools:				{ return "AdminTools"; } break;
+        case SF_Connections:			{ return "Connections"; } break;
+        case SF_CommonMusic:			{ return "CommonMusic"; } break;
+        case SF_CommonPictures:			{ return "CommonPictures"; } break;
+        case SF_CommonVideo:			{ return "CommonVideo"; } break;
+        case SF_Resources:				{ return "Resources"; } break;
+        case SF_ResourcesLocalized:		{ return "ResourcesLocalized"; } break;
+        case SF_CommonOEMLinks:			{ return "CommonOEMLinks"; } break;
+        case SF_CDBurnArea:				{ return "CDBurnArea"; } break;
+        case SF_ComputersNearMe:		{ return "ComputersNearMe"; } break;
+        case SF_FlagCreate:				{ return "FlagCreate"; } break;
+        case SF_FlagDontVerify:			{ return "FlagDontVerify"; } break;
+        case SF_FlagNoAlias:			{ return "FlagNoAlias"; } break;
+        case SF_FlagPerUserInit:		{ return "FlagPerUserInit"; } break;
+        case SF_FlagMask:				{ return "FlagMask"; } break;
+        default:
+            return "Unknown";
+    }
+}
+
+
+#pragma clang diagnostic pop

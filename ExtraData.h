@@ -9,30 +9,7 @@
 #include <vector>
 #include "ReadStream.h"
 #include "LinkTargetIDList.h"
-
-// FillAttributes for ConsolePropsStruct
-#define FOREGROUND_BLUE         0x0001      // The foreground text color contains blue.
-#define FOREGROUND_GREEN        0x0002      // The foreground text color contains green.
-#define FOREGROUND_RED          0x0004      // The foreground text color contains red.
-#define FOREGROUND_INTENSITY    0x0008      // The foreground text color is intensified.
-#define BACKGROUND_BLUE         0x0010      // The background text color contains blue.
-#define BACKGROUND_GREEN        0x0020      // The background text color contains green.
-#define BACKGROUND_RED          0x0040      // The background text color contains red.
-#define BACKGROUND_INTENSITY    0x0080      // The background text color is intensified.
-
-// FontFamily  for ConsolePropsStruct
-#define FF_DONTCARE      0x0000      // The font family is unknown.
-#define FF_ROMAN         0x0010      // The font is variable-width with serifs; for example, "Times New Roman".
-#define FF_SWISS         0x0020      // The font is variable-width without serifs; for example, "Arial".
-#define FF_MODERN        0x0030      // The font is fixed-width, with or without serifs; for example, "Courier New".
-#define FF_SCRIPT        0x0040      // The font is designed to look like handwriting; for example, "Cursive".
-#define FF_DECORATIVE    0x0050      // The font is a novelty font; for example, "Old English".
-// font-pitch
-#define TMPF_NONE          0x0000      // A font pitch does not apply.
-#define TMPF_FIXED_PITCH   0x0001      // The font is a fixed-pitch font.
-#define TMPF_VECTOR        0x0002      // The font is a vector font.
-#define TMPF_TRUETYPE      0x0004      // The font is a true-type font.
-#define TMPF_DEVICE        0x0008      // The font is specific to the device.
+#include "ExtraDataConstants.h"
 
 class ExtraData {
 private:
@@ -186,14 +163,24 @@ private:
     void parseInsertMode();
     void parseAutoPosition();
     void parseHistoryNoDup();
+    void parseColorTable();
+    void parseColorTableUtils(int posStart);
     void parseTypedPropertyValueTypeAndValue(bool parseType,
                 PropertyStorePropsStruct::StringOrIntegerName::TypedPropertyValue tpv);
     void setStringNameStructInPropsStorage();
+    std::string getClsidType(std::vector<unsigned int> clsid);
+    std::string getSpecialFolderType(unsigned int type);
+    bool compareClsidType(std::vector<unsigned int> vec, std::string clsid);
 
 public:
     ExtraData(ReadStream *readStream, int readFrom);
     void printExtraData();
     void printExtraDataInHexStyle();
+
+    struct clsid_type {
+        std::string clsid;
+        std::string name;
+    };
 };
 
 

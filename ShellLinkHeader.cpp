@@ -81,7 +81,7 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
     void ShellLinkHeader::printHeaderInHexStyle() {
         cout << "_____________ShellLinkHeader in HEX style________________" << endl;
         cout << "HeaderSize:                         "; Utils::print_vec(HeaderSize);
-        cout << "LinkCLSID:                          "; printLinkCLSID();
+        cout << "LinkCLSID:                          "; Utils::printSid(LinkCLSID); cout << endl;
         cout << "LinkFlags:                          "; Utils::print_vec(LinkFlags);
         cout << "FileAttributes:                     "; Utils::print_vec(FileAttributes);
         cout << "CreationTime:                       "; Utils::print_vec(CreationTime);
@@ -95,15 +95,6 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
         cout << "Reserved2:                          "; Utils::print_vec(Reserved2);
         cout << "Reserved3:                          "; Utils::print_vec(Reserved3);
         cout << "_________________________________________________________" << endl;
-    }
-
-    void ShellLinkHeader::printLinkCLSID() {
-        //00 02 14 01 -00 00-00 00-C0 00-00 00 00 00 00 46.
-        cout << LinkCLSID[3] <<  " " << LinkCLSID[2] << " " << LinkCLSID[1] << " " << LinkCLSID[0] << " " << "-" << " " <<
-             LinkCLSID[5]  << " " << LinkCLSID[4] << " " << "-" << " " << LinkCLSID[7] << " " << LinkCLSID[6] << " " << "-"  << " " <<
-             LinkCLSID[8] << " " << LinkCLSID[9] << " " << "-" << " " <<
-             LinkCLSID[10] << " " << LinkCLSID[11] << " " << LinkCLSID[12] << " " <<
-             LinkCLSID[13] << " " << LinkCLSID[14] << " " <<LinkCLSID[15] << endl;
     }
 
     bool ShellLinkHeader::isHeaderValid() {
@@ -424,7 +415,7 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
     void ShellLinkHeader::printHeader(){
         cout << "____________________ShellLinkHeader______________________" << endl;
         cout << "HeaderSize:                         " << dec << Utils::lenFourBytes(HeaderSize) << " bytes" << endl;
-        cout << "LinkCLSID:                          "; printLinkCLSID();
+        cout << "LinkCLSID:                          "; Utils::printSid(LinkCLSID); cout << endl;
         cout << "LinkFlags:                          " << endl; parseLinkFlags();
         cout << "FileAttributes:                     " << endl; parseFileAttributesFlags();
         cout << "CreationTime:                       "; Utils::getDate(CreationTime);

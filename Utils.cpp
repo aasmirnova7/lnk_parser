@@ -14,7 +14,7 @@ using namespace std;
 std::string Utils::defaultOffset = "                                    ";
 std::string Utils::defaultOffsetDocInfo = "                                      ";
 
-int Utils::lenFourBytes(std::vector<unsigned int> vec) {
+unsigned int Utils::lenFourBytes(std::vector<unsigned int> vec) {
     unsigned int result = (vec[0] << 8) | vec[1];
     unsigned int result2 = (vec[2] << 8) | vec[3];
     unsigned int result3 = (result << 16) | result2;
@@ -34,16 +34,12 @@ int Utils::lenTwoBytes(std::vector<unsigned char> vec) {
     unsigned int result = (vec[0] << 8) | vec[1];
     std::string r = to_string(result);
 
-   // cout <<" str = " << r  << " R = " << std::strtoul( r.c_str(), 0, 16) << endl;
-    return result;//std::strtoul(to_string(result).c_str(), 0, 16);
+    return result;
 }
 
 int Utils::lenTwoBytes(std::vector<unsigned int> vec) {
     unsigned int result = (vec[0] << 8) | vec[1];
-    std::string r = to_string(result);
-
-     //cout <<" str = " << r  << " R = " << std::strtoul(r.c_str(), 0, 16) << endl;
-    return result;//std::strtoul(to_string(result).c_str(), 0, 16);
+    return result;
 }
 
 void Utils::print_vec(std::vector<unsigned int>& vec) {
@@ -84,11 +80,8 @@ std::vector<LinkTargetIDList::ItemIDList> Utils::fillItemIdList(int count, std::
         it = it + 2;
         reverse(itemIdList.ItemIDSize.begin(), itemIdList.ItemIDSize.end());
         int itemIDSize = Utils::lenTwoBytes(itemIdList.ItemIDSize);
-        // cout << "\nitemIDSize " << dec <<  itemIDSize  << endl;
 
         copy(it, it + itemIDSize - 2, std::back_inserter(itemIdList.Data));       // itemIDSize byte
-        // cout << "itemIdList.Data = "; Utils::print_vec(itemIdList.Data);
-        // cout << " itemIdList.Data size = " << dec << itemIdList.Data.size() << endl;
         reverse(itemIdList.Data.begin(), itemIdList.Data.end());
         it = it + itemIDSize - 2;
 
@@ -98,7 +91,7 @@ std::vector<LinkTargetIDList::ItemIDList> Utils::fillItemIdList(int count, std::
     return IDList;
 }
 
-unsigned int Utils::getPartOfFileTime(std::vector<unsigned int> vec, int pos) {
+unsigned int Utils::vectFourBytesToUnsignedInt(std::vector<unsigned int> vec, int pos) {
     unsigned int result = (vec[pos] << 8) | vec[pos+1];
     unsigned int result2 = (vec[pos+2] << 8) | vec[pos+3];
     unsigned int result3 = (result << 16) | result2;
@@ -108,11 +101,32 @@ unsigned int Utils::getPartOfFileTime(std::vector<unsigned int> vec, int pos) {
 // TODO: время отличается на 3 часа + для WriteTime неверная дата + у AccessTime неверно секунды
 void Utils::getDate(std::vector<unsigned int> vec) {
     FILETIME a;
-    a.dwHighDateTime = getPartOfFileTime(vec, 0);
-    a.dwLowDateTime = getPartOfFileTime(vec, 4);
+    a.dwHighDateTime = vectFourBytesToUnsignedInt(vec, 0);
+    a.dwLowDateTime = vectFourBytesToUnsignedInt(vec, 4);
 
     SYSTEMTIME b;
     FileTimeToSystemTime(&a, &b);  // Перевод из FILETIME в SYSTEMTIME
-    cout << dec << b.wHour + 3 << ":" << dec << b.wMinute   << ":" << dec << b.wSecond << "   " <<
-         b.wDay << "." << dec << b.wMonth << "." << dec << b.wYear << endl;
+    cout << dec << b.wDay << "." << dec << b.wMonth << "." << dec << b.wYear << "   (" <<
+        dec << b.wHour << ":" << dec << b.wMinute   << ":" << dec << b.wSecond << ") [UTC]"<< endl;
+}
+void Utils::printSid(std::vector<unsigned int> vec) {
+    cout << vec[3] <<  " " << vec[2] << " " << vec[1] << " " << vec[0] << " " << "-" << " " <<
+         vec[5]  << " " << vec[4] << " " << "-" << " " << vec[7] << " " << vec[6] << " " << "-"  << " " <<
+         vec[8] << " " << vec[9] << " " << "-" << " " <<
+         vec[10] << " " << vec[11] << " " << vec[12] << " " <<
+         vec[13] << " " << vec[14] << " " << vec[15];
+}
+
+std::vector<unsigned int> Utils::getSidForComparing(std::vector<unsigned int> vec) {
+    std::vector<unsigned int> tmpVec;
+    tmpVec.push_back(vec[3]); tmpVec.push_back(vec[2]);
+    tmpVec.push_back(vec[1]); tmpVec.push_back(vec[0]);
+    tmpVec.push_back(vec[5]); tmpVec.push_back(vec[4]);
+    tmpVec.push_back(vec[7]); tmpVec.push_back(vec[6]);
+    tmpVec.push_back(vec[8]); tmpVec.push_back(vec[9]);
+    tmpVec.push_back(vec[10]); tmpVec.push_back(vec[11]);
+    tmpVec.push_back(vec[12]); tmpVec.push_back(vec[13]);
+    tmpVec.push_back(vec[14]); tmpVec.push_back(vec[15]);
+
+    return tmpVec;
 }

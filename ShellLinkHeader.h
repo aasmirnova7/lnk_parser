@@ -199,7 +199,7 @@ class ShellLinkHeader {
 private:
     // 76 байт
     std::vector<unsigned int> HeaderSize;           //MUST be 0x0000004C
-    std::vector<unsigned int> LinkCLSID;            //MUST be 00021401-0000-0000-C000-000000000046 - ЧТО-ТО НЕ СХОДИТСЯ!!!!!!!!!!
+    std::vector<unsigned int> LinkCLSID;            //MUST be 00021401-0000-0000-C000-000000000046
     std::vector<unsigned int> LinkFlags;
     std::vector<unsigned int> FileAttributes;
     std::vector<unsigned int> CreationTime;
@@ -220,7 +220,6 @@ private:
     void fillShellLinkHeader(std::vector<unsigned char> header);
     /* Reverse All field (read left -> right) */
     void reverseAllFields();
-    void printLinkCLSID();
 
 public:
     ShellLinkHeader(std::vector<unsigned char> header);
