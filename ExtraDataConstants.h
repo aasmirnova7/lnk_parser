@@ -235,4 +235,76 @@
 #define SF_FlagPerUserInit			0x0800	// combine with CSIDL_ value to indicate per-user init (eg. upgrade)
 #define SF_FlagMask					0xFF00	// mask for all possible flag values
 
+//TypedPropertyValue
+#define VT_EMPTY              0x0000
+#define VT_NULL               0x0001
+#define VT_I2                 0x0002
+#define VT_I4                 0x0003
+#define VT_R4                 0x0004
+#define VT_R8                 0x0005
+#define VT_CY                 0x0006
+#define VT_DATE               0x0007
+#define VT_BSTR               0x0008
+#define VT_ERROR              0x000A
+#define VT_BOOL               0x000B
+#define VT_DECIMAL            0x000E
+#define VT_I1                 0x0010
+#define VT_UI1                0x0011
+#define VT_UI2                0x0012
+#define VT_UI4                0x0013
+#define VT_I8                 0x0014
+#define VT_UI8                0x0015
+#define VT_INT                0x0016
+#define VT_UINT               0x0017
+#define VT_LPSTR              0x001E
+#define VT_LPWSTR             0x001F
+#define VT_FILETIME           0x0040
+#define VT_BLOB               0x0041
+#define VT_STREAM             0x0042
+#define VT_STORAGE            0x0043
+#define VT_STREAMED_OBJECT    0x0044
+#define VT_STORED_OBJECT      0x0045
+#define VT_BLOB_OBJECT        0x0046
+#define VT_CF                 0x0047
+#define VT_CLSID              0x0048
+#define VT_VERSIONED_STREAM   0x0049
+#define VT_VECTOR_VT_I2       0x1002
+#define VT_VECTOR_VT_I4       0x1003
+#define VT_VECTOR_VT_R4       0x1004
+#define VT_VECTOR_VT_R8       0x1005
+#define VT_VECTOR_VT_CY       0x1006
+#define VT_VECTOR_VT_DATE     0x1007
+#define VT_VECTOR_VT_BSTR     0x1008
+#define VT_VECTOR_VT_ERROR    0x100A
+#define VT_VECTOR_VT_BOOL     0x100B
+#define VT_VECTOR_VT_VARIANT  0x100C
+#define VT_VECTOR_VT_I1       0x1010
+#define VT_VECTOR_VT_UI1      0x1011
+#define VT_VECTOR_VT_UI2      0x1012
+#define VT_VECTOR_VT_UI4      0x1013
+#define VT_VECTOR_VT_I8       0x1014
+#define VT_VECTOR_VT_UI8      0x1015
+#define VT_VECTOR_VT_LPSTR    0x101E
+#define VT_VECTOR_VT_LPWSTR   0x101F
+#define VT_VECTOR_VT_FILETIME 0x1040
+#define VT_VECTOR_VT_CF       0x1047
+#define VT_VECTOR_VT_CLSID    0x1048
+#define VT_ARRAY_VT_I2        0x2002
+#define VT_ARRAY_VT_I4        0x2003
+#define VT_ARRAY_VT_R4        0x2004
+#define VT_ARRAY_VT_R8        0x2005
+#define VT_ARRAY_VT_CY        0x2006
+#define VT_ARRAY_VT_DATE     0x2007
+#define VT_ARRAY_VT_BSTR     0x2008
+#define VT_ARRAY_VT_ERROR    0x200A
+#define VT_ARRAY_VT_BOOL     0x200B
+#define VT_ARRAY_VT_VARIANT  0x200C
+#define VT_ARRAY_VT_DECIMAL  0x200E
+#define VT_ARRAY_VT_I1       0x2010
+#define VT_ARRAY_VT_UI1      0x2011
+#define VT_ARRAY_VT_UI2      0x2012
+#define VT_ARRAY_VT_UI4      0x2013
+#define VT_ARRAY_VT_INT      0x2016
+#define VT_ARRAY_VT_UINT     0x2017
+
 #endif //MY_DIPLOM_EXTRADATACONSTANTS_H

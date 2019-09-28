@@ -227,7 +227,7 @@ public:
     void printHeaderInHexStyle();
     bool isHeaderValid();
     void parseLinkFlags(unsigned int flags);
-    void parseFileAttributesFlags();
+    void parseFileAttributesFlags(unsigned int flags);
     void parseHotKeyFlags();
     void printHeader();
     void parseShowCommand();

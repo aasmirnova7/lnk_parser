@@ -68,9 +68,6 @@ void Utils::print_vec_unicode(std::vector<unsigned int>& vec) {
         }
         std::cout << (char)vec[i];
     }
-
-//    for (int x: vec)
-//        std::cout << (char)x;
     std::cout << endl;
 }
 
@@ -109,6 +106,10 @@ unsigned int Utils::vectFourBytesToUnsignedInt(std::vector<unsigned int> vec, in
     unsigned int result2 = (vec[pos+2] << 8) | vec[pos+3];
     unsigned int result3 = (result << 16) | result2;
     return result3;
+}
+unsigned int Utils::vectTwoToUnsignedInt(std::vector<unsigned int> vec, int pos) {
+    unsigned int result = (vec[pos] << 8) | vec[pos + 1];
+    return result;
 }
 
 // TODO: время отличается на 3 часа + для WriteTime неверная дата + у AccessTime неверно секунды

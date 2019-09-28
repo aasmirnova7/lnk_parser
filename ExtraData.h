@@ -165,8 +165,7 @@ private:
     void parseHistoryNoDup();
     void parseColorTable();
     void parseColorTableUtils(int posStart);
-    void parseTypedPropertyValueTypeAndValue(bool parseType,
-                PropertyStorePropsStruct::StringOrIntegerName::TypedPropertyValue tpv);
+    void parseTypedPropertyValueTypeAndValue(bool parseType,unsigned int flag);
     void setStringNameStructInPropsStorage();
     std::string getClsidType(std::vector<unsigned int> clsid);
     std::string getSpecialFolderType(unsigned int type);

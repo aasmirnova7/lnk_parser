@@ -29,6 +29,7 @@ public:
     static void printSid(std::vector<unsigned int> vec, int pos);
     static void printMacAddr(std::vector<unsigned int> vec);
     static unsigned int vectFourBytesToUnsignedInt(std::vector<unsigned int> vec, int pos);
+    static unsigned int vectTwoToUnsignedInt(std::vector<unsigned int> vec, int pos);
     static std::vector<unsigned int> getSidForComparing(std::vector<unsigned int> vec);
 
 };

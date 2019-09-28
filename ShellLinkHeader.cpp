@@ -140,6 +140,8 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
     }
 
     void ShellLinkHeader::parseLinkFlags(unsigned int flags) {
+        if (flags == 0x00000000)
+            cout << Utils::defaultOffset << "NONE" << endl;
         if (flags & HasLinkTargetIDList) {
             cout << Utils::defaultOffset << "HasLinkTargetIDList:" << endl <<
                  Utils::defaultOffsetDocInfo << "The shell link is saved with an item ID list (IDList). " << endl <<
@@ -288,60 +290,75 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
         }
     }
 
-    void ShellLinkHeader::parseFileAttributesFlags() {
-        for (int i = 0; i < FileAttributes.size(); ++i) {
-            if (FileAttributes[i] & FILE_ATTRIBUTE_READONLY)
-                cout << Utils::defaultOffset << "FILE_ATTRIBUTE_READONLY" << endl <<
-                Utils::defaultOffsetDocInfo << "The file or directory is read-only. For a file, if this bit is set, " << endl <<
-                Utils::defaultOffsetDocInfo << "applications can read the file but cannot write to it or delete it. " << endl <<
-                Utils::defaultOffsetDocInfo << "For a directory, if this bit is set, applications cannot delete the directory." << endl;
-            if (FileAttributes[i] & FILE_ATTRIBUTE_HIDDEN)
-                cout << Utils::defaultOffset << "FILE_ATTRIBUTE_HIDDEN" << endl <<
-                     Utils::defaultOffsetDocInfo << "The file or directory is hidden. " << endl <<
-                     Utils::defaultOffsetDocInfo << "If this bit is set, the file or folder is not included in an ordinary directory listing." << endl;
-            if (FileAttributes[i] & FILE_ATTRIBUTE_SYSTEM)
-                cout << Utils::defaultOffset << "ILE_ATTRIBUTE_SYSTEM" << endl <<
-                    Utils::defaultOffsetDocInfo << "The file or directory is part of the operating system or is used exclusively by the operating system." << endl;
-            if (FileAttributes[i] & RESERVED1)
-                cout << Utils::defaultOffset << "RESERVED1" << endl <<
-                     Utils::defaultOffsetDocInfo << "A bit that MUST be zero." << endl;
-            if (FileAttributes[i] & FILE_ATTRIBUTE_DIRECTORY)
-                cout << Utils::defaultOffset << "FILE_ATTRIBUTE_DIRECTORY" << endl <<
-                     Utils::defaultOffsetDocInfo << "The link target is a directory instead of a file." << endl;
-            if (FileAttributes[i] & FILE_ATTRIBUTE_ARCHIVE)
-                cout << Utils::defaultOffset << "FILE_ATTRIBUTE_ARCHIVE" << endl <<
-                     Utils::defaultOffsetDocInfo << "The file or directory is an archive file. " << endl <<
-                     Utils::defaultOffsetDocInfo << "Applications use this flag to mark files for backup or removal." << endl;
-            if (FileAttributes[i] & RESERVED2)
-                cout << Utils::defaultOffset << "RESERVED2" << endl <<
-                     Utils::defaultOffsetDocInfo << "A bit that MUST be zero." << endl;
-            if (FileAttributes[i] & FILE_ATTRIBUTE_NORMAL)
-                cout << Utils::defaultOffset << "FILE_ATTRIBUTE_NORMAL" << endl <<
-                     Utils::defaultOffsetDocInfo << "The file or directory has no other flags set. " << endl <<
-                     Utils::defaultOffsetDocInfo << "If this bit is 1, all other bits in this structure MUST be clear." << endl;
-            if (FileAttributes[i] & FILE_ATTRIBUTE_TEMPORARY)
-                cout << Utils::defaultOffset << " FILE_ATTRIBUTE_TEMPORARY" << endl <<
-                     Utils::defaultOffsetDocInfo << "The file is being used for temporary storage." << endl;
-            if (FileAttributes[i] & FILE_ATTRIBUTE_SPARSE_FILE)
-                cout << Utils::defaultOffset << "FILE_ATTRIBUTE_SPARSE_FILE" << endl <<
-                     Utils::defaultOffsetDocInfo << "The file is a sparse file." << endl;
-            if (FileAttributes[i] & FILE_ATTRIBUTE_REPARSE_POINT)
-                cout << Utils::defaultOffset << "FILE_ATTRIBUTE_REPARSE_POINT" << endl <<
-                     Utils::defaultOffsetDocInfo << "The file or directory has an associated reparse point." << endl;
-            if (FileAttributes[i] & FILE_ATTRIBUTE_COMPRESSED)
-                cout << Utils::defaultOffset << "FILE_ATTRIBUTE_COMPRESSED" << endl <<
-                     Utils::defaultOffsetDocInfo << "The file or directory is compressed. For a file, this means that all data in the file is compressed. " << endl <<
-                     Utils::defaultOffsetDocInfo << "For a directory, this means that compression is the default for newly created files and subdirectories." << endl;
-            if (FileAttributes[i] & FILE_ATTRIBUTE_OFFLINE)
-                cout << Utils::defaultOffset << "FILE_ATTRIBUTE_OFFLINE" << endl <<
-                     Utils::defaultOffsetDocInfo << "The data of the file is not immediately available." << endl;
-            if (FileAttributes[i] & FILE_ATTRIBUTE_NOT_CONTENT_INDEXED)
-                cout << Utils::defaultOffset << "FILE_ATTRIBUTE_NOT_CONTENT_INDEXED" << endl <<
-                     Utils::defaultOffsetDocInfo << "The contents of the file need to be indexed." << endl;
-            if (FileAttributes[i] & FILE_ATTRIBUTE_ENCRYPTED)
-                cout << Utils::defaultOffset << "FILE_ATTRIBUTE_ENCRYPTED" << endl <<
-                     Utils::defaultOffsetDocInfo << "The file or directory is encrypted. For a file, this means that all data in the file is encrypted. " << endl <<
-                     Utils::defaultOffsetDocInfo << "For a directory, this means that encryption is the default for newly created files and subdirectories." << endl;
+    void ShellLinkHeader::parseFileAttributesFlags(unsigned int flags) {
+        if (flags == 0x00000000)
+            cout << Utils::defaultOffset << "NONE" << endl;
+        if (flags & FILE_ATTRIBUTE_READONLY) {
+            cout << Utils::defaultOffset << "FILE_ATTRIBUTE_READONLY" << endl <<
+                 Utils::defaultOffsetDocInfo << "The file or directory is read-only. For a file, if this bit is set, " << endl <<
+                 Utils::defaultOffsetDocInfo << "applications can read the file but cannot write to it or delete it. " << endl <<
+                 Utils::defaultOffsetDocInfo << "For a directory, if this bit is set, applications cannot delete the directory." << endl;
+        }
+        if (flags & FILE_ATTRIBUTE_HIDDEN) {
+            cout << Utils::defaultOffset << "FILE_ATTRIBUTE_HIDDEN" << endl <<
+                 Utils::defaultOffsetDocInfo << "The file or directory is hidden. " << endl <<
+                 Utils::defaultOffsetDocInfo << "If this bit is set, the file or folder is not included in an ordinary directory listing." << endl;
+        }
+        if (flags & FILE_ATTRIBUTE_SYSTEM) {
+            cout << Utils::defaultOffset << "ILE_ATTRIBUTE_SYSTEM" << endl <<
+                 Utils::defaultOffsetDocInfo << "The file or directory is part of the operating system or is used exclusively by the operating system." << endl;
+        }
+        if (flags & RESERVED1) {
+            cout << Utils::defaultOffset << "RESERVED1" << endl <<
+                 Utils::defaultOffsetDocInfo << "A bit that MUST be zero." << endl;
+        }
+        if (flags & FILE_ATTRIBUTE_DIRECTORY) {
+            cout << Utils::defaultOffset << "FILE_ATTRIBUTE_DIRECTORY" << endl <<
+                 Utils::defaultOffsetDocInfo << "The link target is a directory instead of a file." << endl;
+        }
+        if (flags & FILE_ATTRIBUTE_ARCHIVE) {
+            cout << Utils::defaultOffset << "FILE_ATTRIBUTE_ARCHIVE" << endl <<
+                 Utils::defaultOffsetDocInfo << "The file or directory is an archive file. " << endl <<
+                 Utils::defaultOffsetDocInfo << "Applications use this flag to mark files for backup or removal." << endl;
+        }
+        if (flags & RESERVED2) {
+            cout << Utils::defaultOffset << "RESERVED2" << endl <<
+                 Utils::defaultOffsetDocInfo << "A bit that MUST be zero." << endl;
+        }
+        if (flags & FILE_ATTRIBUTE_NORMAL) {
+            cout << Utils::defaultOffset << "FILE_ATTRIBUTE_NORMAL" << endl <<
+                 Utils::defaultOffsetDocInfo << "The file or directory has no other flags set. " << endl <<
+                 Utils::defaultOffsetDocInfo << "If this bit is 1, all other bits in this structure MUST be clear." << endl;
+        }
+        if (flags & FILE_ATTRIBUTE_TEMPORARY) {
+            cout << Utils::defaultOffset << " FILE_ATTRIBUTE_TEMPORARY" << endl <<
+                 Utils::defaultOffsetDocInfo << "The file is being used for temporary storage." << endl;
+        }
+        if (flags & FILE_ATTRIBUTE_SPARSE_FILE) {
+            cout << Utils::defaultOffset << "FILE_ATTRIBUTE_SPARSE_FILE" << endl <<
+                 Utils::defaultOffsetDocInfo << "The file is a sparse file." << endl;
+        }
+        if (flags & FILE_ATTRIBUTE_REPARSE_POINT) {
+            cout << Utils::defaultOffset << "FILE_ATTRIBUTE_REPARSE_POINT" << endl <<
+                 Utils::defaultOffsetDocInfo << "The file or directory has an associated reparse point." << endl;
+        }
+        if (flags & FILE_ATTRIBUTE_COMPRESSED) {
+            cout << Utils::defaultOffset << "FILE_ATTRIBUTE_COMPRESSED" << endl <<
+                 Utils::defaultOffsetDocInfo << "The file or directory is compressed. For a file, this means that all data in the file is compressed. " << endl <<
+                 Utils::defaultOffsetDocInfo << "For a directory, this means that compression is the default for newly created files and subdirectories." << endl;
+        }
+        if (flags & FILE_ATTRIBUTE_OFFLINE) {
+            cout << Utils::defaultOffset << "FILE_ATTRIBUTE_OFFLINE" << endl <<
+                 Utils::defaultOffsetDocInfo << "The data of the file is not immediately available." << endl;
+        }
+        if (flags & FILE_ATTRIBUTE_NOT_CONTENT_INDEXED) {
+            cout << Utils::defaultOffset << "FILE_ATTRIBUTE_NOT_CONTENT_INDEXED" << endl <<
+                 Utils::defaultOffsetDocInfo << "The contents of the file need to be indexed." << endl;
+        }
+        if (flags & FILE_ATTRIBUTE_ENCRYPTED) {
+            cout << Utils::defaultOffset << "FILE_ATTRIBUTE_ENCRYPTED" << endl <<
+                 Utils::defaultOffsetDocInfo << "The file or directory is encrypted. For a file, this means that all data in the file is encrypted. " << endl <<
+                 Utils::defaultOffsetDocInfo << "For a directory, this means that encryption is the default for newly created files and subdirectories." << endl;
         }
     }
 
@@ -431,7 +448,7 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
         cout << "HeaderSize:                         " << dec << Utils::lenFourBytes(HeaderSize) << " bytes" << endl;
         cout << "LinkCLSID:                          "; Utils::printSid(LinkCLSID, 0); cout << endl;
         cout << "LinkFlags:                          " << endl; parseLinkFlags(Utils::vectFourBytesToUnsignedInt(LinkFlags,0));
-        cout << "FileAttributes:                     " << endl; parseFileAttributesFlags();
+        cout << "FileAttributes:                     " << endl; parseFileAttributesFlags(Utils::vectFourBytesToUnsignedInt(FileAttributes,0));
         cout << "CreationTime:                       "; Utils::getDate(CreationTime);
         cout << "AccessTime:                         "; Utils::getDate(AccessTime);
         cout << "WriteTime:                          "; Utils::getDate(WriteTime);
