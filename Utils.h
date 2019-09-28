@@ -26,7 +26,8 @@ public:
 
     static int getCountOfBytesBeforeNullTerminator(std::vector<unsigned char>::const_iterator it);
     static void getDate(std::vector<unsigned int> vec);
-    static void printSid(std::vector<unsigned int> vec);
+    static void printSid(std::vector<unsigned int> vec, int pos);
+    static void printMacAddr(std::vector<unsigned int> vec);
     static unsigned int vectFourBytesToUnsignedInt(std::vector<unsigned int> vec, int pos);
     static std::vector<unsigned int> getSidForComparing(std::vector<unsigned int> vec);
 

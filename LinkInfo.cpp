@@ -230,8 +230,8 @@ void LinkInfo::parseLinkInfoFlags() {
         cout << "VolumeIDAndLocalBasePath" << endl;
         cout << Utils::defaultOffsetDocInfo << "If set, the VolumeID and LocalBasePath fields are present, " << endl <<
                 Utils::defaultOffsetDocInfo << "and their locations are specified by the values of the VolumeIDOffset and LocalBasePathOffset fields, respectively. " << endl <<
-                Utils::defaultOffsetDocInfo << "If the value of the LinkInfoHeaderSize field is greater than or equal to 0x00000024, the LocalBasePathUnicode field is present, " << endl <<
-                Utils::defaultOffsetDocInfo << "and its location is specified by the value of the LocalBasePathOffsetUnicode field." << endl;
+                Utils::defaultOffsetDocInfo << "If the value of the LinkInfoHeaderSize field is greater than or equal to 0x00000024, " << endl <<
+                Utils::defaultOffsetDocInfo << "the LocalBasePathUnicode field is present, and its location is specified by the value of the LocalBasePathOffsetUnicode field." << endl;
     }
     if (LinkInfoFlags[3] == CommonNetworkRelativeLinkAndPathSuffix) {
         cout << "CommonNetworkRelativeLinkAndPathSuffix" << endl;

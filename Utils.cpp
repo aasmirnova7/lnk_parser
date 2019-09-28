@@ -56,8 +56,21 @@ void Utils::print_vec(std::vector<unsigned int>& vec) {
 }
 
 void Utils::print_vec_unicode(std::vector<unsigned int>& vec) {
-    for (int x: vec)
-        std::cout << (char)x;
+    bool lastCharIsBlank = false;
+    for(int i=0; i < vec.size(); ++i){
+        if(i > 0 && vec[i] == 0 && !lastCharIsBlank) {
+            std::cout << (char)vec[i];
+            continue;
+        }
+        if (vec[i] == 0) {
+            lastCharIsBlank = true;
+            continue;
+        }
+        std::cout << (char)vec[i];
+    }
+
+//    for (int x: vec)
+//        std::cout << (char)x;
     std::cout << endl;
 }
 
@@ -109,12 +122,16 @@ void Utils::getDate(std::vector<unsigned int> vec) {
     cout << dec << b.wDay << "." << dec << b.wMonth << "." << dec << b.wYear << "   (" <<
         dec << b.wHour << ":" << dec << b.wMinute   << ":" << dec << b.wSecond << ") [UTC]"<< endl;
 }
-void Utils::printSid(std::vector<unsigned int> vec) {
-    cout << vec[3] <<  " " << vec[2] << " " << vec[1] << " " << vec[0] << " " << "-" << " " <<
-         vec[5]  << " " << vec[4] << " " << "-" << " " << vec[7] << " " << vec[6] << " " << "-"  << " " <<
-         vec[8] << " " << vec[9] << " " << "-" << " " <<
-         vec[10] << " " << vec[11] << " " << vec[12] << " " <<
-         vec[13] << " " << vec[14] << " " << vec[15];
+void Utils::printSid(std::vector<unsigned int> vec, int pos) {
+    cout << vec[pos+3] <<  " " << vec[pos+2] << " " << vec[pos+1] << " " << vec[pos] << " " << "-" << " " <<
+         vec[pos+5]  << " " << vec[pos+4] << " " << "-" << " " << vec[pos+7] << " " << vec[pos+6] << " " << "-"  << " " <<
+         vec[pos+8] << " " << vec[pos+9] << " " << "-" << " " <<
+         vec[pos+10] << " " << vec[pos+11] << " " << vec[pos+12] << " " <<
+         vec[pos+13] << " " << vec[pos+14] << " " << vec[pos+15];
+}
+
+void Utils::printMacAddr(std::vector<unsigned int> vec) {
+    cout << vec[5] <<  ":" << vec[4] << ":" << vec[3] << ":" << vec[2] << ":" << vec[1]  << ":" << vec[0] << endl;
 }
 
 std::vector<unsigned int> Utils::getSidForComparing(std::vector<unsigned int> vec) {

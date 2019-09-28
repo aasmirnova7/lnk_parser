@@ -447,15 +447,15 @@ void ExtraData::reverseAllFields() {
         /* ENVIRONMENT_PROPS struct*/
         reverse(ENVIRONMENT_PROPS.BlockSize.begin(), ENVIRONMENT_PROPS.BlockSize.end());
         reverse(ENVIRONMENT_PROPS.BlockSignature.begin(), ENVIRONMENT_PROPS.BlockSignature.end());
-        reverse(ENVIRONMENT_PROPS.TargetAnsi.begin(), ENVIRONMENT_PROPS.TargetAnsi.end());
-        reverse(ENVIRONMENT_PROPS.TargetUnicode.begin(), ENVIRONMENT_PROPS.TargetUnicode.end());
+        //reverse(ENVIRONMENT_PROPS.TargetAnsi.begin(), ENVIRONMENT_PROPS.TargetAnsi.end());
+        //reverse(ENVIRONMENT_PROPS.TargetUnicode.begin(), ENVIRONMENT_PROPS.TargetUnicode.end());
     }
     if (iconEnvironmentPropsIsSet) {
         /* ICON_ENVIRONMENT_PROPS struct*/
         reverse(ICON_ENVIRONMENT_PROPS.BlockSize.begin(), ICON_ENVIRONMENT_PROPS.BlockSize.end());
         reverse(ICON_ENVIRONMENT_PROPS.BlockSignature.begin(), ICON_ENVIRONMENT_PROPS.BlockSignature.end());
-        reverse(ICON_ENVIRONMENT_PROPS.TargetAnsi.begin(), ICON_ENVIRONMENT_PROPS.TargetAnsi.end());
-        reverse(ICON_ENVIRONMENT_PROPS.TargetUnicode.begin(), ICON_ENVIRONMENT_PROPS.TargetUnicode.end());
+        //reverse(ICON_ENVIRONMENT_PROPS.TargetAnsi.begin(), ICON_ENVIRONMENT_PROPS.TargetAnsi.end());
+        //reverse(ICON_ENVIRONMENT_PROPS.TargetUnicode.begin(), ICON_ENVIRONMENT_PROPS.TargetUnicode.end());
     }
     if (knownFolderPropsIsSet) {
         /* KNOWN_FOLDER_PROPS struct*/
@@ -1084,7 +1084,7 @@ void ExtraData::printExtraData() {
         cout << "   TargetAnsi:                      "; Utils::print_vec_unicode(ENVIRONMENT_PROPS.TargetAnsi);
         cout << "   TargetUnicode:                   "; Utils::print_vec_unicode(ENVIRONMENT_PROPS.TargetUnicode);
     }
-    if (iconEnvironmentPropsIsSet) {
+    if (iconEnvironmentPropsIsSet) { // Проверена
         /* ICON_ENVIRONMENT_PROPS struct*/
         cout << "ICON_ENVIRONMENT_PROPS: " << endl;
         cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(ICON_ENVIRONMENT_PROPS.BlockSize) << " bytes" << endl <<
@@ -1094,15 +1094,14 @@ void ExtraData::printExtraData() {
         cout << "   TargetAnsi:                      "; Utils::print_vec_unicode(ICON_ENVIRONMENT_PROPS.TargetAnsi);
         cout << "   TargetUnicode:                   "; Utils::print_vec_unicode(ICON_ENVIRONMENT_PROPS.TargetUnicode);
     }
-    if (knownFolderPropsIsSet) {
+    if (knownFolderPropsIsSet) { //Проверена
         /* KNOWN_FOLDER_PROPS struct*/
         cout << "KNOWN_FOLDER_PROPS: " << endl;
         cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(KNOWN_FOLDER_PROPS.BlockSize) << " bytes" << endl <<
             Utils::defaultOffsetDocInfo << "This value MUST be 0x0000001C." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(KNOWN_FOLDER_PROPS.BlockSignature);
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA000000B." << endl;
-        cout << "   KnownFolderID:                   "; Utils::printSid(Utils::getSidForComparing(KNOWN_FOLDER_PROPS.KnownFolderID));
-            cout << endl << "TEST: " << Utils::getSidForComparing(KNOWN_FOLDER_PROPS.KnownFolderID).data() << endl;
+        cout << "   KnownFolderID:                   "; Utils::printSid(Utils::getSidForComparing(KNOWN_FOLDER_PROPS.KnownFolderID), 0);
             cout << " : " << getClsidType(KNOWN_FOLDER_PROPS.KnownFolderID) << endl;
         cout << "   Offset:                          " << dec << Utils::lenFourBytes(KNOWN_FOLDER_PROPS.Offset) << " bytes." << endl <<
             Utils::defaultOffsetDocInfo << "Specifies the location of the ItemID of the first child segment of the IDList specified by KnownFolderID. " << endl <<
@@ -1121,7 +1120,7 @@ void ExtraData::printExtraData() {
                                                        << " bytes" << endl;
         cout << "       Version:                     "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.Version);
             cout << Utils::defaultOffsetDocInfo << " Has to be equal to 0x53505331." << endl;
-        cout << "       FormatID:                    "; Utils::printSid(PROPERTY_STORE_PROPS.PropertyStore.FormatID);
+        cout << "       FormatID:                    "; Utils::printSid(PROPERTY_STORE_PROPS.PropertyStore.FormatID, 0);
         // TODO: сделать getClsidType - Нужно ли тут?
             cout << " : " << getClsidType(KNOWN_FOLDER_PROPS.KnownFolderID) << endl;
 
@@ -1165,7 +1164,7 @@ void ExtraData::printExtraData() {
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000008." << endl;
         cout << "   LayerName:                       "; Utils::print_vec_unicode(SHIM_PROPS.LayerName);
     }
-    if (sFolderPropsIsSet) {
+    if (sFolderPropsIsSet) { // Проверена
         /* SPECIAL_FOLDER_PROPS struct*/
         cout << "SPECIAL_FOLDER_PROPS: " << endl;
         cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(SPECIAL_FOLDER_PROPS.BlockSize) << " bytes" << endl <<
@@ -1189,19 +1188,21 @@ void ExtraData::printExtraData() {
             Utils::defaultOffsetDocInfo << "This value MUST be 88 bytes." << endl;
         cout << "   Version:                         "; Utils::print_vec(TRACKER_PROPS.Version);
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0x00000000." << endl;
-        cout << "   MachineID (NetBIOS name):         "; Utils::print_vec_unicode(TRACKER_PROPS.MachineID);
-        // TODO: дописать парсинг - структуры не понятны
-        //Two values in GUID packet representation ([MS-DTYP] section 2.3.4.2)
-        /*  Droid volume identifier:                62f99ac8-036c-41b6-a702-330552879fa8
-            Droid file identifier:                  83d94e89-d171-11e9-bbda-ace01058c2c5
-            Birth droid volume identifier:          62f99ac8-036c-41b6-a702-330552879fa8
-            Birth droid file identifier:            83d94e89-d171-11e9-bbda-ace01058c2c5
-            MAC address:                            ac:e0:10:58:c2:c5
+        cout << "   MachineID (NetBIOS name):        "; Utils::print_vec_unicode(TRACKER_PROPS.MachineID);
+        cout << "   Droid:                           ";
+        cout << "     Droid volume identifier:       "; Utils::printSid(TRACKER_PROPS.Droid, 16); cout << endl;
+        cout << "     Droid file identifier:         "; Utils::printSid(TRACKER_PROPS.Droid, 0); cout << endl;
+        cout << "     Mac address:                   "; Utils::printMacAddr(TRACKER_PROPS.Droid);
+        cout << "   DroidBirth:                      "; Utils::print_vec(TRACKER_PROPS.DroidBirth);
+        cout << "     Birth droid volume identifier: "; Utils::printSid(TRACKER_PROPS.DroidBirth, 16); cout << endl;
+        cout << "     Birth droid file identifier:   "; Utils::printSid(TRACKER_PROPS.DroidBirth, 0); cout << endl;
+        // TODO: выяснить, что это:
+        /*
             UUID timestamp:                         09/07/2019 (13:15:08.507) [UTC]
             UUID sequence number:                   15322
-         */
-        cout << "   Droid:                           "; Utils::print_vec(TRACKER_PROPS.Droid);
-        cout << "   DroidBirth:                      "; Utils::print_vec(TRACKER_PROPS.DroidBirth);
+        */
+        //cout << "     UUID timestamp::               "; Utils::getDate(TRACKER_PROPS.DroidBirth);
+        //UUID sequence number:
     }
     if (vistaAndAboveIDListPropsIsSet) {
         /* VISTA_AND_ABOVE_IDLIST_PROPS struct*/
@@ -1225,32 +1226,18 @@ void ExtraData::printExtraData() {
     cout << "_________________________________________________________" << endl;
 }
 
-// TODO: Исправить поиск папок: попробавать сделать вектор как hex и сравнивать
 std::string ExtraData::getClsidType(std::vector<unsigned int> vec) {
-//    for ( int i = 0; clsid_list[i].clsid != GUID_Unknown; i++) {
-//        if (compareClsidType(vec, clsid_list[i].clsid)) { //memcmp(clsid.data(), clsid_list[i].clsid, 16) == 0
-//            return clsid_list[i].name;
-//        }
-//    }
-
-    //GUID_UsersFiles
-    if (compareClsidType(vec, GUID_UsersFiles)) { //memcmp(clsid.data(), clsid_list[i].clsid, 16) == 0
-        return clsid_list[0].name;
+    for ( int i = 0; clsid_list[i].clsid != GUID_Unknown; i++) {
+        if (compareClsidType(vec, clsid_list[i].clsid)) {
+            return clsid_list[i].name;
+        }
     }
     return "Not found";
 }
 bool ExtraData::compareClsidType(std::vector<unsigned int> vec, std::string clsid) {
-    for(int i = 0 ; i < 16; ++i ) {
-        //TODO: ПОЧЕМУ  symb :ce ffffffce
-        cout << " symb :" << vec[i] << " " << hex << (short)clsid.at(i) << endl;
-    }
-    cout << endl;
-    for(int i = 0 ; i < 16; ++i ){
-        //TODO: ПОЧЕМУ  symb :ce ffffffce
-        cout << " symb :" << vec[i] << " " << hex << (unsigned int)clsid.at(i) << endl;
-        if(vec[i] != clsid.at(i))
+    for(int i = 0 ; i < 16; ++i )
+        if((char)vec[i] != (char)clsid.at(i))
             return false;
-    }
     return true;
 }
 
@@ -1323,7 +1310,7 @@ void ExtraData::printExtraDataInHexStyle() {
         cout << "KNOWN_FOLDER_PROPS: " << endl;
         cout << "   BlockSize:                       "; Utils::print_vec(KNOWN_FOLDER_PROPS.BlockSize);
         cout << "   BlockSignature:                  "; Utils::print_vec(KNOWN_FOLDER_PROPS.BlockSignature);
-        cout << "   KnownFolderID:                   "; Utils::printSid(KNOWN_FOLDER_PROPS.KnownFolderID); cout << endl;
+        cout << "   KnownFolderID:                   "; Utils::printSid(KNOWN_FOLDER_PROPS.KnownFolderID, 0); cout << endl;
         cout << "   Offset:                          "; Utils::print_vec(KNOWN_FOLDER_PROPS.Offset);
     }
     if (propertyStorePropsIsSet) {
@@ -1335,7 +1322,7 @@ void ExtraData::printExtraDataInHexStyle() {
         cout << "       StorageSize:                 "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.StorageSize);
         cout << "       Version:                     "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.Version);
             cout << " Has to be equal to 0x53505331." <<  endl;
-        cout << "       FormatID:                    "; Utils::printSid(PROPERTY_STORE_PROPS.PropertyStore.FormatID); cout << endl;
+        cout << "       FormatID:                    "; Utils::printSid(PROPERTY_STORE_PROPS.PropertyStore.FormatID, 0); cout << endl;
 
         for (int i = 0; i < PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue.size(); ++i) {
             cout << "     SerializedPropertyValue " << i << ":" << endl;
