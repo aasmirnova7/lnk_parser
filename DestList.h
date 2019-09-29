@@ -8,12 +8,12 @@
 
 #include <vector>
 #include "DestListHeader.h"
-#include "DestListEntry.h"
+#include "DestListEntryArray.h"
 
 class DestList {
 private:
 public:
-    DestList(std::vector<unsigned char> destList);
+    DestList(ReadStream* rs, int startPosition);
 
 };
 

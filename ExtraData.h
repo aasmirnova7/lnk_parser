@@ -151,6 +151,7 @@ private:
     bool trackerPropsIsSet = false;
     bool vistaAndAboveIDListPropsIsSet = false;
     bool isStringNameStructInPropsStorage = false;
+    int ExtraDataOffsetEnd;
 
     void fillExtraData(ReadStream *readStream, int readFrom);
     void reverseAllFields();
@@ -175,6 +176,7 @@ public:
     ExtraData(ReadStream *readStream, int readFrom);
     void printExtraData();
     void printExtraDataInHexStyle();
+    int getExtraDataOffsetEnd();
 
     struct clsid_type {
         std::string clsid;

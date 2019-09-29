@@ -43,7 +43,7 @@ void DestListHeader::printDestListHeaderInHexStyle() {
     cout << "_____________DestListHeader in HEX style________________" << endl;
     cout << "Version:                            "; Utils::print_vec(Version);
     cout << "TotalNumberOfCurrentEntries:        "; Utils::print_vec(TotalNumberOfCurrentEntries);
-    cout << "FTotalNumberOfPinnedEntries:        "; Utils::print_vec(TotalNumberOfPinnedEntries);
+    cout << "TotalNumberOfPinnedEntries:         "; Utils::print_vec(TotalNumberOfPinnedEntries);
     cout << "Unknown:                            "; Utils::print_vec(Unknown);
     cout << "LastIssuedEntryId:                  "; Utils::print_vec(LastIssuedEntryId);
     cout << "NumberOfAddedDeletedReopened:       "; Utils::print_vec(NumberOfAddedDeletedReopened);
@@ -53,10 +53,13 @@ void DestListHeader::printDestListHeader() {
     cout << "____________________DestListHeader______________________" << endl;
     cout << "Version:                            " << dec<< Utils::lenFourBytes(Version) << endl;
     cout << "TotalNumberOfCurrentEntries:        " << dec<< Utils::lenFourBytes(TotalNumberOfCurrentEntries) << endl;
-    cout << "FTotalNumberOfPinnedEntries:        " << dec<< Utils::lenFourBytes(TotalNumberOfPinnedEntries) << endl;
+    cout << "TotalNumberOfPinnedEntries:         " << dec<< Utils::lenFourBytes(TotalNumberOfPinnedEntries) << endl;
     cout << "Unknown:                            "; Utils::print_vec(Unknown);
     cout << "LastIssuedEntryId:                  "; Utils::print_vec(LastIssuedEntryId);
     cout << "NumberOfAddedDeletedReopened:       "; Utils::print_vec(NumberOfAddedDeletedReopened);
     cout << "_________________________________________________________" << endl;
+}
 
+unsigned int DestListHeader::getTotalNumberOfCurrentEntries() {
+    return Utils::lenFourBytes(TotalNumberOfCurrentEntries);
 }

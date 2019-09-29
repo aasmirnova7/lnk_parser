@@ -387,8 +387,14 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
     }
 
+    ExtraDataOffsetEnd = tmpReadFrom;
     reverseAllFields();
 }
+
+int ExtraData::getExtraDataOffsetEnd() {
+    return ExtraDataOffsetEnd;
+}
+
 void ExtraData::setStringNameStructInPropsStorage() {
     if (PROPERTY_STORE_PROPS.PropertyStore.FormatID[0] == 0xD5 && PROPERTY_STORE_PROPS.PropertyStore.FormatID[1] == 0xCD &&
         PROPERTY_STORE_PROPS.PropertyStore.FormatID[2] == 0xD5 && PROPERTY_STORE_PROPS.PropertyStore.FormatID[3] == 0x05 &&

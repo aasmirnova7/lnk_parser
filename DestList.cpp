@@ -3,11 +3,21 @@
 //
 
 #include "DestList.h"
+#include "ReadStream.h"
+
 
 // TODO:
 //   1) Найти документацию;
-//   2) Объеденить создание destListHeader и destListEntry;
-//   3) Проверить парсинг
-DestList::DestList(std::vector<unsigned char> destList) {
+//   2) Проверить парсинг
+DestList::DestList(ReadStream* rs, int startPosition) {
+    std::vector<unsigned char> header =  rs->read(startPosition,32);
+    startPosition = 32;
 
+    DestListHeader destListHeader =  DestListHeader(header);
+    destListHeader.printDestListHeaderInHexStyle();
+    destListHeader.printDestListHeader();
+
+    DestListEntryArray destListEntryArray = DestListEntryArray(rs, startPosition, header);
+    destListEntryArray.printDestListEntryArrayInHexStyle();
+    destListEntryArray.printDestListEntryArray();
 }

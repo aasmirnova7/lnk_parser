@@ -26,6 +26,7 @@ public:
 
     void printDestListHeaderInHexStyle();
     void printDestListHeader();
+    unsigned int getTotalNumberOfCurrentEntries();
 };
 
 

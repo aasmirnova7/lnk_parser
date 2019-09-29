@@ -52,7 +52,7 @@ void Utils::print_vec(std::vector<unsigned int>& vec) {
         std::cout << hex << x << ' ';
         ++count;
     }
-    std::cout << '\n';
+    std::cout << endl;
 }
 
 void Utils::print_vec_unicode(std::vector<unsigned int>& vec) {
