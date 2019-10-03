@@ -97,7 +97,8 @@ private:
 
         std::vector<unsigned int> BlockSize;            // 4 bytes
         std::vector<unsigned int> BlockSignature;       // 4 bytes
-        SerializedPropertyStorage PropertyStore;
+        std::vector<SerializedPropertyStorage> PropertyStore;       // На самом деле
+        //SerializedPropertyStorage PropertyStore; // По спецификации
     };
     struct ShimPropsStruct {
         std::vector<unsigned int> BlockSize;            // 4 bytes
@@ -167,7 +168,7 @@ private:
     void parseColorTable();
     void parseColorTableUtils(int posStart);
     void parseTypedPropertyValueTypeAndValue(bool parseType,unsigned int flag);
-    void setStringNameStructInPropsStorage();
+    void setStringNameStructInPropsStorage(PropertyStorePropsStruct::SerializedPropertyStorage tmpSerializedPropertyStorage);
     std::string getClsidType(std::vector<unsigned int> clsid);
     std::string getSpecialFolderType(unsigned int type);
     bool compareClsidType(std::vector<unsigned int> vec, std::string clsid);

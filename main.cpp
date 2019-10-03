@@ -15,8 +15,8 @@ int main(int argc, char* argv[]) {
 //    ShellLinkAndJumpListHandler handler =
 //            ShellLinkAndJumpListHandler("C:\\Users\\ann19\\OneDrive\\Desktop\\Opera.lnk");
 
-//    ShellLinkAndJumpListHandler handler =
-//            ShellLinkAndJumpListHandler("C:\\Users\\ann19\\OneDrive\\Desktop\\43929ae4535c8dea.automaticDestinations-ms");
+    ShellLinkAndJumpListHandler handler =
+            ShellLinkAndJumpListHandler("C:\\Users\\ann19\\OneDrive\\Desktop\\4cb9c5750d51c07f.automaticDestinations-ms");
 
     return 0;
 }

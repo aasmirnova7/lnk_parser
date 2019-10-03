@@ -6,7 +6,7 @@
 
 ShellLink::ShellLink(ReadStream* rs, int startPosition) {
     std::vector<unsigned char> header =  rs->read(startPosition,76);
-    startPosition = 76;
+    startPosition += 76;
 
     ShellLinkHeader shellLinkHeader = ShellLinkHeader(header);
     shellLinkHeader.printHeaderInHexStyle();
@@ -56,7 +56,9 @@ ShellLink::ShellLink(ReadStream* rs, int startPosition) {
             ExtraData extraData = ExtraData(rs, startPosition);
             extraData.printExtraDataInHexStyle();
             extraData.printExtraData();
-            ShellLinkOffsetEnd = extraData.getExtraDataOffsetEnd();
+            ShellLinkOffsetEnd = (extraData.getExtraDataOffsetEnd() == 0) ?
+                    startPosition : extraData.getExtraDataOffsetEnd();
+            std::cout << " hellLinkOffsetEnd = " << std::dec << ShellLinkOffsetEnd << std::endl;
         }
     }
 }

@@ -54,8 +54,8 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
         it = it + 2;
         std::copy(it, it + 2, std::back_inserter(Reserved1));               // 2 byte
         it = it + 2;
-        std::copy(it, it + 2, std::back_inserter(Reserved2));               // 2 byte
-        it = it + 2;
+        std::copy(it, it + 4, std::back_inserter(Reserved2));               // 4 byte
+        it = it + 4;
         std::copy(it, it + 4, std::back_inserter(Reserved3));               // 4 byte
 
         /* Reverse All field (read left -> rigth) */

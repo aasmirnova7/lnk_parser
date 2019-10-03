@@ -124,11 +124,11 @@ void Utils::getDate(std::vector<unsigned int> vec) {
         dec << b.wHour << ":" << dec << b.wMinute   << ":" << dec << b.wSecond << ") [UTC]"<< endl;
 }
 void Utils::printSid(std::vector<unsigned int> vec, int pos) {
-    cout << vec[pos+3] <<  " " << vec[pos+2] << " " << vec[pos+1] << " " << vec[pos] << " " << "-" << " " <<
-         vec[pos+5]  << " " << vec[pos+4] << " " << "-" << " " << vec[pos+7] << " " << vec[pos+6] << " " << "-"  << " " <<
-         vec[pos+8] << " " << vec[pos+9] << " " << "-" << " " <<
-         vec[pos+10] << " " << vec[pos+11] << " " << vec[pos+12] << " " <<
-         vec[pos+13] << " " << vec[pos+14] << " " << vec[pos+15];
+    cout << hex << vec[pos+3] <<  " " << hex << vec[pos+2] << " " << hex << vec[pos+1] << " " << hex << vec[pos] << " " << "-" << " " <<
+            hex << vec[pos+5] << " " << hex << vec[pos+4] << " " << "-" << " " << hex << vec[pos+7] << " " << hex << vec[pos+6] << " " << "-"  << " " <<
+            hex << vec[pos+8] << " " << hex << vec[pos+9] << " " << "-" << " " <<
+            hex << vec[pos+10] << " " << hex << vec[pos+11] << " " << hex << vec[pos+12] << " " <<
+            hex << vec[pos+13] << " " << hex << vec[pos+14] << " " << hex << vec[pos+15];
 }
 
 void Utils::printMacAddr(std::vector<unsigned int> vec) {
