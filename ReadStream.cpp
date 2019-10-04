@@ -12,15 +12,22 @@
 using namespace std;
 
     //Конструктор, открывающий файл
-    ReadStream::ReadStream(const char *filePath) {
+    ReadStream::ReadStream(string filePath) {
         f.open(filePath, std::ios::binary);
         if(!f.is_open())
-            cout << "Файл не открыт";
+            cout << "Shortcut or Jump List file is not opened. "
+                 << "Please check that you input correct path and start program again." << endl;
+        else
+            fileIsOpen = true;
     }
 
     //Деструктор, закрывающий файл
     ReadStream::~ReadStream(){
         f.close();
+    }
+
+    bool ReadStream::isFileOpen() {
+        return fileIsOpen;
     }
 
     /* Метод чтения массива символов-байт с указанной позиции

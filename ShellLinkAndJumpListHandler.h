@@ -6,6 +6,7 @@
 #define MY_DIPLOM_SHELLLINKANDJUMPLISTHANDLER_H
 
 #include <algorithm>
+#include <string>
 #include "ShellLink.h"
 #include "DestList.h"
 
@@ -15,8 +16,12 @@ private:
     int countOfShellLinkWithErrors = 0;
     int countOfShellLink = 0;
     int startPosition = 0;
+    bool fileIsOpen = false;
+    ReadStream *rs;
 public:
-    ShellLinkAndJumpListHandler(const char * filePath);
+    ShellLinkAndJumpListHandler(std::string filePath);
+    bool isFileOpen();
+    void parseFile();
 };
 
 

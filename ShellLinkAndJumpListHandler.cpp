@@ -5,12 +5,14 @@
 #include "ShellLinkAndJumpListHandler.h"
 
 using namespace std;
-// TODO: Не понятна структура Jump List-a
-ShellLinkAndJumpListHandler::ShellLinkAndJumpListHandler(const char * filePath) {
-    ReadStream *rs = new ReadStream(filePath);
-    //ShellLink shellLink = ShellLink(rs, 0);
-    //int startPosition = shellLink.getShellLinkOffsetEnd();
 
+ShellLinkAndJumpListHandler::ShellLinkAndJumpListHandler(string filePath) {
+    rs = new ReadStream(filePath);
+    if(rs->isFileOpen())
+        fileIsOpen = true;
+}
+// TODO: Не понятна структура Jump List-a
+void ShellLinkAndJumpListHandler::parseFile() {
     std::vector<unsigned char> headerValue;
     do {
         headerValue =  rs->read(startPosition,4);
@@ -46,4 +48,8 @@ ShellLinkAndJumpListHandler::ShellLinkAndJumpListHandler(const char * filePath) 
 
     cout << "The total number of Shell Link = " << dec << countOfShellLink << endl;
     cout << "The number of Shell Link with errors while parsing = " << dec << countOfShellLinkWithErrors << endl;
+}
+
+bool ShellLinkAndJumpListHandler::isFileOpen() {
+    return fileIsOpen;
 }

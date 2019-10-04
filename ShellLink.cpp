@@ -51,7 +51,7 @@ ShellLink::ShellLink(ReadStream* rs, int startPosition) {
 
         if(shellLinkHeader.HasLinkInfoIsSet() && !linkTargetIdList.LinkTargetIdHasErrors()) {
             /* Determine LinkInfo size before creation */
-            cout << "! startPosition = " << hex << startPosition << endl;
+            //cout << "! startPosition = " << hex << startPosition << endl;
             std::vector<unsigned char> LIS =  rs->read(startPosition,4);
             reverse(LIS.begin(), LIS.end());
             int linkInfoSize = Utils::lenFourBytes(LIS);

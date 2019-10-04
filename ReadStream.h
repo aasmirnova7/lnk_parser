@@ -11,14 +11,16 @@
 #include <vector>
 #include <iomanip>
 #include <algorithm>
+#include <string>
 
 class ReadStream {
 private:
     //Приватное поле - файл
     std::ifstream f;
+    bool fileIsOpen = false;
 public:
     //Конструктор, открывающий файл
-    ReadStream(const char *filePath);
+    ReadStream(std::string filePath);
     //Деструктор, закрывающий файл
     ~ReadStream();
 
@@ -28,6 +30,7 @@ public:
 
     // Нумерация байт с 0, т.е. real_position = position + 1
     unsigned int read_with_string(int position, int byte_count);
+    bool isFileOpen();
 };
 
 #endif //MY_DIPLOM_READSTREAM_H

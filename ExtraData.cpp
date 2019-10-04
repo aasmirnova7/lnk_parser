@@ -1142,8 +1142,10 @@ void ExtraData::printExtraData() {
     if (consolePropsIsSet) {
         /* CONSOLE_PROPS struct*/
         cout << "CONSOLE_PROP: " << endl;
-        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(CONSOLE_PROPS.BlockSize) << " bytes" << endl;
+        cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(CONSOLE_PROPS.BlockSize) << " bytes" << endl <<
+            Utils::defaultOffsetDocInfo << "This value MUST be 204." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(CONSOLE_PROPS.BlockSignature);
+            cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000002." << endl;
         cout << "   FillAttributes:                  "; parseFillAttributes(false); cout << endl;
         cout << "   PopupFillAttributes:             "; parseFillAttributes(true); cout << endl;
         cout << "   ScreenBufferSizeX:               " << dec << Utils::lenTwoBytes(CONSOLE_PROPS.ScreenBufferSizeX) << " characters" << endl;
@@ -1153,8 +1155,14 @@ void ExtraData::printExtraData() {
         cout << "   WindowOriginX:                   " << dec << Utils::lenTwoBytes(CONSOLE_PROPS.WindowOriginX) << " pixels" << endl;
         cout << "   WindowOriginY:                   " << dec << Utils::lenTwoBytes(CONSOLE_PROPS.WindowOriginY) << " pixels" << endl;
         cout << "   UNUSED1:                         "; Utils::print_vec(CONSOLE_PROPS.UNUSED1);
+            cout << Utils::defaultOffsetDocInfo << "A value that is undefined and MUST be ignored." << endl;
         cout << "   UNUSED2:                         "; Utils::print_vec(CONSOLE_PROPS.UNUSED2);
-        cout << "   FontSize:                        " << dec << Utils::lenFourBytes(CONSOLE_PROPS.FontSize) << " pixels" << endl;
+            cout << Utils::defaultOffsetDocInfo << "A value that is undefined and MUST be ignored." << endl;
+       cout << "   FontSize:                        " << endl;
+            int height  = ((CONSOLE_PROPS.FontSize[0] << 8) | CONSOLE_PROPS.FontSize[1]);
+            int width = ((CONSOLE_PROPS.FontSize[2] << 8) | CONSOLE_PROPS.FontSize[3]);
+            cout << "       Font height:                 " << dec << height << " pixels" << endl;
+            cout << "       Font width:                  " << dec << width << " pixels" << endl;
         cout << "   FontFamily:                      "; parseFontFamily();
         cout << "   FontWeight:                      "; parseFontWeight();
         cout << "   FaceName:                        "; Utils::print_vec_unicode(CONSOLE_PROPS.FaceName);
@@ -1173,7 +1181,7 @@ void ExtraData::printExtraData() {
         /* CONSOLE_FE_PROPS struct*/
         cout << "CONSOLE_FE_PROPS: " << endl;
         cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(CONSOLE_FE_PROPS.BlockSize) << " bytes" << endl <<
-            Utils::defaultOffsetDocInfo << "This value MUST be 0x0000000C." << endl;
+            Utils::defaultOffsetDocInfo << "This value MUST be 12." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(CONSOLE_FE_PROPS.BlockSignature);
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000004." << endl;
         // TODO: дописать парсинг: (очень много значений) - нужен ли детальный парсинг?
@@ -1184,7 +1192,7 @@ void ExtraData::printExtraData() {
         /* DARWIN_PROPS struct*/
         cout << "DARWIN_PROPS: " << endl;
         cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(DARWIN_PROPS.BlockSize) << " bytes" << endl <<
-            Utils::defaultOffsetDocInfo << "This value MUST be 0x00000314." << endl;
+            Utils::defaultOffsetDocInfo << "This value MUST be 788." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(DARWIN_PROPS.BlockSignature);
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000006." << endl;
         cout << "   DarwinDataAnsi:                  "; Utils::print_vec(DARWIN_PROPS.DarwinDataAnsi);
@@ -1194,7 +1202,7 @@ void ExtraData::printExtraData() {
         /* ENVIRONMENT_PROPS struct*/
         cout << "ENVIRONMENT_PROPS: " << endl;
         cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(ENVIRONMENT_PROPS.BlockSize) << " bytes" << endl <<
-            Utils::defaultOffsetDocInfo << "This value MUST be 0x00000314." << endl;
+            Utils::defaultOffsetDocInfo << "This value MUST be 788." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(ENVIRONMENT_PROPS.BlockSignature);
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000001." << endl;
         cout << "   TargetAnsi:                      "; Utils::print_vec_unicode(ENVIRONMENT_PROPS.TargetAnsi);
@@ -1204,7 +1212,7 @@ void ExtraData::printExtraData() {
         /* ICON_ENVIRONMENT_PROPS struct*/
         cout << "ICON_ENVIRONMENT_PROPS: " << endl;
         cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(ICON_ENVIRONMENT_PROPS.BlockSize) << " bytes" << endl <<
-            Utils::defaultOffsetDocInfo << "This value MUST be 0x00000314." << endl;
+            Utils::defaultOffsetDocInfo << "This value MUST be 788." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(ICON_ENVIRONMENT_PROPS.BlockSignature);
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000007." << endl;
         cout << "   TargetAnsi:                      "; Utils::print_vec_unicode(ICON_ENVIRONMENT_PROPS.TargetAnsi);
@@ -1214,7 +1222,7 @@ void ExtraData::printExtraData() {
         /* KNOWN_FOLDER_PROPS struct*/
         cout << "KNOWN_FOLDER_PROPS: " << endl;
         cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(KNOWN_FOLDER_PROPS.BlockSize) << " bytes" << endl <<
-            Utils::defaultOffsetDocInfo << "This value MUST be 0x0000001C." << endl;
+            Utils::defaultOffsetDocInfo << "This value MUST be 28." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(KNOWN_FOLDER_PROPS.BlockSignature);
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA000000B." << endl;
         cout << "   KnownFolderID:                   "; Utils::printSid(Utils::getSidForComparing(KNOWN_FOLDER_PROPS.KnownFolderID), 0);
@@ -1322,7 +1330,7 @@ void ExtraData::printExtraData() {
         /* SHIM_PROPS struct*/
         cout << "SHIM_PROPS: " << endl;
         cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(SHIM_PROPS.BlockSize) << " bytes" << endl <<
-            Utils::defaultOffsetDocInfo << "This value MUST be greater than or equal to 0x00000088." << endl;
+            Utils::defaultOffsetDocInfo << "This value MUST be greater than or equal to 136." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(SHIM_PROPS.BlockSignature);
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000008." << endl;
         cout << "   LayerName:                       "; Utils::print_vec_unicode(SHIM_PROPS.LayerName);
@@ -1331,7 +1339,7 @@ void ExtraData::printExtraData() {
         /* SPECIAL_FOLDER_PROPS struct*/
         cout << "SPECIAL_FOLDER_PROPS: " << endl;
         cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(SPECIAL_FOLDER_PROPS.BlockSize) << " bytes" << endl <<
-            Utils::defaultOffsetDocInfo << "This value MUST be 0x00000010." << endl;
+            Utils::defaultOffsetDocInfo << "This value MUST be 16." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(SPECIAL_FOLDER_PROPS.BlockSignature);
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000005." << endl;
         cout << "   SpecialFolderID:                 " << dec << Utils::lenFourBytes(SPECIAL_FOLDER_PROPS.SpecialFolderID) <<  " : " <<
@@ -1372,7 +1380,7 @@ void ExtraData::printExtraData() {
         cout << "VISTA_AND_ABOVE_IDLIST_PROPS: " << endl;
         cout << "   BlockSize:                       " << dec
             << Utils::lenFourBytes(VISTA_AND_ABOVE_IDLIST_PROPS.BlockSize) << " bytes" << endl <<
-            Utils::defaultOffsetDocInfo << "This value MUST be greater than or equal to 0x0000000A." << endl;
+            Utils::defaultOffsetDocInfo << "This value MUST be greater than or equal to 10." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.BlockSignature);
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA000000C." << endl;
         //TODO: РАСПАРСИТЬ Data в IDList
