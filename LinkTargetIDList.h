@@ -14,6 +14,7 @@ private:
     std::vector<unsigned int> TerminalID;       // 2 bytes
 
     void fillLinkTargetIDList(std::vector<unsigned char> linkTargetIdList);
+    bool hasErrors = false;
 
 public:
     struct ItemIDList {
@@ -23,9 +24,11 @@ public:
     std::vector<ItemIDList> IDList;
 
     LinkTargetIDList(std::vector<unsigned char> linkTargetIdList);
+    LinkTargetIDList();
 
     void printLinkTargetIdListInHexStyle();
     void printLinkTargetIdList();
+    bool LinkTargetIdHasErrors();
 };
 
 

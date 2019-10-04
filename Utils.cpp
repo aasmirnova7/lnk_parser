@@ -23,11 +23,13 @@ unsigned int Utils::lenFourBytes(std::vector<unsigned int> vec) {
 }
 
 int Utils::lenFourBytes(std::vector<unsigned char> vec) {
-    unsigned int result = (vec[0] << 8) | vec[1];
-    unsigned int result2 = (vec[2] << 8) | vec[3];
-    unsigned int result3 = (result << 16) | result2;
-
-    return result3;
+    if(vec.size() == 4) {
+        unsigned int result = (vec[0] << 8) | vec[1];
+        unsigned int result2 = (vec[2] << 8) | vec[3];
+        unsigned int result3 = (result << 16) | result2;
+        return result3;
+    }
+    return 0;
 }
 
 int Utils::lenTwoBytes(std::vector<unsigned char> vec) {

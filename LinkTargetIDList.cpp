@@ -21,27 +21,41 @@ void LinkTargetIDList::fillLinkTargetIDList(std::vector<unsigned char> linkTarge
     reverse(IDListSize.begin(), IDListSize.end());
     it_begin = it_begin + 2;
     int count = Utils::lenTwoBytes(IDListSize) - 2;
+    int tmpCount = count;
 
-    while (count > 0) {
+    int itemIDSize = 1;
+    while (tmpCount > 0) {
+        if (itemIDSize == 0)
+            break;
         ItemIDList itemIdList;
         copy(it_begin, it_begin + 2, std::back_inserter(itemIdList.ItemIDSize));          // 2 byte
         it_begin = it_begin + 2;
         reverse(itemIdList.ItemIDSize.begin(), itemIdList.ItemIDSize.end());
-        int itemIDSize = Utils::lenTwoBytes(itemIdList.ItemIDSize);
+        itemIDSize = Utils::lenTwoBytes(itemIdList.ItemIDSize);
+        if (tmpCount < itemIDSize) {
+            hasErrors = true;
+            break;
+        }
 
         copy(it_begin, it_begin + itemIDSize - 2, std::back_inserter(itemIdList.Data));       // itemIDSize byte
         reverse(itemIdList.Data.begin(), itemIdList.Data.end());
         it_begin = it_begin + itemIDSize - 2;
 
         IDList.push_back(itemIdList);
-        count = count - itemIDSize;
+        tmpCount = tmpCount - itemIDSize;
     }
+    if (tmpCount > 0 && itemIDSize == 0)
+        hasErrors = true;
+
     std::copy(it_begin, it_begin + 2, std::back_inserter( TerminalID));                  // 2 bytes
     reverse(TerminalID.begin(), TerminalID.end());
 }
+bool LinkTargetIDList::LinkTargetIdHasErrors() {
+    return hasErrors;
+}
 
 void LinkTargetIDList::printLinkTargetIdList() {
-    cout << endl <<"____________________LinkTargetIdList______________________" << endl;
+    cout <<"____________________LinkTargetIdList______________________" << endl;
     cout << "IDListSize:                         " << dec << Utils::lenTwoBytes(IDListSize) << " bytes" << endl;
     cout << "IDList:                             " << endl ;
     for(int i = 0; i < IDList.size(); ++i){
@@ -54,7 +68,7 @@ void LinkTargetIDList::printLinkTargetIdList() {
 }
 
 void LinkTargetIDList::printLinkTargetIdListInHexStyle() {
-    cout << endl <<"_________________LinkTargetIdList in Hex Style___________________" << endl;
+    cout <<"_________________LinkTargetIdList in Hex Style___________________" << endl;
     cout << "IDListSize:                         " ; Utils::print_vec(IDListSize);
     cout << "IDList:                             " << endl ;
     for(int i = 0; i < IDList.size(); ++i){
@@ -65,3 +79,5 @@ void LinkTargetIDList::printLinkTargetIdListInHexStyle() {
     cout << "   TerminalID:                      "; Utils::print_vec(TerminalID);
     cout << "_________________________________________________________" << endl;
 }
+
+LinkTargetIDList::LinkTargetIDList() { }

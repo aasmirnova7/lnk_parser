@@ -16,10 +16,12 @@
 class ShellLink {
 private:
     int ShellLinkOffsetEnd;
+    bool thisShellLinkHasErrors = false;
 public:
     ShellLink(ReadStream* rs, int startPosition);
 
     int getShellLinkOffsetEnd();
+    bool isThisShellLinkHasErrors();
 };
 
 

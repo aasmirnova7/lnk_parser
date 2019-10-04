@@ -11,6 +11,10 @@
 
 
 class ShellLinkAndJumpListHandler {
+private:
+    int countOfShellLinkWithErrors = 0;
+    int countOfShellLink = 0;
+    int startPosition = 0;
 public:
     ShellLinkAndJumpListHandler(const char * filePath);
 };

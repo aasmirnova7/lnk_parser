@@ -10,7 +10,6 @@ ShellLinkAndJumpListHandler::ShellLinkAndJumpListHandler(const char * filePath) 
     ReadStream *rs = new ReadStream(filePath);
     //ShellLink shellLink = ShellLink(rs, 0);
     //int startPosition = shellLink.getShellLinkOffsetEnd();
-    int startPosition = 0;
 
     std::vector<unsigned char> headerValue;
     do {
@@ -27,11 +26,15 @@ ShellLinkAndJumpListHandler::ShellLinkAndJumpListHandler(const char * filePath) 
                 startPosition += 4;
                 continue;
             }
+            cout << "[ShellLink structure " << dec << countOfShellLink + 1 << "]: ";
             ShellLink shellLink = ShellLink(rs, startPosition);
             int offsetEnd = shellLink.getShellLinkOffsetEnd();
             int remainder = offsetEnd % 16;
-            startPosition = remainder == 0 ? offsetEnd : offsetEnd - remainder;
-            cout << " startPosition = " <<  shellLink.getShellLinkOffsetEnd() << endl;
+            startPosition = remainder == 0 ? offsetEnd : offsetEnd + 16 - remainder;
+            ++countOfShellLink;
+            if(shellLink.isThisShellLinkHasErrors())
+                ++countOfShellLinkWithErrors;
+            cout << endl << endl << endl;
         }
 //        else {
 //            /* Decode DestList Stream from Jump List*/
@@ -39,6 +42,8 @@ ShellLinkAndJumpListHandler::ShellLinkAndJumpListHandler(const char * filePath) 
 //
 //        }
         startPosition += 4;
-
     } while(headerValue.size() != 0);
+
+    cout << "The total number of Shell Link = " << dec << countOfShellLink << endl;
+    cout << "The number of Shell Link with errors while parsing = " << dec << countOfShellLinkWithErrors << endl;
 }
