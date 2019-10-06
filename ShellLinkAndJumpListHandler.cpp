@@ -7,6 +7,7 @@
 using namespace std;
 
 ShellLinkAndJumpListHandler::ShellLinkAndJumpListHandler(string filePath) {
+    cout << "File:                               " << filePath << endl;
     rs = new ReadStream(filePath);
     if(rs->isFileOpen())
         fileIsOpen = true;

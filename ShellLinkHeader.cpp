@@ -202,88 +202,88 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
                  Utils::defaultOffsetDocInfo << "The LinkInfo structure is ignored." << endl;
         }
         if (flags & HasExpString) {
-            cout << Utils::defaultOffset << "HasExpString" << endl <<
+            cout << Utils::defaultOffset << "HasExpString:" << endl <<
                  Utils::defaultOffsetDocInfo << "The shell link is saved with an EnvironmentVariableDataBlock" << endl;
             HasExpStringSet = true;
         }
         if (flags & RunInSeparateProcess) {
-            cout << Utils::defaultOffset << "RunInSeparateProcess" << endl <<
+            cout << Utils::defaultOffset << "RunInSeparateProcess:" << endl <<
                  Utils::defaultOffsetDocInfo << "The target is run in a separate virtual machine when launching a link target that is a 16-bit application." << endl;
         }
         if (flags & Unused1) {
-            cout << Utils::defaultOffset << "Unused1" << endl <<
+            cout << Utils::defaultOffset << "Unused1:" << endl <<
                  Utils::defaultOffsetDocInfo << "A bit that is undefined and MUST be ignored." << endl;
         }
         if (flags & HasDarwinID) {
-            cout << Utils::defaultOffset << "HasDarwinID" << endl <<
+            cout << Utils::defaultOffset << "HasDarwinID:" << endl <<
                  Utils::defaultOffsetDocInfo << "The shell link is saved with a DarwinDataBlock." << endl;
             HasDarwinIDSet = true;
         }
         if (flags & RunAsUser) {
-            cout << Utils::defaultOffset << "RunAsUser" << endl <<
+            cout << Utils::defaultOffset << "RunAsUser:" << endl <<
                  Utils::defaultOffsetDocInfo << "The application is run as a different user when the target of the shell link is activated." << endl;
         }
         if (flags & HasExpIcon) {
-            cout << Utils::defaultOffset << "HasExpIcon" << endl <<
+            cout << Utils::defaultOffset << "HasExpIcon:" << endl <<
                  Utils::defaultOffsetDocInfo << "The shell link is saved with an IconEnvironmentDataBlock." << endl;
             HasExpIconSet = true;
         }
         if (flags & NoPidlAlias) {
-            cout << Utils::defaultOffset << "NoPidlAlias" << endl <<
+            cout << Utils::defaultOffset << "NoPidlAlias:" << endl <<
                  Utils::defaultOffsetDocInfo << "The file system location is represented in the shell namespace when the path to an item is parsed into an IDList." << endl;
         }
         if (flags & Unused2) {
-            cout << Utils::defaultOffset << "Unused2" << endl <<
+            cout << Utils::defaultOffset << "Unused2:" << endl <<
                  Utils::defaultOffsetDocInfo << "A bit that is undefined and MUST be ignored." << endl;
         }
         if (flags & RunWithShimLayer) {
-            cout << Utils::defaultOffset << "RunWithShimLayer" << endl <<
+            cout << Utils::defaultOffset << "RunWithShimLayer:" << endl <<
                  Utils::defaultOffsetDocInfo << "The shell link is saved with a ShimDataBlock." << endl;
             RunWithShimLayerSet = true;
         }
         if (flags & ForceNoLinkTrack) {
-            cout << Utils::defaultOffset << "ForceNoLinkTrack" << endl <<
+            cout << Utils::defaultOffset << "ForceNoLinkTrack:" << endl <<
                  Utils::defaultOffsetDocInfo << "The TrackerDataBlock is ignored." << endl;
             ForceNoLinkTrackSet = true;
         }
         if (flags & EnableTargetMetadata) {
-            cout << Utils::defaultOffset << "EnableTargetMetadata" << endl <<
+            cout << Utils::defaultOffset << "EnableTargetMetadata:" << endl <<
                  Utils::defaultOffsetDocInfo << "The shell link attempts to collect target properties and store them in the PropertyStoreDataBlock when the link target is set." << endl;
             EnableTargetMetadataSet = true;
         }
         if (flags & DisableLinkPathTracking) {
-            cout << Utils::defaultOffset << "DisableLinkPathTracking" << endl <<
+            cout << Utils::defaultOffset << "DisableLinkPathTracking:" << endl <<
                  Utils::defaultOffsetDocInfo << "The EnvironmentVariableDataBlock is ignored." << endl;
         }
         if (flags & DisableKnownFolderTracking) {
-            cout << Utils::defaultOffset << "DisableKnownFolderTracking" << endl <<
+            cout << Utils::defaultOffset << "DisableKnownFolderTracking:" << endl <<
                  Utils::defaultOffsetDocInfo << "The SpecialFolderDataBlock and the KnownFolderDataBlock are ignored when loading the shell link." << endl <<
                  Utils::defaultOffsetDocInfo << "If this bit is set, these extra data blocks SHOULD NOT be saved when saving the shell link." << endl;
 
         }
         if (flags & DisableKnownFolderAlias) {
-            cout << Utils::defaultOffset << "DisableKnownFolderAlias" << endl <<
+            cout << Utils::defaultOffset << "DisableKnownFolderAlias:" << endl <<
                  Utils::defaultOffsetDocInfo << "If the link has a KnownFolderDataBlock, the unaliased form of the known folder IDList " << endl <<
                  Utils::defaultOffsetDocInfo << "SHOULD be used when translating the target IDList at the time that the link is loaded." << endl;
 
         }
         if (flags & AllowLinkToLink) {
-            cout << Utils::defaultOffset << "AllowLinkToLink" << endl <<
+            cout << Utils::defaultOffset << "AllowLinkToLink:" << endl <<
                  Utils::defaultOffsetDocInfo << "Creating a link that references another link is enabled. " << endl <<
                  Utils::defaultOffsetDocInfo << "Otherwise, specifying a link as the target IDList SHOULD NOT be allowed." << endl;
         }
         if (flags & UnaliasOnSave) {
-            cout << Utils::defaultOffset << "UnaliasOnSave" << endl <<
+            cout << Utils::defaultOffset << "UnaliasOnSave:" << endl <<
                  Utils::defaultOffsetDocInfo << "When saving a link for which the target IDList is under a known folder," << endl <<
                  Utils::defaultOffsetDocInfo << "either the unaliased form of that known folder or the target IDList SHOULD be used." << endl;
         }
         if (flags & PreferEnvironmentPath) {
-            cout << Utils::defaultOffset << "PreferEnvironmentPath" << endl <<
+            cout << Utils::defaultOffset << "PreferEnvironmentPath:" << endl <<
                  Utils::defaultOffsetDocInfo << "The target IDList SHOULD NOT be stored;" << endl <<
                  Utils::defaultOffsetDocInfo << "instead, the path specified in the EnvironmentVariableDataBlock SHOULD be used to refer to the target." << endl;
         }
         if (flags & KeepLocalIDListForUNCTarget) {
-            cout << Utils::defaultOffset << "KeepLocalIDListForUNCTarget" << endl <<
+            cout << Utils::defaultOffset << "KeepLocalIDListForUNCTarget:" << endl <<
                  Utils::defaultOffsetDocInfo << "When the target is a UNC name that refers to a location on a local machine," << endl <<
                  Utils::defaultOffsetDocInfo << "the local path IDList in the PropertyStoreDataBlock SHOULD be stored," << endl <<
                  Utils::defaultOffsetDocInfo << "so it can be used when the link is loaded on the local machine." << endl;

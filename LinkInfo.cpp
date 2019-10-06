@@ -392,7 +392,8 @@ void LinkInfo::printLinkInfo() {
         cout << "      VolumeIDSize:                 " << dec <<
             Utils::lenFourBytes(VolumeID.VolumeIDSize) << " bytes" << endl;
         cout << "      DriveType:                    "; parseDriveType();
-        cout << "      DriveSerialNumber:            "; Utils::print_vec(VolumeID.DriveSerialNumber);
+        cout << "      DriveSerialNumber:            " << hex <<  VolumeID.DriveSerialNumber[0] << VolumeID.DriveSerialNumber[1]
+            << "-" << VolumeID.DriveSerialNumber[2] << VolumeID.DriveSerialNumber[3] << endl;
         if(VolumeID.VolumeLabelOffset[3] == 0x00000010) {  // По документации 0x00000014
             cout << "      VolumeLabelOffset:            " << dec <<
                  Utils::lenFourBytes(VolumeID.VolumeLabelOffset) << " bytes (offset in bytes from the start of the VolumeID structure)" << endl;

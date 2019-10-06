@@ -134,7 +134,7 @@ void Utils::printSid(std::vector<unsigned int> vec, int pos) {
 }
 
 void Utils::printMacAddr(std::vector<unsigned int> vec) {
-    cout << vec[5] <<  ":" << vec[4] << ":" << vec[3] << ":" << vec[2] << ":" << vec[1]  << ":" << vec[0] << endl;
+    cout << hex << vec[5] <<  ":" << vec[4] << ":" << vec[3] << ":" << vec[2] << ":" << vec[1]  << ":" << vec[0] << endl;
 }
 
 std::vector<unsigned int> Utils::getSidForComparing(std::vector<unsigned int> vec) {
