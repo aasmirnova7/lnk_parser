@@ -169,20 +169,13 @@ private:
     void parseColorTableUtils(int posStart);
     void parseTypedPropertyValueTypeAndValue(bool parseType,unsigned int flag);
     void setStringNameStructInPropsStorage(PropertyStorePropsStruct::SerializedPropertyStorage tmpSerializedPropertyStorage);
-    std::string getClsidType(std::vector<unsigned int> clsid);
     std::string getSpecialFolderType(unsigned int type);
-    bool compareClsidType(std::vector<unsigned int> vec, std::string clsid);
 
 public:
     ExtraData(ReadStream *readStream, int readFrom);
     void printExtraData();
     void printExtraDataInHexStyle();
     int getExtraDataOffsetEnd();
-
-    struct clsid_type {
-        std::string clsid;
-        std::string name;
-    };
 };
 
 

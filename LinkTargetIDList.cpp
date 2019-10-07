@@ -38,7 +38,7 @@ void LinkTargetIDList::fillLinkTargetIDList(std::vector<unsigned char> linkTarge
         }
 
         copy(it_begin, it_begin + itemIDSize - 2, std::back_inserter(itemIdList.Data));       // itemIDSize byte
-        reverse(itemIdList.Data.begin(), itemIdList.Data.end());
+        //reverse(itemIdList.Data.begin(), itemIdList.Data.end());
         it_begin = it_begin + itemIDSize - 2;
 
         IDList.push_back(itemIdList);
@@ -61,7 +61,7 @@ void LinkTargetIDList::printLinkTargetIdList() {
     for(int i = 0; i < IDList.size(); ++i){
         cout << "   ItemID " << i + 1 << endl;
         cout << "       ItemIDSize:                  " << dec << Utils::lenTwoBytes(IDList[i].ItemIDSize) << " bytes" << endl;
-        cout << "       Data:                        "; Utils::print_vec(IDList[i].Data);
+        cout << "       Data:                        "; parseItemData(IDList[i].Data);
     }
     cout << "   TerminalID:                      "; Utils::print_vec(TerminalID);
     cout << "_________________________________________________________" << endl;
@@ -78,6 +78,38 @@ void LinkTargetIDList::printLinkTargetIdListInHexStyle() {
     }
     cout << "   TerminalID:                      "; Utils::print_vec(TerminalID);
     cout << "_________________________________________________________" << endl;
+}
+
+void LinkTargetIDList::parseItemData(std::vector<unsigned int> data) {
+    unsigned int type = data[0];
+    switch (type) {
+        case TYPE_FILE_OLD:
+            cout << "TYPE_FILE_OLD: ";
+            //break;
+        case TYPE_DIRECTORY_OLD:
+            cout << "TYPE_DIRECTORY_OLD: ";
+            //break;
+        case TYPE_FILE:
+            cout << "TYPE_FILE: ";
+            //break;
+        case TYPE_DIRECTORY:
+            cout << "TYPE_DIRECTORY: ";
+            //break;
+        case TYPE_DRIVE_OLD:
+            cout << "TYPE_DRIVE_OLD: ";
+            //break;
+        case TYPE_DRIVE:
+            Utils::print_vec_unicode(data);
+            cout << endl;
+            break;
+        case TYPE_CLSID:
+            cout << "TYPE_CLSID: ";
+            Utils::printSid(Utils::getSidForComparing(data, data.size() - 16), 0);
+            cout << " : " << Utils::getClsidType(data) << endl;
+            break;
+        default:
+            cout << "UNKNOWN type for ItemID" << endl;
+    }
 }
 
 LinkTargetIDList::LinkTargetIDList() { }

@@ -98,8 +98,8 @@ int main(int argc, char* argv[]) {
      * 2) не распаршено value для PROPERTY_STORE_PROPS:
      * 3) неверно вычисляются UUID Sequence number: и UUID timestamp:
      * */
-//    ShellLinkAndJumpListHandler handler1 = ShellLinkAndJumpListHandler("C:\\Users\\ann19\\OneDrive\\Desktop\\vk.lnk");
-//    handler1.parseFile();
+    ShellLinkAndJumpListHandler handler1 = ShellLinkAndJumpListHandler("C:\\Users\\ann19\\OneDrive\\Desktop\\vk.lnk");
+    handler1.parseFile();
 
     /*
      * 1) Файлы с пробелами в пути не открываются, как и в той программе

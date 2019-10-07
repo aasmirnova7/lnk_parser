@@ -9,8 +9,12 @@
 #include <vector>
 #include <string>
 #include "LinkTargetIDList.h"
+#include "UtilsConstant.h"
 
 class Utils {
+private:
+    static bool compareClsidType(std::vector<unsigned int> vec, std::string clsid);
+
 public:
     static std::string defaultOffset;
     static std::string defaultOffsetDocInfo;
@@ -30,8 +34,13 @@ public:
     static void printMacAddr(std::vector<unsigned int> vec);
     static unsigned int vectFourBytesToUnsignedInt(std::vector<unsigned int> vec, int pos);
     static unsigned int vectTwoToUnsignedInt(std::vector<unsigned int> vec, int pos);
-    static std::vector<unsigned int> getSidForComparing(std::vector<unsigned int> vec);
+    static std::vector<unsigned int> getSidForComparing(std::vector<unsigned int> vec, int pos);
+    static std::string getClsidType(std::vector<unsigned int> clsid);
 
+    struct clsid_type {
+        std::string clsid;
+        std::string name;
+    };
 };
 
 
