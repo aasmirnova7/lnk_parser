@@ -14,7 +14,7 @@ using namespace std;
 std::string Utils::defaultOffset = "                                    ";
 std::string Utils::defaultOffsetDocInfo = "                                      ";
 
-const Utils::clsid_type clsid_list[] = {{ GUID_AddNewPrograms, "AddNewPrograms" }, { GUID_AdminTools, "AdminTools" },
+const Utils::clsid_type clsid_list[] = {/*{ GUID_AddNewPrograms, "AddNewPrograms" }, { GUID_AdminTools, "AdminTools" },
                                             { GUID_AppDataLow, "AppDataLow" }, { GUID_ApplicationShortcuts, "ApplicationShortcuts" },
                                             { GUID_AppsFolder, "AppsFolder" }, { GUID_AppUpdates, "AppUpdates" },
                                             { GUID_CDBurning, "CDBurning" }, { GUID_ChangeRemovePrograms, "ChangeRemovePrograms" },
@@ -69,10 +69,10 @@ const Utils::clsid_type clsid_list[] = {{ GUID_AddNewPrograms, "AddNewPrograms" 
                                             { GUID_UserProgramFilesCommon, "UserProgramFilesCommon" }, { GUID_UsersFiles, "UsersFiles" },
                                             { GUID_UsersLibraries, "UsersLibraries" }, { GUID_UsersLibrariesFolder, "UsersLibrariesFolder" },
                                             { GUID_UserTiles, "UserTiles" }, { GUID_Videos, "Videos" },
-                                            { GUID_VideosLibrary, "VideosLibrary" }, { GUID_Windows, "Windows" },
+                                            { GUID_VideosLibrary, "VideosLibrary" }, { GUID_Windows, "Windows" }, */
 
                                             { GUID_My_Computer, "My Computer" }, { GUID_My_Documents, "My Documents" },
-                                            { GUID_Control_Panel, "Control Panel" }, { GUID_Control_Panel2, "Control Panel" },
+                                          /*  { GUID_Control_Panel, "Control Panel" }, { GUID_Control_Panel2, "Control Panel" },
                                             { GUID_Internet_Explorer, "Internet Explorer" }, { GUID_My_Games, "My Games" },
                                             { GUID_My_Network_Places, "My Network Places" }, { GUID_Network_Connections, "Network Connections" },
                                             { GUID_Printers_and_Faxes, "Printers and Faxes" }, { GUID_Dial_up_Connection, "Dial-up Connection" },
@@ -83,7 +83,7 @@ const Utils::clsid_type clsid_list[] = {{ GUID_AddNewPrograms, "AddNewPrograms" 
                                             { GUID_Run, "Run..." }, { GUID_Email, "E-mail" },
                                             { GUID_Set_Program_Access, "Set Program Access and Defaults" }, { GUID_Start_Menu_Provider, "StartMenuProviderFolder" },
                                             { GUID_Start_Menu, "Start Menu" }, { GUID_Search_Results, "Search Results" },
-                                            { GUID_Unknown, "GUID_Unknown" }};
+                                            { GUID_Unknown, "GUID_Unknown" } */};
 
 
 unsigned int Utils::lenFourBytes(std::vector<unsigned int> vec) {
@@ -116,7 +116,7 @@ int Utils::lenTwoBytes(std::vector<unsigned int> vec) {
     return result;
 }
 
-void Utils::print_vec(std::vector<unsigned int>& vec) {
+void Utils::print_vec(vector<unsigned int> vec) {
     int count = 0;
     for (int x: vec) {
         if(count >= 25) {
@@ -143,6 +143,29 @@ void Utils::print_vec_unicode(std::vector<unsigned int>& vec) {
         std::cout << (char)vec[i];
     }
     std::cout << endl;
+}
+
+void Utils::print_vec_unicode(std::vector<unsigned int>& vec, int from, int to) {
+    bool lastCharIsBlank = false;
+    for(int i=from; i < to; ++i){
+        if(i > 0 && vec[i] == 0 && !lastCharIsBlank) {
+            std::cout << (char)vec[i];
+            continue;
+        }
+        if (vec[i] == 0) {
+            lastCharIsBlank = true;
+            continue;
+        }
+        std::cout << (char)vec[i];
+    }
+    std::cout << endl;
+}
+int Utils::getFirtPosWhereByteIsNull(std::vector<unsigned int>& vec, int from) {
+    for(int i=from; i < vec.size(); ++i){
+        if(vec[i] == 0x00)
+            return i;
+    }
+    return vec.size()-1;
 }
 
 int Utils::getCountOfBytesBeforeNullTerminator(std::vector<unsigned char>::const_iterator it) {
@@ -211,14 +234,14 @@ void Utils::printMacAddr(std::vector<unsigned int> vec) {
 
 std::vector<unsigned int> Utils::getSidForComparing(std::vector<unsigned int> vec, int pos) {
     std::vector<unsigned int> tmpVec;
-    tmpVec.push_back(vec[3] + pos); tmpVec.push_back(vec[2] + pos);
-    tmpVec.push_back(vec[1] + pos); tmpVec.push_back(vec[0] + pos);
-    tmpVec.push_back(vec[5] + pos); tmpVec.push_back(vec[4] + pos);
-    tmpVec.push_back(vec[7] + pos); tmpVec.push_back(vec[6] + pos);
-    tmpVec.push_back(vec[8] + pos); tmpVec.push_back(vec[9] + pos);
-    tmpVec.push_back(vec[10] + pos); tmpVec.push_back(vec[11] + pos);
-    tmpVec.push_back(vec[12] + pos); tmpVec.push_back(vec[13] + pos);
-    tmpVec.push_back(vec[14] + pos); tmpVec.push_back(vec[15] + pos);
+    tmpVec.push_back(vec[3 + pos]); tmpVec.push_back(vec[2 + pos]);
+    tmpVec.push_back(vec[1 + pos]); tmpVec.push_back(vec[0 + pos]);
+    tmpVec.push_back(vec[5 + pos]); tmpVec.push_back(vec[4  + pos]);
+    tmpVec.push_back(vec[7 + pos]); tmpVec.push_back(vec[6 + pos]);
+    tmpVec.push_back(vec[8 + pos]); tmpVec.push_back(vec[9 + pos]);
+    tmpVec.push_back(vec[10 + pos]); tmpVec.push_back(vec[11 + pos]);
+    tmpVec.push_back(vec[12 + pos]); tmpVec.push_back(vec[13 + pos]);
+    tmpVec.push_back(vec[14 + pos]); tmpVec.push_back(vec[15 + pos]);
 
     return tmpVec;
 }
@@ -232,8 +255,11 @@ std::string Utils::getClsidType(std::vector<unsigned int> vec) {
     return "Not found";
 }
 bool Utils::compareClsidType(std::vector<unsigned int> vec, std::string clsid) {
-    for(int i = 0 ; i < 16; ++i )
-        if((char)vec[i] != (char)clsid.at(i))
-            return false;
+    for(int i = 0 ; i < 16; ++i ) {
+        cout << hex << " (char)vec[i] = " << hex << vec[i] << " :  "  << hex <<  clsid.at(i) << endl;
+//        if((char)vec[i] != (char)clsid.at(i))
+//            return false;
+    }
+
     return true;
 }

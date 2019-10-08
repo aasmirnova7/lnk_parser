@@ -74,9 +74,9 @@ int main(int argc, char* argv[]) {
     string destPath = "C:\\Users\\ann19\\AppData\\Roaming\\Microsoft\\Windows\\Recent\\AutomaticDestinations\\";
     string customPath  = "C:\\Users\\ann19\\AppData\\Roaming\\Microsoft\\Windows\\Recent\\CustomDestinations\\";
 
-//    ShellLinkAndJumpListHandler handler =
-//            ShellLinkAndJumpListHandler("C:\\Users\\ann19\\OneDrive\\Desktop\\4cb9c5750d51c07f.automaticDestinations-ms");
-//    handler.parseFile();
+    ShellLinkAndJumpListHandler handler =
+            ShellLinkAndJumpListHandler("C:\\Users\\ann19\\OneDrive\\Desktop\\4cb9c5750d51c07f.automaticDestinations-ms");
+    handler.parseFile();
 //    ShellLinkAndJumpListHandler handler1 =
 //            ShellLinkAndJumpListHandler(customPath + "b8ab77100df80ab2.customDestinations-ms");
 //    handler1.parseFile();
@@ -98,8 +98,8 @@ int main(int argc, char* argv[]) {
      * 2) не распаршено value для PROPERTY_STORE_PROPS:
      * 3) неверно вычисляются UUID Sequence number: и UUID timestamp:
      * */
-    ShellLinkAndJumpListHandler handler1 = ShellLinkAndJumpListHandler("C:\\Users\\ann19\\OneDrive\\Desktop\\vk.lnk");
-    handler1.parseFile();
+//    ShellLinkAndJumpListHandler handler1 = ShellLinkAndJumpListHandler("C:\\Users\\ann19\\OneDrive\\Desktop\\vk.lnk");
+//    handler1.parseFile();
 
     /*
      * 1) Файлы с пробелами в пути не открываются, как и в той программе

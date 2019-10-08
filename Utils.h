@@ -23,8 +23,10 @@ public:
     static int lenFourBytes(std::vector<unsigned char> vec);
     static int lenTwoBytes(std::vector<unsigned char> vec);
     static int lenTwoBytes(std::vector<unsigned int> vec);
-    static void print_vec(std::vector<unsigned int>& vec);
+    static void print_vec(std::vector<unsigned int> vec);
     static void print_vec_unicode(std::vector<unsigned int>& vec);
+    static void print_vec_unicode(std::vector<unsigned int>& vec, int from, int to);
+    static int getFirtPosWhereByteIsNull(std::vector<unsigned int>& vec, int from);
     static std::vector<LinkTargetIDList::ItemIDList> fillItemIdList(int count,
                                std::vector<unsigned char>::const_iterator it);
 

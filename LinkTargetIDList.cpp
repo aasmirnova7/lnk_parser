@@ -84,29 +84,50 @@ void LinkTargetIDList::parseItemData(std::vector<unsigned int> data) {
     unsigned int type = data[0];
     switch (type) {
         case TYPE_FILE_OLD:
-            cout << "TYPE_FILE_OLD: ";
-            //break;
-        case TYPE_DIRECTORY_OLD:
-            cout << "TYPE_DIRECTORY_OLD: ";
-            //break;
-        case TYPE_FILE:
-            cout << "TYPE_FILE: ";
-            //break;
-        case TYPE_DIRECTORY:
-            cout << "TYPE_DIRECTORY: ";
-            //break;
+            cout << "TYPE_FILE_OLD: " << endl;
+        case TYPE_DIRECTORY_OLD:{
+            if (type == TYPE_DIRECTORY_OLD)
+                cout << "TYPE_DIRECTORY_OLD: " << endl;
+        }
+        case TYPE_FILE: {
+            if (type == TYPE_FILE)
+                cout << "TYPE_FILE: " << endl;
+        }
+        case TYPE_DIRECTORY: {
+            if (type == TYPE_DIRECTORY)
+                cout << "TYPE_DIRECTORY: " << endl;
+            cout << Utils::defaultOffset << "  Short Name: ";
+            int endNamePos = Utils::getFirtPosWhereByteIsNull(data, 12);
+            int shortNameLen = endNamePos - 12;
+            int startPosForLongName = data.size() - 4 - 2*shortNameLen;
+
+            Utils::print_vec_unicode(data, 12, endNamePos);
+            cout  << Utils::defaultOffset << "  Long Name:  ";
+            Utils::print_vec_unicode(data, startPosForLongName, data.size() - 3);
+            cout << endl;
+            break;
+        }
         case TYPE_DRIVE_OLD:
-            cout << "TYPE_DRIVE_OLD: ";
+            cout << "TYPE_DRIVE_OLD: " << endl;
             //break;
         case TYPE_DRIVE:
             Utils::print_vec_unicode(data);
             cout << endl;
             break;
-        case TYPE_CLSID:
+        case TYPE_CLSID: {
             cout << "TYPE_CLSID: ";
-            Utils::printSid(Utils::getSidForComparing(data, data.size() - 16), 0);
-            cout << " : " << Utils::getClsidType(data) << endl;
+            Utils::printSid(data, 2);
+//            cout << endl;
+//            Utils::print_vec(Utils::getSidForComparing(data, 2));
+//            cout << endl;
+            std::vector<unsigned int> dataTmp;
+            for(int i = 2; i < data.size(); ++i) {
+                cout << " Data i = " << data[i] ;
+                dataTmp.push_back(data[i]);
+            }
+            cout << " : " << Utils::getClsidType(dataTmp) << endl;
             break;
+        }
         default:
             cout << "UNKNOWN type for ItemID" << endl;
     }
