@@ -64,6 +64,7 @@ ShellLink::ShellLink(ReadStream* rs, int startPosition) {
         }
 
         if(shellLinkHeader.HasStringDataIsSet() && !linkTargetIdList.LinkTargetIdHasErrors()) {
+            //cout << " HasStringDataIsSet() " << endl;
             StringData stringData = StringData(rs, startPosition);
             stringData.printStringDataInHexStyle();
             stringData.printStringData();
@@ -76,6 +77,7 @@ ShellLink::ShellLink(ReadStream* rs, int startPosition) {
 //                for(int i = 0; i < 8; ++i)
 //                    cout <<  hex << (int)h[i] << ' ';
 
+            //cout << " ExtraData " << endl;
             ExtraData extraData = ExtraData(rs, startPosition);
             extraData.printExtraDataInHexStyle();
             extraData.printExtraData();

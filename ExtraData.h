@@ -9,7 +9,6 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <Windows.h>
 #include <cstdio>
 
 #include "ReadStream.h"
@@ -187,6 +186,7 @@ private:
     void parseVT_BOOL(std::vector<unsigned int> val, int pos);
     int parseUnicodeString(std::vector<unsigned int> val, int pos);
     int parseClipboardData(std::vector<unsigned int> val, int pos);
+    void parseDECIMAL(std::vector<unsigned int> val, int pos);
 
 public:
     ExtraData(ReadStream *readStream, int readFrom);

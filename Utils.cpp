@@ -121,7 +121,7 @@ int Utils::lenTwoBytes(std::vector<unsigned int> vec) {
     unsigned int result = (vec[0] << 8) | vec[1];
     return result;
 }
-int lenTwoBytesFromPos(std::vector<unsigned int> vec, int pos){
+int Utils::lenTwoBytesFromPos(std::vector<unsigned int> vec, int pos){
     unsigned int result = (vec[pos] << 8) | vec[pos+1];
     return result;
 }
@@ -138,7 +138,7 @@ void Utils::print_vec(vector<unsigned int> vec) {
     }
     std::cout << endl;
 }
-void print_vec_from_to(std::vector<unsigned int> vec, int from, int to) {
+void Utils::print_vec_from_to(std::vector<unsigned int> vec, int from, int to) {
     int count = 0;
     for (int i = from; i < to; ++i) {
         if(count >= 25) {
@@ -252,7 +252,7 @@ void Utils::getDate(std::vector<unsigned int> vec) {
     cout << dec << b.wDay << "." << dec << b.wMonth << "." << dec << b.wYear << "   (" <<
         dec << b.wHour << ":" << dec << b.wMinute   << ":" << dec << b.wSecond << ") [UTC]"<< endl;
 }
-void Utils::getDateFromPos(std::vector<unsigned int> vec, int pos){
+void Utils::getDateFromPos(std::vector<unsigned int> vec, int pos) {
     FILETIME a;
     a.dwHighDateTime = vectFourBytesToUnsignedInt(vec, pos);
     a.dwLowDateTime = vectFourBytesToUnsignedInt(vec, pos+4);
@@ -271,8 +271,9 @@ void Utils::printSid(std::vector<unsigned int> vec, int pos) {
             hex << vec[pos+13] << " " << hex << vec[pos+14] << " " << hex << vec[pos+15];
 }
 
-void Utils::printMacAddr(std::vector<unsigned int> vec) {
-    cout << hex << vec[5] <<  ":" << vec[4] << ":" << vec[3] << ":" << vec[2] << ":" << vec[1]  << ":" << vec[0] << endl;
+void Utils::printMacAddr(std::vector<unsigned int> vec, int pos) {
+    cout << hex << vec[pos+10] <<  ":" << vec[pos+11] << ":" << vec[pos+12] << ":"
+        << vec[pos+13] << ":" << vec[pos+14]  << ":" << vec[pos+15] << endl;
 }
 
 std::vector<unsigned int> Utils::getSidForComparing(std::vector<unsigned int> vec, int pos) {
