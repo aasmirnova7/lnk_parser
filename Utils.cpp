@@ -102,6 +102,13 @@ int Utils::lenFourBytes(std::vector<unsigned char> vec) {
     }
     return 0;
 }
+int Utils::lenFourBytesFromPos(std::vector<unsigned int> vec, int pos) {
+    unsigned int result = (vec[pos] << 8) | vec[pos+1];
+    unsigned int result2 = (vec[pos+2] << 8) | vec[pos+3];
+    unsigned int result3 = (result << 16) | result2;
+
+    return result3;
+}
 
 int Utils::lenTwoBytes(std::vector<unsigned char> vec) {
     unsigned int result = (vec[0] << 8) | vec[1];
@@ -114,6 +121,10 @@ int Utils::lenTwoBytes(std::vector<unsigned int> vec) {
     unsigned int result = (vec[0] << 8) | vec[1];
     return result;
 }
+int lenTwoBytesFromPos(std::vector<unsigned int> vec, int pos){
+    unsigned int result = (vec[pos] << 8) | vec[pos+1];
+    return result;
+}
 
 void Utils::print_vec(vector<unsigned int> vec) {
     int count = 0;
@@ -123,6 +134,18 @@ void Utils::print_vec(vector<unsigned int> vec) {
             count = 0;
         }
         std::cout << hex << x << ' ';
+        ++count;
+    }
+    std::cout << endl;
+}
+void print_vec_from_to(std::vector<unsigned int> vec, int from, int to) {
+    int count = 0;
+    for (int i = from; i < to; ++i) {
+        if(count >= 25) {
+            std::cout << endl << "                                    ";
+            count = 0;
+        }
+        std::cout << hex << vec[i] << ' ';
         ++count;
     }
     std::cout << endl;
@@ -177,6 +200,16 @@ int Utils::getCountOfBytesBeforeNullTerminator(std::vector<unsigned char>::const
     }
     return countBytesBeforeNullTerminated + 3;  // Правильно, но нужно подумать, почему
 }
+int Utils::getCountOfBytesBeforeNullTerminatorInt(std::vector<unsigned int>::const_iterator it) {
+    int countBytesBeforeNullTerminated = 0;
+    auto itCopy = it;
+    // Получаем сколько байт нужно считать до нультермитатора
+    while ((int)*itCopy != 0x00 && (int)*(itCopy + 1) != 0x00 ) {
+        ++countBytesBeforeNullTerminated;
+        ++itCopy;
+    }
+    return countBytesBeforeNullTerminated + 3;  // Правильно, но нужно подумать, почему
+}
 
 std::vector<LinkTargetIDList::ItemIDList> Utils::fillItemIdList(int count, std::vector<unsigned char>::const_iterator it) {
     std::vector<LinkTargetIDList::ItemIDList> IDList;
@@ -219,6 +252,17 @@ void Utils::getDate(std::vector<unsigned int> vec) {
     cout << dec << b.wDay << "." << dec << b.wMonth << "." << dec << b.wYear << "   (" <<
         dec << b.wHour << ":" << dec << b.wMinute   << ":" << dec << b.wSecond << ") [UTC]"<< endl;
 }
+void Utils::getDateFromPos(std::vector<unsigned int> vec, int pos){
+    FILETIME a;
+    a.dwHighDateTime = vectFourBytesToUnsignedInt(vec, pos);
+    a.dwLowDateTime = vectFourBytesToUnsignedInt(vec, pos+4);
+
+    SYSTEMTIME b;
+    FileTimeToSystemTime(&a, &b);  // Перевод из FILETIME в SYSTEMTIME
+    cout << dec << b.wDay << "." << dec << b.wMonth << "." << dec << b.wYear << "   (" <<
+         dec << b.wHour << ":" << dec << b.wMinute   << ":" << dec << b.wSecond << ") [UTC]"<< endl;
+}
+
 void Utils::printSid(std::vector<unsigned int> vec, int pos) {
     cout << hex << vec[pos+3] <<  " " << hex << vec[pos+2] << " " << hex << vec[pos+1] << " " << hex << vec[pos] << " " << "-" << " " <<
             hex << vec[pos+5] << " " << hex << vec[pos+4] << " " << "-" << " " << hex << vec[pos+7] << " " << hex << vec[pos+6] << " " << "-"  << " " <<

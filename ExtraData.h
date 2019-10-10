@@ -7,6 +7,11 @@
 
 
 #include <vector>
+#include <string>
+#include <iostream>
+#include <Windows.h>
+#include <cstdio>
+
 #include "ReadStream.h"
 #include "LinkTargetIDList.h"
 #include "ExtraDataConstants.h"
@@ -170,9 +175,18 @@ private:
     void parseHistoryNoDup();
     void parseColorTable();
     void parseColorTableUtils(int posStart);
-    void parseTypedPropertyValueTypeAndValue(bool parseType,unsigned int flag);
+    void parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int flag,
+            ExtraData::PropertyStorePropsStruct::StringOrIntegerName::TypedPropertyValue value);
     void setStringNameStructInPropsStorage(PropertyStorePropsStruct::SerializedPropertyStorage tmpSerializedPropertyStorage);
     std::string getSpecialFolderType(unsigned int type);
+    int parseCodePageStream(ExtraData::PropertyStorePropsStruct::StringOrIntegerName::TypedPropertyValue value, int from);
+    int getVectorHeader(std::vector<unsigned int> val);
+    int getArrayHeader(std::vector<unsigned int> val);
+    void parseCURRENCY(std::vector<unsigned int> val, int pos);
+    void parseVT_ERROR(std::vector<unsigned int> val, int from, int to);
+    void parseVT_BOOL(std::vector<unsigned int> val, int pos);
+    int parseUnicodeString(std::vector<unsigned int> val, int pos);
+    int parseClipboardData(std::vector<unsigned int> val, int pos);
 
 public:
     ExtraData(ReadStream *readStream, int readFrom);
