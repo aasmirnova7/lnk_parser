@@ -1,11 +1,7 @@
 //
 // Created by user on 30.08.2019.
 //
-
-#include <cstring>
 #include "ExtraData.h"
-#include "ShellLinkHeader.h"
-#include "Utils.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++11-narrowing"
@@ -22,7 +18,7 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         vector<unsigned char> blockSize  = readStream->read(tmpReadFrom,4);
         reverse(blockSize.begin(), blockSize.end());
 
-        if (blockSize[3] == 0x00000000) {
+        if (blockSize[3] == 0x00) {
             std::copy(blockSize.begin(), blockSize.begin() + 4, std::back_inserter(TerminalBlock));
             break;
         }
@@ -222,7 +218,7 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
                     tmpIt = tmpIt + 4;
                     std::reverse(tmpStringOrIntegerName.ValueSize.begin(), tmpStringOrIntegerName.ValueSize.end());
                     len = Utils::lenFourBytes(tmpStringOrIntegerName.ValueSize);
-                    if((len > storageSize) || len < 0) //Чтобы парсинг работал и для jump List
+                    if(((storageSize != 0) && (len > storageSize)) || len < 0) //Чтобы парсинг работал и для jump List
                         break;
                     int sizeOfValue = len;
 
@@ -236,6 +232,7 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
                         /* for StringName */
                         std::reverse(tmpStringOrIntegerName.NameSizeOrId.begin(), tmpStringOrIntegerName.NameSizeOrId.end());
                         int count  = Utils::lenFourBytes(tmpStringOrIntegerName.NameSizeOrId);
+                        std::reverse(tmpStringOrIntegerName.NameSizeOrId.begin(), tmpStringOrIntegerName.NameSizeOrId.end());
                         std::copy(tmpIt, tmpIt + count, std::back_inserter(tmpStringOrIntegerName.Name));
                         tmpIt = tmpIt + count;
                         sizeOfValue -= count;
@@ -433,8 +430,10 @@ void ExtraData::reverseAllFields() {
         /* parse of SerializedPropertyStorage */
         for (int j = 0; j < PROPERTY_STORE_PROPS.PropertyStore.size(); ++j) {
             reverse(PROPERTY_STORE_PROPS.PropertyStore[j].Version.begin(), PROPERTY_STORE_PROPS.PropertyStore[j].Version.end());
-            reverse(PROPERTY_STORE_PROPS.PropertyStore[j].FormatID.begin(), PROPERTY_STORE_PROPS.PropertyStore[j].FormatID.end());
+            //reverse(PROPERTY_STORE_PROPS.PropertyStore[j].FormatID.begin(), PROPERTY_STORE_PROPS.PropertyStore[j].FormatID.end());
             for (int i = 0; i <  PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue.size(); ++i) {
+                reverse(PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].NameSizeOrId.begin(),
+                        PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].NameSizeOrId.end());
                 reverse(PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].Reserved.begin(),
                         PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].Reserved.end());
                 if (isStringNameStructInPropsStorage)
@@ -1169,8 +1168,6 @@ void ExtraData::printExtraData() {
     }
     if (propertyStorePropsIsSet) {
         /* PROPERTY_STORE_PROPS struct*/
-        // TODO: в другой программе есть PROPERTY_STORE_PROPS, понять, почему тут её нет
-        // TODO: транный парсинг для mk.lnk (вывод проверен)
         cout << "PROPERTY_STORE_PROPS: " << endl;
         cout << "   BlockSize:                       " << dec << Utils::lenFourBytes(PROPERTY_STORE_PROPS.BlockSize) << " bytes" << endl <<
         Utils::defaultOffsetDocInfo << "This value MUST be greater than or equal to 12." << endl;
@@ -1183,29 +1180,29 @@ void ExtraData::printExtraData() {
                  << " bytes" << endl;
             cout << "          Version:                  "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore[j].Version);
             cout << Utils::defaultOffsetDocInfo << "Has to be equal to 0x53505331." << endl;
-            cout << "          FormatID:                 ";  Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore[j].FormatID);
+            cout << "          FormatID:                 ";  Utils::printSid(PROPERTY_STORE_PROPS.PropertyStore[j].FormatID, 0);
             // TODO: сделать getClsidType - Нужно ли тут?
-            //cout << " : " << getClsidType(KNOWN_FOLDER_PROPS.KnownFolderID) << endl;
+            cout << " : " << Utils::getClsidType(PROPERTY_STORE_PROPS.PropertyStore[j].FormatID) << endl;
 
             for (int i = 0; i < PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue.size(); ++i) {
                 cout << "          SerializedPropertyValue " << i + 1 << ":" << endl;
-                cout << "            ValueSize               " << dec <<
+                cout << "            ValueSize:              " << dec <<
                      Utils::lenFourBytes(PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].ValueSize)  << " bytes" << endl;
                 if (isStringNameStructInPropsStorage) {
                     /* for StringName */
-                    cout << "            NameSize                "  << dec <<
+                    cout << "            NameSize:               "  << dec <<
                          Utils::lenFourBytes(PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].NameSizeOrId) << " bytes" << endl;
                 } else {
                     /* for IntegerName */
-                    cout << "            Id                      " << dec <<
+                    cout << "            Id:                     " << dec <<
                          Utils::lenFourBytes(PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].NameSizeOrId) << endl;
                 }
-                cout << "            Reserved                ";
+                cout << "            Reserved:               ";
                 Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].Reserved);
                     cout << Utils::defaultOffsetDocInfo << "MUST be 0x00." << endl;
                 if (isStringNameStructInPropsStorage) {
                     /* for StringName */
-                    cout << "            Name                ";
+                    cout << "            Name:               ";
                     Utils::print_vec_unicode(PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].Name);
                 }
                 cout << "            Value (TypedPropertyValue structure):" << endl;
@@ -1221,46 +1218,6 @@ void ExtraData::printExtraData() {
                 Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].Value.Value);
             }
         }
-//        cout << "       StorageSize:                 " << dec << Utils::lenFourBytes(PROPERTY_STORE_PROPS.PropertyStore.StorageSize)
-//                                                       << " bytes" << endl;
-//        cout << "       Version:                     "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.Version);
-//            cout << Utils::defaultOffsetDocInfo << "Has to be equal to 0x53505331." << endl;
-//        cout << "       FormatID:                    ";  Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.FormatID);
-//        // TODO: сделать getClsidType - Нужно ли тут?
-//            //cout << " : " << getClsidType(KNOWN_FOLDER_PROPS.KnownFolderID) << endl;
-//
-//        for (int i = 0; i < PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue.size(); ++i) {
-//            cout << "       SerializedPropertyValue " << i + 1 << ":" << endl;
-//            cout << "           ValueSize                " << dec <<
-//                Utils::lenFourBytes(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].ValueSize)  << " bytes" << endl;
-//            if (isStringNameStructInPropsStorage) {
-//                /* for StringName */
-//                cout << "           NameSize                 "  << dec <<
-//                    Utils::lenFourBytes(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].NameSizeOrId) << " bytes" << endl;
-//            } else {
-//                /* for IntegerName */
-//                cout << "           Id                       " << dec <<
-//                     Utils::lenFourBytes(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].NameSizeOrId) << endl;
-//            }
-//            cout << "           Reserved                 ";
-//                Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Reserved);
-//                cout << Utils::defaultOffsetDocInfo << "MUST be 0x00." << endl;
-//            if (isStringNameStructInPropsStorage) {
-//                /* for StringName */
-//                cout << "           Name                 ";
-//                    Utils::print_vec_unicode(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Name);
-//            }
-//            cout << "           Value (TypedPropertyValue structure):" << endl;
-//            cout << "              Type:                 ";
-//                parseTypedPropertyValueTypeAndValue(true,
-//                        Utils::vectTwoToUnsignedInt(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Type, 0));
-//            cout << "              Padding:              ";
-//                Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Padding);
-//                cout << Utils::defaultOffsetDocInfo << "MUST be set to zero, and any nonzero value SHOULD be rejected." << endl;
-//            // TODO: MUST be the value of the property represented and serialized according to the value of Type as follows.
-//            cout << "              Value:                ";
-//            Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Value);
-//        }
     }
     if (shimPropsIsSet) {
         /* SHIM_PROPS struct*/
@@ -1315,13 +1272,12 @@ void ExtraData::printExtraData() {
             Utils::defaultOffsetDocInfo << "This value MUST be greater than or equal to 10." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.BlockSignature);
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA000000C." << endl;
-        //TODO: РАСПАРСИТЬ Data в IDList
         cout << "   IDList: " <<  endl;
         for(int i = 0; i < VISTA_AND_ABOVE_IDLIST_PROPS.IDList.size(); ++i){
             cout << "       ItemID " << i + 1 << endl;
             cout << "           ItemIDSize:              " << dec
                  << Utils::lenTwoBytes(VISTA_AND_ABOVE_IDLIST_PROPS.IDList[i].ItemIDSize) << " bytes" << endl;
-            cout << "           Data:                    "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.IDList[i].Data);
+            cout << "           Data:                    "; Utils::parseItemData(VISTA_AND_ABOVE_IDLIST_PROPS.IDList[i].Data);
         }
         cout << "           TerminalID:              "; Utils::print_vec(VISTA_AND_ABOVE_IDLIST_PROPS.TerminalID);
     }
@@ -1442,38 +1398,6 @@ void ExtraData::printExtraDataInHexStyle() {
                 Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].Value.Value);
             }
         }
-//        cout << "       StorageSize:                 "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.StorageSize);
-//        cout << "       Version:                     "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.Version);
-//        cout << "       FormatID:                    "; Utils::printSid(PROPERTY_STORE_PROPS.PropertyStore.FormatID, 0); cout << endl;
-//
-//        for (int i = 0; i < PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue.size(); ++i) {
-//            cout << "       SerializedPropertyValue " << i + 1 << ":" << endl;
-//            cout << "           ValueSize                ";
-//                Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].ValueSize);
-//            if (isStringNameStructInPropsStorage) {
-//                /* for StringName */
-//                cout << "           NameSize                 ";
-//                    Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].NameSizeOrId);
-//            } else {
-//                /* for IntegerName */
-//                cout << "           Id                       ";
-//                    Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].NameSizeOrId);
-//            }
-//            cout << "           Reserved                 ";
-//            Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Reserved);
-//            if (isStringNameStructInPropsStorage) {
-//                /* for StringName */
-//                cout << "           Name                 ";
-//                    Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Name);
-//            }
-//            cout << "           Value (TypedPropertyValue structure):" << endl;
-//            cout << "              Type:                 ";
-//                Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Type);
-//            cout << "              Padding:              ";
-//                Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Padding);
-//            cout << "              Value:                ";
-//                Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore.SerializedPropertyValue[i].Value.Value);
-//        }
     }
     if (shimPropsIsSet) {
         /* SHIM_PROPS struct*/

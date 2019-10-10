@@ -92,3 +92,18 @@ int ShellLink::getShellLinkOffsetEnd() {
 bool ShellLink::isThisShellLinkHasErrors() {
     return thisShellLinkHasErrors;
 }
+void ShellLink::resetAllFlags() {
+    ShellLinkHeader::setHltidListIsSet(false);
+    ShellLinkHeader::setHliIsSet(false);
+    ShellLinkHeader::setHasNameSet(false);
+    ShellLinkHeader::setHasRelativePathSet(false);
+    ShellLinkHeader::setHasWorkingDirSet(false);
+    ShellLinkHeader::setHasArgumentsSet(false);
+    ShellLinkHeader::setHasIconLocationSet(false);
+    ShellLinkHeader::setHasDarwinIdSet(false);
+    ShellLinkHeader::setHasExpStringSet(false);
+    ShellLinkHeader::setHasExpIconSet(false);
+    ShellLinkHeader::setEnableTargetMetadataSet(false);
+    ShellLinkHeader::setRunWithShimLayerSet(false);
+    ShellLinkHeader::setForceNoLinkTrackSet(false);
+}

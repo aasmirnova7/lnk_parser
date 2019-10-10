@@ -22,6 +22,7 @@ public:
 
     int getShellLinkOffsetEnd();
     bool isThisShellLinkHasErrors();
+    void resetAllFlags();
 };
 
 

@@ -7,7 +7,7 @@
 using namespace std;
 
 ShellLinkAndJumpListHandler::ShellLinkAndJumpListHandler(string filePath) {
-    cout << "File:                               " << filePath << endl;
+    cout << "File:                               " << filePath << endl << endl;
     rs = new ReadStream(filePath);
     if(rs->isFileOpen())
         fileIsOpen = true;
@@ -37,6 +37,7 @@ void ShellLinkAndJumpListHandler::parseFile() {
             ++countOfShellLink;
             if(shellLink.isThisShellLinkHasErrors())
                 ++countOfShellLinkWithErrors;
+            shellLink.resetAllFlags();
             cout << endl << endl << endl;
         }
 //        else {

@@ -213,16 +213,26 @@ private:
     std::vector<unsigned int> Reserved2;           //MUST be zero
     std::vector<unsigned int> Reserved3;           //MUST be zero
 
-    bool HLTIDListIsSet = false;
-    bool HLIIsSet = false;
-
-
     void fillShellLinkHeader(std::vector<unsigned char> header);
     /* Reverse All field (read left -> right) */
     void reverseAllFields();
 
 public:
     ShellLinkHeader(std::vector<unsigned char> header);
+
+    static void setHltidListIsSet(bool hltidListIsSet);
+    static void setHliIsSet(bool hliIsSet);
+    static void setHasNameSet(bool hasNameSet);
+    static void setHasRelativePathSet(bool hasRelativePathSet);
+    static void setHasWorkingDirSet(bool hasWorkingDirSet);
+    static void setHasArgumentsSet(bool hasArgumentsSet);
+    static void setHasIconLocationSet(bool hasIconLocationSet);
+    static void setHasDarwinIdSet(bool hasDarwinIdSet);
+    static void setHasExpStringSet(bool hasExpStringSet);
+    static void setHasExpIconSet(bool hasExpIconSet);
+    static void setEnableTargetMetadataSet(bool enableTargetMetadataSet);
+    static void setRunWithShimLayerSet(bool runWithShimLayerSet);
+    static void setForceNoLinkTrackSet(bool forceNoLinkTrackSet);
 
     void printHeaderInHexStyle();
     bool isHeaderValid();

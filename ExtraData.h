@@ -10,6 +10,9 @@
 #include "ReadStream.h"
 #include "LinkTargetIDList.h"
 #include "ExtraDataConstants.h"
+#include "ExtraData.h"
+#include "ShellLinkHeader.h"
+#include "Utils.h"
 
 class ExtraData {
 private:

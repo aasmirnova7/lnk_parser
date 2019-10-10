@@ -10,6 +10,9 @@
 
 using  namespace std;
 
+static bool HLTIDListIsSet = false;
+static bool HLIIsSet = false;
+
 static bool HasNameSet = false;
 static bool HasRelativePathSet = false;
 static bool HasWorkingDirSet = false;
@@ -492,23 +495,63 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
     }
 
     /* For ExtraData structure */
-    bool ShellLinkHeader::HasDarwinIDIsSet(){
+bool ShellLinkHeader::HasDarwinIDIsSet(){
     return HasDarwinIDSet;
 }
-    bool ShellLinkHeader::HasExpStringIsSet(){
+bool ShellLinkHeader::HasExpStringIsSet(){
     return HasExpStringSet;
 }
-    bool ShellLinkHeader::HasExpIconIsSet(){
+bool ShellLinkHeader::HasExpIconIsSet(){
     return HasExpIconSet;
 }
-    bool ShellLinkHeader::EnableTargetMetadataIsSet(){
+bool ShellLinkHeader::EnableTargetMetadataIsSet(){
     return EnableTargetMetadataSet;
 }
-    bool ShellLinkHeader::RunWithShimLayerIsSet(){
+bool ShellLinkHeader::RunWithShimLayerIsSet(){
     return RunWithShimLayerSet;
 }
-    bool ShellLinkHeader::ForceNoLinkTrackIsSet(){
+bool ShellLinkHeader::ForceNoLinkTrackIsSet(){
     return ForceNoLinkTrackSet;
+}
+
+void ShellLinkHeader::setHltidListIsSet(bool hltidListIsSet) {
+    HLTIDListIsSet = hltidListIsSet;
+}
+void ShellLinkHeader::setHliIsSet(bool hliIsSet) {
+    HLIIsSet = hliIsSet;
+}
+void ShellLinkHeader::setHasNameSet(bool hasNameSet) {
+    HasNameSet = hasNameSet;
+}
+void ShellLinkHeader::setHasRelativePathSet(bool hasRelativePathSet) {
+    HasRelativePathSet = hasRelativePathSet;
+}
+void ShellLinkHeader::setHasWorkingDirSet(bool hasWorkingDirSet) {
+    HasWorkingDirSet = hasWorkingDirSet;
+}
+void ShellLinkHeader::setHasArgumentsSet(bool hasArgumentsSet) {
+    HasArgumentsSet = hasArgumentsSet;
+}
+void ShellLinkHeader::setHasIconLocationSet(bool hasIconLocationSet) {
+    HasIconLocationSet = hasIconLocationSet;
+}
+void ShellLinkHeader::setHasDarwinIdSet(bool hasDarwinIdSet) {
+    HasDarwinIDSet = hasDarwinIdSet;
+}
+void ShellLinkHeader::setHasExpStringSet(bool hasExpStringSet) {
+    HasExpStringSet = hasExpStringSet;
+}
+void ShellLinkHeader::setHasExpIconSet(bool hasExpIconSet) {
+    HasExpIconSet = hasExpIconSet;
+}
+void ShellLinkHeader::setEnableTargetMetadataSet(bool enableTargetMetadataSet) {
+    EnableTargetMetadataSet = enableTargetMetadataSet;
+}
+void ShellLinkHeader::setRunWithShimLayerSet(bool runWithShimLayerSet) {
+    RunWithShimLayerSet = runWithShimLayerSet;
+}
+void ShellLinkHeader::setForceNoLinkTrackSet(bool forceNoLinkTrackSet) {
+    ForceNoLinkTrackSet = forceNoLinkTrackSet;
 }
 
 

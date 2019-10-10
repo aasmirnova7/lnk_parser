@@ -38,6 +38,7 @@ public:
     static unsigned int vectTwoToUnsignedInt(std::vector<unsigned int> vec, int pos);
     static std::vector<unsigned int> getSidForComparing(std::vector<unsigned int> vec, int pos);
     static std::string getClsidType(std::vector<unsigned int> clsid);
+    static void parseItemData(std::vector<unsigned int> data);
 
     struct clsid_type {
         std::string clsid;
