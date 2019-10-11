@@ -2,8 +2,8 @@
 // Created by user on 29.08.2019.
 //
 
-#ifndef MY_DIPLOM_SHELLLINK_H
-#define MY_DIPLOM_SHELLLINK_H
+#ifndef LNK_JUMP_LIST_PARSER_SHELLLINK_H
+#define LNK_JUMP_LIST_PARSER_SHELLLINK_H
 
 #include "ReadStream.h"
 #include "ShellLinkHeader.h"
@@ -26,4 +26,4 @@ public:
 };
 
 
-#endif //MY_DIPLOM_SHELLLINK_H
+#endif //LNK_JUMP_LIST_PARSER_SHELLLINK_H

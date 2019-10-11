@@ -2,8 +2,8 @@
 // Created by user on 30.08.2019.
 //
 
-#ifndef MY_DIPLOM_STRINGDATA_H
-#define MY_DIPLOM_STRINGDATA_H
+#ifndef LNK_JUMP_LIST_PARSER_STRINGDATA_H
+#define LNK_JUMP_LIST_PARSER_STRINGDATA_H
 
 
 #include <vector>
@@ -38,4 +38,4 @@ public:
 };
 
 
-#endif //MY_DIPLOM_STRINGDATA_H
+#endif //LNK_JUMP_LIST_PARSER_STRINGDATA_H

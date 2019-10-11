@@ -2,8 +2,8 @@
 // Created by user on 23.08.2019.
 //
 
-#ifndef MY_DIPLOM_SHELLLINKHEADER_H
-#define MY_DIPLOM_SHELLLINKHEADER_H
+#ifndef LNK_JUMP_LIST_PARSER_SHELLLINKHEADER_H
+#define LNK_JUMP_LIST_PARSER_SHELLLINKHEADER_H
 
 #include <vector>
 #include <iostream>
@@ -262,4 +262,4 @@ public:
 };
 
 
-#endif //MY_DIPLOM_SHELLLINKHEADER_H
+#endif //LNK_JUMP_LIST_PARSER_SHELLLINKHEADER_H

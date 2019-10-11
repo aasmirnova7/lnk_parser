@@ -2,8 +2,8 @@
 // Created by user on 29.08.2019.
 //
 
-#ifndef MY_DIPLOM_READSTREAM_H
-#define MY_DIPLOM_READSTREAM_H
+#ifndef LNK_JUMP_LIST_PARSER_READSTREAM_H
+#define LNK_JUMP_LIST_PARSER_READSTREAM_H
 
 #include <iostream>
 #include <iostream>
@@ -33,4 +33,4 @@ public:
     bool isFileOpen();
 };
 
-#endif //MY_DIPLOM_READSTREAM_H
+#endif //LNK_JUMP_LIST_PARSER_READSTREAM_H

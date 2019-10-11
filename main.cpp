@@ -64,5 +64,9 @@ int main(int argc, char* argv[]) {
 
     // Раскомментировать при полной готовности программы
     ParserUtils::startParsing();
+
+    char c;
+    cout << "Press any key to continue . . . " << endl;
+    cin >> c;
     return 0;
 }

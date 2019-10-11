@@ -2,8 +2,8 @@
 // Created by ann19 on 07.10.2019.
 //
 
-#ifndef MY_DIPLOM_UTILSCONSTANT_H
-#define MY_DIPLOM_UTILSCONSTANT_H
+#ifndef LNK_JUMP_LIST_PARSER_UTILSCONSTANT_H
+#define LNK_JUMP_LIST_PARSER_UTILSCONSTANT_H
 
 // KNOWNFOLDERID
 #define GUID_AddNewPrograms			"\x71\xd9\x61\xde\xbc\x5e\x02\x4f\xa3\xa9\x6c\x82\x89\x5e\x5c\x04"
@@ -148,4 +148,4 @@
 #define GUID_Unknown				"\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff"
 
 
-#endif //MY_DIPLOM_UTILSCONSTANT_H
+#endif //LNK_JUMP_LIST_PARSER_UTILSCONSTANT_H

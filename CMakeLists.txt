@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.14)
-project(my_diplom)
+project(lnk_jump_list_parser)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(my_diplom main.cpp ReadStream.cpp ShellLinkHeader.cpp ShellLinkHeader.h
+add_executable(lnk_jump_list_parser main.cpp ReadStream.cpp ShellLinkHeader.cpp ShellLinkHeader.h
         ShellLink.cpp ShellLink.h ReadStream.h LinkTargetIDList.cpp LinkTargetIDList.h Utils.cpp Utils.h LinkInfo.cpp LinkInfo.h StringData.cpp
         StringData.h ExtraData.cpp ExtraData.h ExtraDataConstants.h DestList.cpp DestList.h DestListHeader.cpp DestListHeader.h DestListEntryArray.cpp DestListEntryArray.h ShellLinkAndJumpListHandler.cpp ShellLinkAndJumpListHandler.h UtilsConstant.h ParserUtils.cpp ParserUtils.h)

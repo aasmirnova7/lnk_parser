@@ -2,8 +2,8 @@
 // Created by ann19 on 10.10.2019.
 //
 
-#ifndef MY_DIPLOM_PARSERUTILS_H
-#define MY_DIPLOM_PARSERUTILS_H
+#ifndef LNK_JUMP_LIST_PARSER_PARSERUTILS_H
+#define LNK_JUMP_LIST_PARSER_PARSERUTILS_H
 
 #include <string>
 #include <iostream>
@@ -25,4 +25,4 @@ public:
 };
 
 
-#endif //MY_DIPLOM_PARSERUTILS_H
+#endif //LNK_JUMP_LIST_PARSER_PARSERUTILS_H

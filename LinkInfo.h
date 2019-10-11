@@ -2,8 +2,8 @@
 // Created by user on 30.08.2019.
 //
 
-#ifndef MY_DIPLOM_LINKINFO_H
-#define MY_DIPLOM_LINKINFO_H
+#ifndef LNK_JUMP_LIST_PARSER_LINKINFO_H
+#define LNK_JUMP_LIST_PARSER_LINKINFO_H
 
 
 #include <vector>
@@ -135,4 +135,4 @@ public:
 };
 
 
-#endif //MY_DIPLOM_LINKINFO_H
+#endif //LNK_JUMP_LIST_PARSER_LINKINFO_H

@@ -2,8 +2,8 @@
 // Created by ann19 on 27.09.2019.
 //
 
-#ifndef MY_DIPLOM_EXTRADATACONSTANTS_H
-#define MY_DIPLOM_EXTRADATACONSTANTS_H
+#ifndef LNK_JUMP_LIST_PARSER_EXTRADATACONSTANTS_H
+#define LNK_JUMP_LIST_PARSER_EXTRADATACONSTANTS_H
 
 // FillAttributes for ConsolePropsStruct
 #define FOREGROUND_BLUE         0x0001      // The foreground text color contains blue.
@@ -165,4 +165,4 @@
 #define VT_ARRAY_VT_INT      0x2016
 #define VT_ARRAY_VT_UINT     0x2017
 
-#endif //MY_DIPLOM_EXTRADATACONSTANTS_H
+#endif //LNK_JUMP_LIST_PARSER_EXTRADATACONSTANTS_H
