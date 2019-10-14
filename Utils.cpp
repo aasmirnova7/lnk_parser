@@ -7,7 +7,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
-#include <w32api/timezoneapi.h>
+//#include <w32api/timezoneapi.h>
 
 using namespace std;
 
@@ -243,24 +243,24 @@ unsigned int Utils::vectTwoToUnsignedInt(std::vector<unsigned int> vec, int pos)
 
 // TODO: время отличается на 3 часа + для WriteTime неверная дата + у AccessTime неверно секунды
 void Utils::getDate(std::vector<unsigned int> vec) {
-    FILETIME a;
+  /*  FILETIME a;
     a.dwHighDateTime = vectFourBytesToUnsignedInt(vec, 0);
     a.dwLowDateTime = vectFourBytesToUnsignedInt(vec, 4);
 
     SYSTEMTIME b;
     FileTimeToSystemTime(&a, &b);  // Перевод из FILETIME в SYSTEMTIME
     cout << dec << b.wDay << "." << dec << b.wMonth << "." << dec << b.wYear << "   (" <<
-        dec << b.wHour << ":" << dec << b.wMinute   << ":" << dec << b.wSecond << ") [UTC]"<< endl;
+        dec << b.wHour << ":" << dec << b.wMinute   << ":" << dec << b.wSecond << ") [UTC]"<< endl; */
 }
 void Utils::getDateFromPos(std::vector<unsigned int> vec, int pos) {
-    FILETIME a;
+   /* FILETIME a;
     a.dwHighDateTime = vectFourBytesToUnsignedInt(vec, pos);
     a.dwLowDateTime = vectFourBytesToUnsignedInt(vec, pos+4);
 
     SYSTEMTIME b;
     FileTimeToSystemTime(&a, &b);  // Перевод из FILETIME в SYSTEMTIME
     cout << dec << b.wDay << "." << dec << b.wMonth << "." << dec << b.wYear << "   (" <<
-         dec << b.wHour << ":" << dec << b.wMinute   << ":" << dec << b.wSecond << ") [UTC]"<< endl;
+         dec << b.wHour << ":" << dec << b.wMinute   << ":" << dec << b.wSecond << ") [UTC]"<< endl; */
 }
 
 void Utils::printSid(std::vector<unsigned int> vec, int pos) {
