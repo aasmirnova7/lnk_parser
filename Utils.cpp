@@ -7,7 +7,6 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
-//#include <w32api/timezoneapi.h>
 
 using namespace std;
 
@@ -230,6 +229,18 @@ std::vector<LinkTargetIDList::ItemIDList> Utils::fillItemIdList(int count, std::
     return IDList;
 }
 
+long long int Utils::vectEightBytesToUnsignedInt(std::vector<unsigned int> vec, int pos) {
+    unsigned int result = (vec[pos+0] << 8) | vec[pos+1];
+    unsigned int result2 = (vec[pos+2] << 8) | vec[pos+3];
+    long long int result3 = (result << 16) | result2;
+
+    unsigned int result4 = (vec[pos+4] << 8) | vec[pos+5];
+    unsigned int result5 = (vec[pos+6] << 8) | vec[pos+7];
+    long long int result6 = (result4 << 16) | result5;
+
+    long long int result7 = (result3 << 32) | result6;
+    return  result7;
+}
 unsigned int Utils::vectFourBytesToUnsignedInt(std::vector<unsigned int> vec, int pos) {
     unsigned int result = (vec[pos] << 8) | vec[pos+1];
     unsigned int result2 = (vec[pos+2] << 8) | vec[pos+3];
@@ -241,26 +252,19 @@ unsigned int Utils::vectTwoToUnsignedInt(std::vector<unsigned int> vec, int pos)
     return result;
 }
 
-// TODO: время отличается на 3 часа + для WriteTime неверная дата + у AccessTime неверно секунды
-void Utils::getDate(std::vector<unsigned int> vec) {
-  /*  FILETIME a;
-    a.dwHighDateTime = vectFourBytesToUnsignedInt(vec, 0);
-    a.dwLowDateTime = vectFourBytesToUnsignedInt(vec, 4);
-
-    SYSTEMTIME b;
-    FileTimeToSystemTime(&a, &b);  // Перевод из FILETIME в SYSTEMTIME
-    cout << dec << b.wDay << "." << dec << b.wMonth << "." << dec << b.wYear << "   (" <<
-        dec << b.wHour << ":" << dec << b.wMinute   << ":" << dec << b.wSecond << ") [UTC]"<< endl; */
+time_t Utils::convertWindowsTimeToUnixTime(long long int input) {
+    long long int temp;
+    temp = input / TICKS_PER_SECOND; //convert from 100ns intervals to seconds;
+    temp = temp - EPOCH_DIFFERENCE;  //subtract number of seconds between epochs
+    return (time_t) temp;
 }
 void Utils::getDateFromPos(std::vector<unsigned int> vec, int pos) {
-   /* FILETIME a;
-    a.dwHighDateTime = vectFourBytesToUnsignedInt(vec, pos);
-    a.dwLowDateTime = vectFourBytesToUnsignedInt(vec, pos+4);
+    long long int time_l = vectEightBytesToUnsignedInt(vec, pos);
+    time_t rawtime = convertWindowsTimeToUnixTime(time_l);
+    struct tm * timeinfo;
 
-    SYSTEMTIME b;
-    FileTimeToSystemTime(&a, &b);  // Перевод из FILETIME в SYSTEMTIME
-    cout << dec << b.wDay << "." << dec << b.wMonth << "." << dec << b.wYear << "   (" <<
-         dec << b.wHour << ":" << dec << b.wMinute   << ":" << dec << b.wSecond << ") [UTC]"<< endl; */
+    timeinfo = localtime(&rawtime);
+    cout << asctime(timeinfo);
 }
 
 void Utils::printSid(std::vector<unsigned int> vec, int pos) {

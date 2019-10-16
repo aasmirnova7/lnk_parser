@@ -11,6 +11,9 @@
 #include "LinkTargetIDList.h"
 #include "UtilsConstant.h"
 
+#define TICKS_PER_SECOND 10000000
+#define EPOCH_DIFFERENCE 11644473600LL
+
 class Utils {
 private:
     static bool compareClsidType(std::vector<unsigned int> vec, std::string clsid);
@@ -35,10 +38,11 @@ public:
 
     static int getCountOfBytesBeforeNullTerminator(std::vector<unsigned char>::const_iterator it);
     static int getCountOfBytesBeforeNullTerminatorInt(std::vector<unsigned int>::const_iterator it);
-    static void getDate(std::vector<unsigned int> vec);
     static void getDateFromPos(std::vector<unsigned int> vec, int pos);
+    static time_t convertWindowsTimeToUnixTime(long long int input);
     static void printSid(std::vector<unsigned int> vec, int pos);
     static void printMacAddr(std::vector<unsigned int> vec, int pos);
+    static long long int vectEightBytesToUnsignedInt(std::vector<unsigned int> vec, int pos);
     static unsigned int vectFourBytesToUnsignedInt(std::vector<unsigned int> vec, int pos);
     static unsigned int vectTwoToUnsignedInt(std::vector<unsigned int> vec, int pos);
     static std::vector<unsigned int> getSidForComparing(std::vector<unsigned int> vec, int pos);

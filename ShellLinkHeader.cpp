@@ -445,16 +445,15 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
             cout << "SW_SHOWMINNOACTIVE" << endl << Utils::defaultOffsetDocInfo << "The application is open, but its window is not shown. It is not given the keyboard focus." << endl;
     }
 
-    // TODO: Дописать парсинг времени НЕ через winApi (некорректно работает)
     void ShellLinkHeader::printHeader(){
         cout << "____________________ShellLinkHeader______________________" << endl;
         cout << "HeaderSize:                         " << dec << Utils::lenFourBytes(HeaderSize) << " bytes" << endl;
         cout << "LinkCLSID:                          "; Utils::printSid(LinkCLSID, 0); cout << endl;
         cout << "LinkFlags:                          " << endl; parseLinkFlags(Utils::vectFourBytesToUnsignedInt(LinkFlags,0));
         cout << "FileAttributes:                     " << endl; parseFileAttributesFlags(Utils::vectFourBytesToUnsignedInt(FileAttributes,0));
-        cout << "CreationTime:                       "; Utils::getDate(CreationTime);
-        cout << "AccessTime:                         "; Utils::getDate(AccessTime);
-        cout << "WriteTime:                          "; Utils::getDate(WriteTime);
+        cout << "CreationTime:                       "; Utils::getDateFromPos(CreationTime, 0);
+        cout << "AccessTime:                         "; Utils::getDateFromPos(AccessTime, 0);
+        cout << "WriteTime:                          "; Utils::getDateFromPos(WriteTime, 0);
         cout << "FileSize:                           " << dec << Utils::lenFourBytes(FileSize) << " bytes" << endl;
         cout << "IconIndex:                          "; Utils::print_vec(IconIndex);
         cout << "ShowCommand:                        "; parseShowCommand();

@@ -1,7 +1,6 @@
 //
 // Created by user on 30.08.2019.
 //
-//#include <w32api/wincon.h>
 #include "ExtraData.h"
 
 #pragma clang diagnostic push
@@ -1828,8 +1827,10 @@ void ExtraData::printExtraData() {
         cout << "     Droid volume identifier:       "; Utils::printSid(TRACKER_PROPS.Droid, 16); cout << endl;
         cout << "     Droid file identifier:         "; Utils::printSid(TRACKER_PROPS.Droid, 0); cout << endl;
         // TODO: Исправить UUID timestamp и UUID Sequence number
-        cout << "     UUID timestamp:                "; Utils::getDate(TRACKER_PROPS.Droid);
-        cout << "     UUID Sequence number:          " << dec << Utils::vectTwoToUnsignedInt(TRACKER_PROPS.Droid, 8) << endl;
+        //reverse(TRACKER_PROPS.Droid.begin(), TRACKER_PROPS.Droid.end());
+        cout << "     UUID timestamp:                "; Utils::getDateFromPos(TRACKER_PROPS.Droid, 16);
+        //reverse(TRACKER_PROPS.Droid.begin(), TRACKER_PROPS.Droid.end());
+        cout << "     UUID Sequence number:          " << dec << Utils::vectTwoToUnsignedInt(TRACKER_PROPS.Droid, 24) << endl;
         cout << "     Mac address:                   "; Utils::printMacAddr(TRACKER_PROPS.Droid, 16);
         cout << "   DroidBirth:                      " << endl;
         cout << "     Birth droid volume identifier: "; Utils::printSid(TRACKER_PROPS.DroidBirth, 16); cout << endl;
