@@ -100,12 +100,13 @@ private:
             // then all values in the sequence MUST be Serialized Property Value (String Name) structures;
             // otherwise, all values MUST be Serialized Property Value (Integer Name) structures
             std::vector<StringOrIntegerName> SerializedPropertyValue;
+            std::vector<unsigned int> TerminalIdentifier;       // 4 bytes
         };
 
         std::vector<unsigned int> BlockSize;            // 4 bytes
         std::vector<unsigned int> BlockSignature;       // 4 bytes
         std::vector<SerializedPropertyStorage> PropertyStore;       // На самом деле
-        //SerializedPropertyStorage PropertyStore; // По спецификации
+        std::vector<unsigned int> TerminalId;           // 4 bytes
     };
     struct ShimPropsStruct {
         std::vector<unsigned int> BlockSize;            // 4 bytes

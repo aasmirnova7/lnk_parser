@@ -190,9 +190,9 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
 
             reverse(propertyStoreBlockSize.begin(), propertyStoreBlockSize.end());
             int lenTmp = Utils::lenFourBytes(propertyStoreBlockSize);
+            int lenOfPropStore = lenTmp;
 
-            //cout << "lenTmp = " << dec << lenTmp << endl;
-            vector<unsigned char> propertyStorePropsStruct  = readStream->read(tmpReadFrom, lenTmp);
+            vector<unsigned char> propertyStorePropsStruct  = readStream->read(tmpReadFrom, lenTmp - 4);
             auto it = propertyStorePropsStruct.begin() + 4;
             std::copy(it, it + 4, std::back_inserter(PROPERTY_STORE_PROPS.BlockSignature));
             it = it + 4;
@@ -201,7 +201,7 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
             std::copy(it, it + lenTmp - 8, std::back_inserter(tmpPropertyStore));
             auto tmpIt = tmpPropertyStore.begin();
 
-            // Ощущение, будто в спецификации не совсем верно
+            lenTmp -= 8;
             int storageSize = 0;
             do {
                 PropertyStorePropsStruct::SerializedPropertyStorage tmpSerializedPropertyStorage;
@@ -209,27 +209,21 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
                 tmpIt = tmpIt + 4;
                 std::reverse(tmpSerializedPropertyStorage.StorageSize.begin(), tmpSerializedPropertyStorage.StorageSize.end());
                 storageSize = Utils::lenFourBytes(tmpSerializedPropertyStorage.StorageSize);
-                //cout << "storageSize = " << dec << storageSize << endl;
-
-                if((storageSize == 0) || (storageSize > lenTmp)) { // Это нужно было для jump List - проверить
-                    std::copy(tmpIt, tmpIt + 4, std::back_inserter(tmpSerializedPropertyStorage.StorageSize));
-                    tmpIt = tmpIt + 4;
-                    std::reverse(tmpSerializedPropertyStorage.StorageSize.begin(), tmpSerializedPropertyStorage.StorageSize.end());
-                }
+                lenTmp -= storageSize;
 
                 std::copy(tmpIt, tmpIt + 4, std::back_inserter(tmpSerializedPropertyStorage.Version));
                 tmpIt = tmpIt + 4;
                 std::copy(tmpIt, tmpIt + 16, std::back_inserter(tmpSerializedPropertyStorage.FormatID));
                 tmpIt = tmpIt + 16;
+                storageSize -= 24;
 
                 int len = 0;
-                //do {
+                do {
                     PropertyStorePropsStruct::StringOrIntegerName tmpStringOrIntegerName;
                     std::copy(tmpIt, tmpIt + 4, std::back_inserter(tmpStringOrIntegerName.ValueSize));
                     tmpIt = tmpIt + 4;
                     std::reverse(tmpStringOrIntegerName.ValueSize.begin(), tmpStringOrIntegerName.ValueSize.end());
                     len = Utils::lenFourBytes(tmpStringOrIntegerName.ValueSize);
-                   //cout << "len = " << dec << len << endl;
                     if(((storageSize != 0) && (len > storageSize)) || len < 0) //Чтобы парсинг работал и для jump List
                         break;
                     int sizeOfValue = len;
@@ -260,11 +254,19 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
                     tmpIt = tmpIt + sizeOfValue;
 
                     tmpSerializedPropertyStorage.SerializedPropertyValue.push_back(tmpStringOrIntegerName);
-                //} while (len > 0);
+                    storageSize -= len;
+                    if(storageSize == 4)
+                        break;
+                } while (len > 0);
+                 std::copy(tmpIt, tmpIt + 4, std::back_inserter(
+                        tmpSerializedPropertyStorage.TerminalIdentifier));
+                tmpIt = tmpIt + 4;
                 PROPERTY_STORE_PROPS.PropertyStore.push_back(tmpSerializedPropertyStorage);
-            } while (storageSize > 0);
+            } while (lenTmp > 4);
 
-            tmpReadFrom = tmpReadFrom + lenTmp;
+            tmpReadFrom = tmpReadFrom + lenOfPropStore;
+            vector<unsigned char> terminalId  = readStream->read(tmpReadFrom - 4, 4);
+            std::copy(terminalId.begin() , terminalId.begin() + 4, std::back_inserter(PROPERTY_STORE_PROPS.TerminalId));
             propertyStorePropsIsSet = true;
             continue;
         }
@@ -710,22 +712,23 @@ void ExtraData::parseVT_BOOL(std::vector<unsigned int> val, int pos){
 int ExtraData::parseUnicodeString(std::vector<unsigned int> val, int pos) {
     cout << "                 CodePageString:    " << endl;
     int len = Utils::lenFourBytesFromPos(val, pos);
-    cout << "                     Length:        " << len << " bytes" << endl <<
+    if(len == 0 && val.size() > 4)
+        len = (val.size() - 2) / 2;
+    reverse(val.begin(), val.end());
+    cout << "                     Length:        " << dec << len*2 << " bytes" << endl <<
          Utils::defaultOffsetDocInfo << "The length in 16-bit Unicode characters of the Characters field, " << endl <<
          Utils::defaultOffsetDocInfo << "including the null terminator, but not including padding (if any). " << endl;
-    cout << "                     Characters:    " << endl;
+    cout << "                     Characters:    ";
     if(len > 0) {
-        // TODO: выводить unicode
-        //SetConsoleOutputCP(CP_UTF8);
-        auto it = val.begin() + pos + 4;
-        Utils::print_vec_unicode(val, pos+4, pos+Utils::getCountOfBytesBeforeNullTerminatorInt(it));
-    }
-    //SetConsoleOutputCP(866);
+        Utils::print_vec_unicode(val, pos+4, val.size());
+    } else
+        cout << endl;
+    reverse(val.begin(), val.end());
     cout << Utils::defaultOffsetDocInfo << "If Length is nonzero, this field MUST be a null-terminated array " << endl <<
          Utils::defaultOffsetDocInfo << "of 16-bit Unicode characters followed by zero padding to a multiple of 4 bytes. " << endl <<
 
          Utils::defaultOffsetDocInfo << "If Length is zero, this field MUST be zero bytes in length." << endl;
-    return len + 4;
+    return len;// + 4;
 }
 int ExtraData::parseClipboardData(std::vector<unsigned int> val, int pos) {
     cout << "                ClipboardData:      " << endl;
@@ -1783,11 +1786,11 @@ void ExtraData::printExtraData() {
                 cout << "              Padding:              ";
                 Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].Value.Padding);
                 cout << Utils::defaultOffsetDocInfo << "MUST be set to zero, and any nonzero value SHOULD be rejected." << endl;
-//                // TODO: MUST be the value of the property represented and serialized according to the value of Type as follows.
-//                cout << "              Value:                ";
-//                Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].Value.Value);
             }
+            cout << "          TerminalIdentifier:       ";
+            Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore[j].TerminalIdentifier);
         }
+        cout << "   TerminalId:                      "; Utils::print_vec(PROPERTY_STORE_PROPS.TerminalId);
     }
     if (shimPropsIsSet) {
         /* SHIM_PROPS struct*/
@@ -1821,16 +1824,16 @@ void ExtraData::printExtraData() {
         cout << "   Length:                          "  << dec << Utils::lenFourBytes(TRACKER_PROPS.Length) << " bytes" << endl <<
             Utils::defaultOffsetDocInfo << "This value MUST be 88 bytes." << endl;
         cout << "   Version:                         " << dec << Utils::lenFourBytes(TRACKER_PROPS.Version) << endl;
-            cout << Utils::defaultOffsetDocInfo << "This value MUST be 0x00000000." << endl;
+            cout << Utils::defaultOffsetDocInfo << "This value MUST be 0." << endl;
         cout << "   MachineID (NetBIOS name):        "; Utils::print_vec_unicode(TRACKER_PROPS.MachineID);
         cout << "   Droid:                           " << endl;
         cout << "     Droid volume identifier:       "; Utils::printSid(TRACKER_PROPS.Droid, 16); cout << endl;
         cout << "     Droid file identifier:         "; Utils::printSid(TRACKER_PROPS.Droid, 0); cout << endl;
         // TODO: Исправить UUID timestamp и UUID Sequence number
         //reverse(TRACKER_PROPS.Droid.begin(), TRACKER_PROPS.Droid.end());
-        cout << "     UUID timestamp:                "; Utils::getDateFromPos(TRACKER_PROPS.Droid, 16);
+       // cout << "     UUID timestamp:                "; Utils::getDateFromPos(TRACKER_PROPS.Droid, 16);
         //reverse(TRACKER_PROPS.Droid.begin(), TRACKER_PROPS.Droid.end());
-        cout << "     UUID Sequence number:          " << dec << Utils::vectTwoToUnsignedInt(TRACKER_PROPS.Droid, 24) << endl;
+        //cout << "     UUID Sequence number:          " << dec << Utils::vectTwoToUnsignedInt(TRACKER_PROPS.Droid, 24) << endl;
         cout << "     Mac address:                   "; Utils::printMacAddr(TRACKER_PROPS.Droid, 16);
         cout << "   DroidBirth:                      " << endl;
         cout << "     Birth droid volume identifier: "; Utils::printSid(TRACKER_PROPS.DroidBirth, 16); cout << endl;
@@ -1969,7 +1972,10 @@ void ExtraData::printExtraDataInHexStyle() {
                 cout << "              Value:                ";
                 Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].Value.Value);
             }
+            cout << "          TerminalIdentifier:       ";
+            Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore[j].TerminalIdentifier);
         }
+        cout << "   TerminalId:                      "; Utils::print_vec(PROPERTY_STORE_PROPS.TerminalId);
     }
     if (shimPropsIsSet) {
         /* SHIM_PROPS struct*/
