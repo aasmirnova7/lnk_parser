@@ -55,8 +55,10 @@ void DestListHeader::printDestListHeader() {
     cout << "TotalNumberOfCurrentEntries:        " << dec<< Utils::lenFourBytes(TotalNumberOfCurrentEntries) << endl;
     cout << "TotalNumberOfPinnedEntries:         " << dec<< Utils::lenFourBytes(TotalNumberOfPinnedEntries) << endl;
     cout << "Unknown:                            "; Utils::print_vec(Unknown);
-    cout << "LastIssuedEntryId:                  "; Utils::print_vec(LastIssuedEntryId);
-    cout << "NumberOfAddedDeletedReopened:       "; Utils::print_vec(NumberOfAddedDeletedReopened);
+    cout << "LastIssuedEntryId:                  " << dec <<
+         Utils::vectEightBytesToUnsignedInt(LastIssuedEntryId, 0) << endl;
+    cout << "NumberOfAddedDeletedReopened:       " << dec <<
+         Utils::vectEightBytesToUnsignedInt(NumberOfAddedDeletedReopened, 0) << endl;
     cout << "_________________________________________________________" << endl;
 }
 

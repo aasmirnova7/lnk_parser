@@ -34,7 +34,7 @@ private:
 
 
     void fillLinkTargetIDList(ReadStream *rs, int readFrom, DestListHeader header);
-    void reverseAllFields();
+    void reverseAllFields(DestListEntry* tmpDestListEntry);
 
 public:
     DestListEntryArray(ReadStream *readStream, int readFrom, DestListHeader header);

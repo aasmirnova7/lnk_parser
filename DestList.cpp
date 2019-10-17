@@ -11,7 +11,7 @@
 //   2) Проверить парсинг
 DestList::DestList(ReadStream* rs, int startPosition) {
     std::vector<unsigned char> header =  rs->read(startPosition,32);
-    startPosition = 32;
+    startPosition += 32;
 
     DestListHeader destListHeader =  DestListHeader(header);
     destListHeader.printDestListHeaderInHexStyle();

@@ -12,7 +12,6 @@ ShellLinkAndJumpListHandler::ShellLinkAndJumpListHandler(string filePath) {
     if(rs->isFileOpen())
         fileIsOpen = true;
 }
-// TODO: Не понятна структура Jump List-a
 void ShellLinkAndJumpListHandler::parseFile() {
     std::vector<unsigned char> headerValue;
     do {
@@ -20,12 +19,11 @@ void ShellLinkAndJumpListHandler::parseFile() {
 
         reverse(headerValue.begin(), headerValue.end());
         unsigned int hValue = Utils::lenFourBytes(headerValue);
-        //cout << "hValue = " << hex << hValue << endl;
 
         if(hValue == 0x0000004c) {
             /* Decode ShellLink Stream = CustDest Jump List */
             headerValue =  rs->read(startPosition + 4,4);
-            if (Utils::lenFourBytes(headerValue) == 0x4d000000) { // пока не разобралась, где DESTList
+            if (Utils::lenFourBytes(headerValue) != 0x01140200) { // Если следующее поле не CLSI -> ищем структуры далее
                 startPosition += 4;
                 continue;
             }
@@ -40,11 +38,17 @@ void ShellLinkAndJumpListHandler::parseFile() {
             shellLink.resetAllFlags();
             cout << endl << endl << endl;
         }
-//        else {
-//            /* Decode DestList Stream from Jump List*/
-//            DestList destList = DestList(rs, startPosition);
-//
-//        }
+        if(hValue == 0x00000004) {
+            std::vector<unsigned char>  countOfEntries =  rs->read(startPosition + 4,4);
+            reverse(countOfEntries.begin(), countOfEntries.end());
+            unsigned int count = Utils::lenFourBytes(countOfEntries);
+            if(count != countOfShellLink) {
+                startPosition += 4;
+                continue;
+            }
+            /* Decode DestList Stream from Jump List*/
+            DestList destList = DestList(rs, startPosition);
+        }
         startPosition += 4;
     } while(headerValue.size() != 0);
 
