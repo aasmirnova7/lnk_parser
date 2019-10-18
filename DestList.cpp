@@ -5,10 +5,6 @@
 #include "DestList.h"
 #include "ReadStream.h"
 
-
-// TODO:
-//   1) Найти документацию;
-//   2) Проверить парсинг
 DestList::DestList(ReadStream* rs, int startPosition) {
     std::vector<unsigned char> header =  rs->read(startPosition,32);
     startPosition += 32;

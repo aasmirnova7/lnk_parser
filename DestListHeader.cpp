@@ -9,10 +9,10 @@
 using namespace std;
 
 DestListHeader::DestListHeader(std::vector<unsigned char> destListHeader) {
-    fillLinkTargetIDList(destListHeader);
+    fillDestListHeader(destListHeader);
 }
 
-void DestListHeader::fillLinkTargetIDList(std::vector<unsigned char> destListHeader) {
+void DestListHeader::fillDestListHeader(std::vector<unsigned char> destListHeader) {
     auto it = destListHeader.begin();
 
     std::copy(it, it + 4, std::back_inserter(Version));                         // 4 byte

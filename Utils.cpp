@@ -181,7 +181,7 @@ void Utils::print_vec_unicode(std::vector<unsigned int>& vec, int from, int to) 
     }
     std::cout << endl;
 }
-int Utils::getFirtPosWhereByteIsNull(std::vector<unsigned int>& vec, int from) {
+int Utils::getFirstPosWhereByteIsNull(std::vector<unsigned int>& vec, int from) {
     for(int i=from; i < vec.size(); ++i){
         if(vec[i] == 0x00)
             return i;
@@ -280,19 +280,19 @@ void Utils::printMacAddr(std::vector<unsigned int> vec, int pos) {
         << vec[pos+13] << ":" << vec[pos+14]  << ":" << vec[pos+15] << endl;
 }
 
-std::vector<unsigned int> Utils::getSidForComparing(std::vector<unsigned int> vec, int pos) {
-    std::vector<unsigned int> tmpVec;
-    tmpVec.push_back(vec[3 + pos]); tmpVec.push_back(vec[2 + pos]);
-    tmpVec.push_back(vec[1 + pos]); tmpVec.push_back(vec[0 + pos]);
-    tmpVec.push_back(vec[5 + pos]); tmpVec.push_back(vec[4  + pos]);
-    tmpVec.push_back(vec[7 + pos]); tmpVec.push_back(vec[6 + pos]);
-    tmpVec.push_back(vec[8 + pos]); tmpVec.push_back(vec[9 + pos]);
-    tmpVec.push_back(vec[10 + pos]); tmpVec.push_back(vec[11 + pos]);
-    tmpVec.push_back(vec[12 + pos]); tmpVec.push_back(vec[13 + pos]);
-    tmpVec.push_back(vec[14 + pos]); tmpVec.push_back(vec[15 + pos]);
-
-    return tmpVec;
-}
+//std::vector<unsigned int> Utils::getSidForComparing(std::vector<unsigned int> vec, int pos) {
+//    std::vector<unsigned int> tmpVec;
+//    tmpVec.push_back(vec[3 + pos]); tmpVec.push_back(vec[2 + pos]);
+//    tmpVec.push_back(vec[1 + pos]); tmpVec.push_back(vec[0 + pos]);
+//    tmpVec.push_back(vec[5 + pos]); tmpVec.push_back(vec[4  + pos]);
+//    tmpVec.push_back(vec[7 + pos]); tmpVec.push_back(vec[6 + pos]);
+//    tmpVec.push_back(vec[8 + pos]); tmpVec.push_back(vec[9 + pos]);
+//    tmpVec.push_back(vec[10 + pos]); tmpVec.push_back(vec[11 + pos]);
+//    tmpVec.push_back(vec[12 + pos]); tmpVec.push_back(vec[13 + pos]);
+//    tmpVec.push_back(vec[14 + pos]); tmpVec.push_back(vec[15 + pos]);
+//
+//    return tmpVec;
+//}
 
 std::string Utils::getClsidType(std::vector<unsigned int> vec) {
     for (int i = 0; clsid_list[i].clsid != GUID_Unknown; i++) {
@@ -337,7 +337,7 @@ void Utils::parseItemData(std::vector<unsigned int> data) {
             if (type == TYPE_DIRECTORY)
                 cout << "TYPE_DIRECTORY: " << endl;
             cout << Utils::defaultOffset << "  Short Name: ";
-            int endNamePos = Utils::getFirtPosWhereByteIsNull(data, 12);
+            int endNamePos = Utils::getFirstPosWhereByteIsNull(data, 12);
             int i = endNamePos;
             int rightPartOfData = data.size() - endNamePos - 15;
 
@@ -367,9 +367,6 @@ void Utils::parseItemData(std::vector<unsigned int> data) {
         case TYPE_CLSID: {
             cout << "TYPE_CLSID: ";
             Utils::printSid(data, 2);
-//            cout << endl;
-//            Utils::print_vec(Utils::getSidForComparing(data, 2));
-//            cout << endl;
             std::vector<unsigned int> dataTmp;
             for(int i = 2; i < data.size(); ++i) {
                 dataTmp.push_back(data[i]);

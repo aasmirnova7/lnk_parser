@@ -11,8 +11,31 @@
 #include "ReadStream.h"
 #include "DestListHeader.h"
 
+/**
+    @class DestListEntryArray
+    Класс описывает хранение и разбор структуры DestListEntryArray для списков быстрого доступа.       */
 class DestListEntryArray {
 private:
+    /* ----------------------------------------------------------------------------------------------- */
+    /*! \brief Структура DestListEntry для вектора структур destListEntryArray.                        */
+    /*!  Структура DestListEntry содержит поля, характерные для Entry элемента списков быстрого доступа.
+         Включает следующие поля:
+            Checksum;                 // 8 bytes
+            VolumeId;                 // 16 bytes
+            ObjectId;                 // 16 bytes
+            BirthVolumeId;            // 16 bytes
+            BirthObjectId;            // 16 bytes
+            NetBIOSName;              // 16 bytes
+            EntryId;                  // 4 bytes
+            Reserved1;                // 8 bytes
+            MSFileTime;               // 8 bytes
+            EntryPinStatus;           // 4 bytes
+            Reserved2;                // 4 bytes
+            AccessedCount;            // 4 bytes
+            Reserved3;                // 8 bytes
+            LengthOfUnicodeData;      // 2 bytes
+            EntryStringData;          // variable                                                      */
+    /* ----------------------------------------------------------------------------------------------- */
     struct DestListEntry {
         std::vector<unsigned int> Checksum;                 // 8 bytes
         std::vector<unsigned int> VolumeId;                 // 16 bytes
@@ -30,18 +53,47 @@ private:
         std::vector<unsigned int> LengthOfUnicodeData;      // 2 bytes
         std::vector<unsigned int> EntryStringData;          // variable
     };
+    /* ----------------------------------------------------------------------------------------------- */
+    /*! \brief Вектор destListEntryArray содержит множество структур DestListEntry.                    */
+    /* ----------------------------------------------------------------------------------------------- */
     std::vector<DestListEntry> destListEntryArray;
 
+    /* ----------------------------------------------------------------------------------------------- */
+    /*! Функиця для разбора данных в вектор destListEntryArray
+        @param rs Поток для чтения из файла
+        @param readFrom Позиция начала чтения из потока rs
+        @param header Заголовок структуры DestList списка быстрого доступа
+        @return void                                                                                   */
+    /* ----------------------------------------------------------------------------------------------- */
+    void fillDestListEntryArray(ReadStream *rs, int readFrom, DestListHeader header);
 
-    void fillLinkTargetIDList(ReadStream *rs, int readFrom, DestListHeader header);
+    /* ----------------------------------------------------------------------------------------------- */
+    /*! Функция отображения справа налево всех полей структуры DestListEntry.
+        @param tmpDestListEntry Структура DestListEntry для вектора структур destListEntryArray.
+        @return void                                                                                   */
+    /* ----------------------------------------------------------------------------------------------- */
     void reverseAllFields(DestListEntry* tmpDestListEntry);
 
 public:
+    /* ----------------------------------------------------------------------------------------------- */
+    /*! Конструктор с параметрами.
+        @param readStream Поток для чтения данных из файла
+        @param readFrom Позиция начала чтения из потока rs
+        @param header Заголовок структуры DestList списка быстрого доступа                             */
+    /* ----------------------------------------------------------------------------------------------- */
     DestListEntryArray(ReadStream *readStream, int readFrom, DestListHeader header);
 
+    /* ----------------------------------------------------------------------------------------------- */
+    /*! Функция вывода разобранной информации, содержащейся в DestListEntryArray, в 16-ричном формате.
+        @return void                                                                                   */
+    /* ----------------------------------------------------------------------------------------------- */
     void printDestListEntryArrayInHexStyle();
-    void printDestListEntryArray();
 
+    /* ----------------------------------------------------------------------------------------------- */
+    /*! Функция вывода разобранной информации, содержащейся в DestListEntryArray, в текстовом формате.
+        @return void                                                                                   */
+    /* ----------------------------------------------------------------------------------------------- */
+    void printDestListEntryArray();
 };
 
 

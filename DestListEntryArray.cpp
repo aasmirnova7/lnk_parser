@@ -10,10 +10,10 @@
 using namespace std;
 
 DestListEntryArray::DestListEntryArray(ReadStream *readStream, int readFrom, DestListHeader header) {
-    fillLinkTargetIDList(readStream, readFrom, header);
+    fillDestListEntryArray(readStream, readFrom, header);
 }
 
-void DestListEntryArray::fillLinkTargetIDList(ReadStream *rs, int readFrom, DestListHeader header) {
+void DestListEntryArray::fillDestListEntryArray(ReadStream *rs, int readFrom, DestListHeader header) {
     int count = header.getTotalNumberOfCurrentEntries();
     int tmpReadFrom = readFrom;
 
