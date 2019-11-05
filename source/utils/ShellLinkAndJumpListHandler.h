@@ -7,10 +7,10 @@
 
 #include <algorithm>
 #include <string>
-#include "ShellLink.h"
-#include "DestList.h"
+#include "../lnkStructure/ShellLink.h"
+#include "../jumpListStructure/DestList.h"
 
-/**
+/*!
     @class ShellLinkAndJumpListHandler
     Класс являющийся обработчиком структур Shell Link (.LNK) Binary File Format
     и списков быстрого доступа                                                                     */

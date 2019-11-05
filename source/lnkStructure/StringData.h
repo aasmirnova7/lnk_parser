@@ -6,9 +6,9 @@
 #define LNK_JUMP_LIST_PARSER_STRINGDATA_H
 
 #include <vector>
-#include "ReadStream.h"
+#include "../utils/ReadStream.h"
 
-/**
+/*!
     @class StringDat
     Класс производит разбор структуры StringDat для Shell Link (.LNK) Binary File Format.
     Докуметация структуры: 2.4 StringData

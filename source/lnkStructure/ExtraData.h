@@ -11,14 +11,14 @@
 #include <iostream>
 #include <cstdio>
 
-#include "ReadStream.h"
+#include "../utils/ReadStream.h"
 #include "LinkTargetIDList.h"
 #include "ExtraDataConstants.h"
 #include "ExtraData.h"
 #include "ShellLinkHeader.h"
-#include "Utils.h"
+#include "../utils/Utils.h"
 
-/**
+/*!
     @class ExtraData
     Класс производит разбор ExtraData для Shell Link (.LNK) Binary File Format.
     Докуметация структуры: 2.5 ExtraData
@@ -246,13 +246,13 @@ private:
             BlockSize;            // 4 bytes
             BlockSignature;       // 4 bytes
             IDList;   //  IDList structure (section 2.2.1)
-            TerminalID;               // 4 bytes                                                       */
+            TerminalID;               // 2 bytes                                                       */
     /* ----------------------------------------------------------------------------------------------- */
     struct VistaAndAboveIDListPropsStruct {
         std::vector<unsigned int> BlockSize;                // 4 bytes
         std::vector<unsigned int> BlockSignature;           // 4 bytes
         std::vector<LinkTargetIDList::ItemIDList> IDList;   //  IDList structure (section 2.2.1)
-        std::vector<unsigned int> TerminalID;               // 4 bytes - ?????
+        std::vector<unsigned int> TerminalID;               // 2 bytes
     };
 
     /// Поле содержит информацию структуры CONSOLE_PROPS.

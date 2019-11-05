@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <string>
 
-/**
+/*!
     @class ReadStream
     Класс для чтения данных из заданного файла                                                        */
 class ReadStream {

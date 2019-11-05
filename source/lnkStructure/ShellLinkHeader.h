@@ -13,7 +13,7 @@
 #include "ShellLinkHeader.h"
 #include "ShellLinkHeaderConstants.h"
 
-/**
+/*!
     @class ShellLinkHeader
     Класс производит разбор заголовка для Shell Link (.LNK) Binary File Format.
     Докуметация структуры: 2.1 ShellLinkHeader

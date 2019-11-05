@@ -3,7 +3,7 @@
 //
 
 #include "DestList.h"
-#include "ReadStream.h"
+#include "../utils/ReadStream.h"
 
 DestList::DestList(ReadStream* rs, int startPosition) {
     std::vector<unsigned char> header =  rs->read(startPosition,32);

@@ -10,7 +10,7 @@
 #include "DestListHeader.h"
 #include "DestListEntryArray.h"
 
-/**
+/*!
     @class DestList
     Класс описывает структуру DestList для списков быстрого доступа.                                   */
 class DestList {

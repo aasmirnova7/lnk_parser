@@ -347,10 +347,9 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
             auto it = vistaStruct.begin() + 4;
             std::copy(it, it + 4, std::back_inserter(VISTA_AND_ABOVE_IDLIST_PROPS.BlockSignature));
             it = it + 4;
-            // TODO:  TerminalID как 4 байта???
             VISTA_AND_ABOVE_IDLIST_PROPS.IDList = Utils::fillItemIdList(lenTmp - 12, it);
             it = it + lenTmp - 12;
-            std::copy(it, it + 4, std::back_inserter(VISTA_AND_ABOVE_IDLIST_PROPS.TerminalID));
+            std::copy(it, it + 2, std::back_inserter(VISTA_AND_ABOVE_IDLIST_PROPS.TerminalID));
 
             tmpReadFrom = tmpReadFrom + lenTmp;
             vistaAndAboveIDListPropsIsSet = true;
@@ -539,7 +538,6 @@ void ExtraData::parseFillAttributes(bool popupFillAttributes) {
         }
     }
 }
-// TODO: Проверить корректность
 void ExtraData::parseFontFamily() {
     // Первые 2 байта - font family
     for (int i = 0; i < CONSOLE_PROPS.PopupFillAttributes.size() - 2; ++i) {
@@ -630,19 +628,13 @@ int ExtraData::parseCodePageStream(ExtraData::PropertyStorePropsStruct::StringOr
     if(len == 0x04B0)
         len *= 2;
     cout << "                     Characters:    " << endl;
-    if(len > 0) {
-        //reverse(value.Value.begin(), value.Value.end());
+    if(len > 0) {;
         int posNullTerminator = Utils::getCountOfBytesBeforeNullTerminatorInt(value.Value.begin());
         if(len == 0x04B0) {
-            // TODO: Выводить unicode
-            //SetConsoleOutputCP(65001);  // CP_UTF8 = 65001
             Utils::print_vec_unicode(value.Value, from + 4, from + posNullTerminator);
         } else {
-            //SetConsoleOutputCP(866);
             Utils::print_vec_unicode(value.Value, from + 4, from + posNullTerminator);
         }
-        //SetConsoleOutputCP(866);
-        //reverse(value.Value.begin(), value.Value.end());
     }
     cout << Utils::defaultOffsetDocInfo << "If Size is nonzero and the CodePage property set's CodePage property " <<
          Utils::defaultOffsetDocInfo << "has the value CP_WINUNICODE (0x04B0), then the value MUST be a null-terminated array " <<
@@ -923,22 +915,20 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
         return;
     }
     if (flag == VT_I8) {
-        // TODO: 8-byte signed integer
         cout << "VT_I8: " << endl;
         if (parseType) {
             cout << Utils::defaultOffsetDocInfo << "MUST be an 8-byte signed integer." << endl;
             cout << "              Value:                ";
-            Utils::print_vec(value.Value);
+            Utils::vectEightBytesToUnsignedInt(value.Value, 0);
         } else cout << Utils::defaultOffsetDocInfo << "Type is 8-byte signed integer, and the minimum property set version is 0." << endl;
         return;
     }
     if (flag == VT_UI8) {
-        // TODO: 8-byte signed integer
         cout << "VT_UI8: " << endl;
         if (parseType) {
             cout << Utils::defaultOffsetDocInfo << "MUST be an 8-byte unsigned integer." << endl;
             cout << "              Value:                ";
-            Utils::print_vec(value.Value);
+            Utils::vectEightBytesToUnsignedInt(value.Value, 0);
         } else cout << Utils::defaultOffsetDocInfo << "Type is 8-byte unsigned integer, and the minimum property set version is 0." << endl;
         return;
     }
@@ -1539,7 +1529,6 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
         return;
     }
     if (flag == VT_VECTOR_VT_I8) {
-        // TODO: sequence of 8-byte signed integers
         cout << "VT_VECTOR_VT_I8: " << endl;
         if (parseType) {
             getVectorHeader(value.Value);
@@ -1548,12 +1537,11 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int countOfInt =  (value.Value.size() - 4)/8;
             for(int i=4; i<countOfInt; i += 8)
                 cout << "                     signed integer:" << endl <<
-                     Utils::defaultOffset << dec << (signed int)Utils::lenFourBytesFromPos(value.Value, i) << endl;
+                     Utils::defaultOffset << dec << (signed int)Utils::vectEightBytesToUnsignedInt(value.Value, i) << endl;
         } else cout << Utils::defaultOffsetDocInfo << "Type is Vector of 8-byte signed integers, and the minimum property set version is 0." << endl;
         return;
     }
     if (flag == VT_VECTOR_VT_UI8) {
-        //  TODO: sequence of 8-byte unsigned integers
         cout << "VT_VECTOR_VT_UI8: " << endl;
         if (parseType) {
             getVectorHeader(value.Value);
@@ -1562,7 +1550,7 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int countOfInt =  (value.Value.size() - 4)/8;
             for(int i=4; i<countOfInt; i += 8)
                 cout << "                     signed integer:" << endl <<
-                     Utils::defaultOffset << dec << Utils::lenFourBytesFromPos(value.Value, i) << endl;
+                     Utils::defaultOffset << dec << Utils::vectEightBytesToUnsignedInt(value.Value, i) << endl;
         } else cout << Utils::defaultOffsetDocInfo << "Type is Vector of 8-byte unsigned integers and the minimum property set version is 0." << endl;
         return;
     }
@@ -1754,7 +1742,6 @@ void ExtraData::printExtraData() {
             cout << "          Version:                  "; Utils::print_vec(PROPERTY_STORE_PROPS.PropertyStore[j].Version);
             cout << Utils::defaultOffsetDocInfo << "Has to be equal to 0x53505331." << endl;
             cout << "          FormatID:                 ";  Utils::printSid(PROPERTY_STORE_PROPS.PropertyStore[j].FormatID, 0);
-            // TODO: сделать getClsidType - Нужно ли тут?
             cout << " : " << Utils::getClsidType(PROPERTY_STORE_PROPS.PropertyStore[j].FormatID) << endl;
 
             for (int i = 0; i < PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue.size(); ++i) {

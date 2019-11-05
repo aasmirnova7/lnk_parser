@@ -5,15 +5,15 @@
 #ifndef LNK_JUMP_LIST_PARSER_SHELLLINK_H
 #define LNK_JUMP_LIST_PARSER_SHELLLINK_H
 
-#include "ReadStream.h"
+#include "../utils/ReadStream.h"
 #include "ShellLinkHeader.h"
 #include "LinkTargetIDList.h"
-#include "Utils.h"
+#include "../utils/Utils.h"
 #include "LinkInfo.h"
 #include "StringData.h"
 #include "ExtraData.h"
 
-/**
+/*!
     @class ShellLink
     Класс производит разбор структур для Shell Link (.LNK) Binary File Format.
     Докуметация формата: [MS-SHLLINK]: Shell Link (.LNK) Binary File Format

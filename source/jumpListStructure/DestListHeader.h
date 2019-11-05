@@ -7,9 +7,9 @@
 
 
 #include <vector>
-#include "Utils.h"
+#include "../utils/Utils.h"
 
-/**
+/*!
     @class DestListHeader
     Класс описывает хранение и разбор заголовка для списков быстрого доступа.                         */
 class DestListHeader {

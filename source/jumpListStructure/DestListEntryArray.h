@@ -7,11 +7,11 @@
 
 
 #include <vector>
-#include "Utils.h"
-#include "ReadStream.h"
+#include "../utils/Utils.h"
+#include "../utils/ReadStream.h"
 #include "DestListHeader.h"
 
-/**
+/*!
     @class DestListEntryArray
     Класс описывает хранение и разбор структуры DestListEntryArray для списков быстрого доступа.       */
 class DestListEntryArray {

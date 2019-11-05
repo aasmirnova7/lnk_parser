@@ -16,7 +16,7 @@
 #define  TYPE_DRIVE             0x2f
 #define  TYPE_CLSID             0x1f
 
-/**
+/*!
     @class LinkTargetIDList
     Класс производит разбор структуры LinkTargetIDList для Shell Link (.LNK) Binary File Format.
     Докуметация структуры: 2.2 LinkTargetIDList

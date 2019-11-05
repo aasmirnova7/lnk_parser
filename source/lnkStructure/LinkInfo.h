@@ -8,7 +8,7 @@
 #include <vector>
 #include "LinkInfoConstants.h"
 
-/**
+/*!
     @class LinkInfo
     Класс производит разбор структуры LinkInfo для Shell Link (.LNK) Binary File Format.
     Докуметация структуры: 2.3 LinkInfo

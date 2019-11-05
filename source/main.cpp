@@ -1,4 +1,5 @@
-#include "ParserUtils.h"
+#include <bitset>
+#include "utils/ParserUtils.h"
 
 using namespace std;
 
@@ -70,6 +71,14 @@ void testTime() {
 ////    //printf ("Current local time and date: %s", asctime(timeinfo));
 }
 
+/**
+ * @brief Точка входа в программу.
+ *  Выполнение программы начинается с данного метода.
+ *
+ * @param argc Количество аргементов программы
+ * @param argv Список аргументов программы
+ * @return int Статус завершения программы
+ */
 int main(int argc, char* argv[]) {
     // пока путь указон явно для удобства тестирования
     string destPath = "C:\\Users\\ann19\\AppData\\Roaming\\Microsoft\\Windows\\Recent\\AutomaticDestinations\\";
@@ -109,5 +118,21 @@ int main(int argc, char* argv[]) {
     char c;
     cout << "Press any key to continue . . . " << endl;
     cin >> c;
+
+
+//    int byteArray[]={0x00, 0x00, 0x00, 0xF8, 0xFF, 0x8F, 0x57, 0x40} ;
+//    unsigned int f = 0xC0000000;
+//    bitset<32> set(f);
+//
+//    cout << "set[0] = " << hex << set[0] << "set[31] = " << set[31]<< endl;
+//    for(int i = 0; i < set.size(); ++i)
+//        cout << "set[i] = " << dec << i << " : " << hex << set[i] << endl;
+//    if(set[0] == 1) {
+//        f = -f;
+//    }
+//    cout << " f = " << dec << (float)f << endl;
+//    cout << " f = " << dec << (double)f << endl;
+
+
     return 0;
 }

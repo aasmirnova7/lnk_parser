@@ -3,7 +3,7 @@
 //
 
 #include "Utils.h"
-#include "LinkTargetIDList.h"
+#include "../lnkStructure/LinkTargetIDList.h"
 #include <vector>
 #include <iostream>
 #include <algorithm>

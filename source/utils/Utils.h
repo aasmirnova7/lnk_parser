@@ -8,10 +8,10 @@
 
 #include <vector>
 #include <string>
-#include "LinkTargetIDList.h"
+#include "../lnkStructure/LinkTargetIDList.h"
 #include "UtilsConstant.h"
 
-/**
+/*!
     @class Utils
     Вспомогательный класс для разбора информации в структурах .lnk файла и списков быстрого доступа.       */
 class Utils {
