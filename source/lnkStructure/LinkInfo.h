@@ -1,14 +1,10 @@
-//
-// Created by user on 30.08.2019.
-//
-
 #ifndef LNK_JUMP_LIST_PARSER_LINKINFO_H
 #define LNK_JUMP_LIST_PARSER_LINKINFO_H
 
 #include <vector>
 #include "LinkInfoConstants.h"
 
-/*!
+/**
     @class LinkInfo
     Класс производит разбор структуры LinkInfo для Shell Link (.LNK) Binary File Format.
     Докуметация структуры: 2.3 LinkInfo

@@ -1,7 +1,3 @@
-//
-// Created by user on 29.08.2019.
-//
-
 #include <algorithm>
 #include <iostream>
 #include "LinkTargetIDList.h"
@@ -37,7 +33,6 @@ void LinkTargetIDList::fillLinkTargetIDList(std::vector<unsigned char> linkTarge
         }
 
         copy(it_begin, it_begin + itemIDSize - 2, std::back_inserter(itemIdList.Data));       // itemIDSize byte
-        //reverse(itemIdList.Data.begin(), itemIdList.Data.end());
         it_begin = it_begin + itemIDSize - 2;
 
         IDList.push_back(itemIdList);

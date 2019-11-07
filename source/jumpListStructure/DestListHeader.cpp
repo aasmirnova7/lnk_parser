@@ -1,7 +1,3 @@
-//
-// Created by ann19 on 28.09.2019.
-//
-
 #include <iostream>
 #include <algorithm>
 #include "DestListHeader.h"

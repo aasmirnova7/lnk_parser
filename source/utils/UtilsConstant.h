@@ -1,7 +1,3 @@
-//
-// Created by ann19 on 07.10.2019.
-//
-
 #ifndef LNK_JUMP_LIST_PARSER_UTILSCONSTANT_H
 #define LNK_JUMP_LIST_PARSER_UTILSCONSTANT_H
 

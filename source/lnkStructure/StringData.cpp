@@ -1,6 +1,3 @@
-//
-// Created by user on 30.08.2019.
-//
 #include <algorithm>
 #include "StringData.h"
 #include "ShellLinkHeader.h"
@@ -87,7 +84,6 @@ void StringData::fillStringData(ReadStream *readStream, int readFrom) {
                   std::back_inserter(ICON_LOCATION.String));
 
         StringDataSize =  StringDataSize + len + 2;
-        //tmpReadFrom = tmpReadFrom + len + 2;
     }
 }
 

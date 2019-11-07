@@ -1,7 +1,3 @@
-//
-// Created by user on 30.08.2019.
-//
-
 #ifndef LNK_JUMP_LIST_PARSER_UTILS_H
 #define LNK_JUMP_LIST_PARSER_UTILS_H
 
@@ -11,7 +7,7 @@
 #include "../lnkStructure/LinkTargetIDList.h"
 #include "UtilsConstant.h"
 
-/*!
+/**
     @class Utils
     Вспомогательный класс для разбора информации в структурах .lnk файла и списков быстрого доступа.       */
 class Utils {
@@ -119,7 +115,7 @@ public:
                                std::vector<unsigned char>::const_iterator it);
     /* ----------------------------------------------------------------------------------------------- */
     /*! Функиця вывода информации поля Data структуры ItemID.
-        @param vec Вектор беззнаковых целых чисел - содержимое поля Data
+        @param data Вектор беззнаковых целых чисел - содержимое поля Data
         @return void                                                                                   */
     /* ----------------------------------------------------------------------------------------------- */
     static void parseItemData(std::vector<unsigned int> data);

@@ -1,7 +1,3 @@
-//
-// Created by ann19 on 10.10.2019.
-//
-
 #ifndef LNK_JUMP_LIST_PARSER_PARSERUTILS_H
 #define LNK_JUMP_LIST_PARSER_PARSERUTILS_H
 
@@ -9,7 +5,7 @@
 #include <iostream>
 #include "ShellLinkAndJumpListHandler.h"
 
-/*!
+/**
     @class ParserUtils
     Вспомогательный класс, который предоставляет методы для взаимодействия с пользователем.*/
 class ParserUtils {

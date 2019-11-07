@@ -1,7 +1,3 @@
-//
-// Created by user on 30.08.2019.
-//
-
 #include <iostream>
 #include <algorithm>
 #include "LinkInfo.h"
@@ -36,10 +32,10 @@ void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
     it = it + 4;
 
     /* optional fields */
-    // if the value of the LinkInfoHeaderSize field is greater than or equal to 0x00000024.
+    /* if the value of the LinkInfoHeaderSize field is greater than or equal to 0x00000024. */
     if (Utils::lenFourBytes(LinkInfoHeaderSize) >= 0x00000024) {
-        //if the VolumeIDAndLocalBasePath flag is set, this value is an offset, in bytes,
-        //from the start of the LinkInfo structure; otherwise, this value MUST be zero
+        /* if the VolumeIDAndLocalBasePath flag is set, this value is an offset, in bytes,
+        from the start of the LinkInfo structure; otherwise, this value MUST be zero */
         copy(it, it + 4, std::back_inserter(LocalBasePathOffsetUnicode));       // 4 byte
         it = it + 4;
         copy(it, it + 4, std::back_inserter(CommonPathSuffixOffsetUnicode));    // 4 byte
@@ -49,7 +45,6 @@ void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
     //  if the VolumeIDAndLocalBasePath flag is set.
     if (LinkInfoFlags[3] == VolumeIDAndLocalBasePath) {
         /* VolumeID structure */
-        // !!! ещё есть VolumeIDOffset - по нему и нужно искать - учитывается в итераторах
         copy(it, it + 4, std::back_inserter(VolumeID.VolumeIDSize));                    // 4 byte
         it = it + 4;
         reverse(VolumeID.VolumeIDSize.begin(), VolumeID.VolumeIDSize.end());
@@ -107,7 +102,7 @@ void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
                 CommonNetworkRelativeLink.NetworkProviderType));                              // 4 byte
         it = it + 4;
         /* optional fields */
-        //if the value of the NetNameOffset field is greater than 0x00000014
+        /* if the value of the NetNameOffset field is greater than 0x00000014 */
         if (CommonNetworkRelativeLink.NetNameOffset[3] > 0x00000014) {
             copy(it, it + 4, std::back_inserter(
                     CommonNetworkRelativeLink.NetNameOffsetUnicode));                         // 4 byte
@@ -124,7 +119,7 @@ void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
                 CommonNetworkRelativeLink.DeviceName));
         it = it + 4;
         /* optional fields */
-        //NetNameOffset field is greater than 0x00000014
+        /* NetNameOffset field is greater than 0x00000014 */
         if (CommonNetworkRelativeLink.NetNameOffset[3] > 0x00000014) {
             copy(it, it + 4, std::back_inserter(
                     CommonNetworkRelativeLink.NetNameUnicode));
@@ -136,7 +131,6 @@ void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
         /* end CommonNetworkRelativeLink structure */
     }
 
-    //NULL–terminated string
     reverse(LinkInfoSize.begin(), LinkInfoSize.end());
     reverse(CommonPathSuffixOffset.begin(), CommonPathSuffixOffset.end());
     int len = Utils::lenFourBytes(LinkInfoSize) - Utils::lenFourBytes(CommonPathSuffixOffset);
@@ -144,15 +138,15 @@ void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
     it = it + len;
 
     /* optional fields */
-    //VolumeIDAndLocalBasePath flag is set and the value of the LinkInfoHeaderSize
-    // field is greater than or equal to 0x00000024.
+    /* VolumeIDAndLocalBasePath flag is set and the value of the LinkInfoHeaderSize
+       field is greater than or equal to 0x00000024. */
     if (LinkInfoFlags[3] == VolumeIDAndLocalBasePath && Utils::lenFourBytes(LinkInfoHeaderSize) >= 0x00000024) {
         int countBytesBeforeNullTerminated  = getCountOfBytesBeforeNullTerminatorForLBP(it);
         copy(it, it + countBytesBeforeNullTerminated, std::back_inserter(LocalBasePathUnicode));
         it = it + countBytesBeforeNullTerminated;
     }
 
-    //if the value of the LinkInfoHeaderSize field is greater than or equal to 0x00000024.
+    /* if the value of the LinkInfoHeaderSize field is greater than or equal to 0x00000024. */
     if (Utils::lenFourBytes(LinkInfoHeaderSize) >= 0x00000024) {
         int countBytesBeforeNullTerminated  = Utils::getCountOfBytesBeforeNullTerminator(it);
         copy(it, it + countBytesBeforeNullTerminated, std::back_inserter(CommonPathSuffixUnicode));
@@ -175,34 +169,23 @@ int LinkInfo::getCountOfBytesBeforeNullTerminatorForLBP(std::vector<unsigned cha
     return countBytesBeforeNullTerminated + 1;
 }
 
-// TODO: убрать лишнее
 /* Reverse All field (read left -> rigth) */
 void LinkInfo::reverseAllFields() {
-    //reverse(LinkInfoSize.begin(), LinkInfoSize.end());
-   // reverse(LinkInfoHeaderSize.begin(), LinkInfoHeaderSize.end());
-   // reverse(LinkInfoFlags.begin(), LinkInfoFlags.end());
     reverse(VolumeIDOffset.begin(), VolumeIDOffset.end());
     reverse(LocalBasePathOffset.begin(), LocalBasePathOffset.end());
     reverse(CommonNetworkRelativeLinkOffset.begin(), CommonNetworkRelativeLinkOffset.end());
-    //reverse(CommonPathSuffixOffset.begin(), CommonPathSuffixOffset.end());
     reverse(LocalBasePathOffsetUnicode.begin(), LocalBasePathOffsetUnicode.end());
     reverse(CommonPathSuffixOffsetUnicode.begin(), CommonPathSuffixOffsetUnicode.end());
     /* reverse for VolumeID struct */
-   // reverse(VolumeID.VolumeIDSize.begin(), VolumeID.VolumeIDSize.end());
     reverse(VolumeID.DriveType.begin(), VolumeID.DriveType.end());
     reverse(VolumeID.DriveSerialNumber.begin(), VolumeID.DriveSerialNumber.end());
-    //reverse(VolumeID.VolumeLabelOffset.begin(), VolumeID.VolumeLabelOffset.end());
     reverse(VolumeID.VolumeLabelOffsetUnicode.begin(), VolumeID.VolumeLabelOffsetUnicode.end());
     reverse(VolumeID.Data.begin(), VolumeID.Data.end());   // чтобы читать
     /* end reverse for VolumeID struct */
     reverse(LocalBasePath.begin(), LocalBasePath.end()); // чтобы читать
     /* reverse for CommonNetworkRelativeLink struct */
-   // reverse(CommonNetworkRelativeLink.CommonNetworkRelativeLinkSize.begin(),
-    //        CommonNetworkRelativeLink.CommonNetworkRelativeLinkSize.end());
     reverse(CommonNetworkRelativeLink.CommonNetworkRelativeLinkFlags.begin(),
             CommonNetworkRelativeLink.CommonNetworkRelativeLinkFlags.end());
-    //reverse(CommonNetworkRelativeLink.NetNameOffset.begin(),
-    //        CommonNetworkRelativeLink.NetNameOffset.end());
     reverse(CommonNetworkRelativeLink.DeviceNameOffset.begin(),
             CommonNetworkRelativeLink.DeviceNameOffset.end());
     reverse(CommonNetworkRelativeLink.NetworkProviderType.begin(),

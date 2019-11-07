@@ -1,7 +1,3 @@
-//
-// Created by ann19 on 29.09.2019.
-//
-
 #ifndef LNK_JUMP_LIST_PARSER_SHELLLINKANDJUMPLISTHANDLER_H
 #define LNK_JUMP_LIST_PARSER_SHELLLINKANDJUMPLISTHANDLER_H
 
@@ -10,7 +6,7 @@
 #include "../lnkStructure/ShellLink.h"
 #include "../jumpListStructure/DestList.h"
 
-/*!
+/**
     @class ShellLinkAndJumpListHandler
     Класс являющийся обработчиком структур Shell Link (.LNK) Binary File Format
     и списков быстрого доступа                                                                     */
@@ -44,6 +40,16 @@ public:
         @return void                                                                                   */
     /* ----------------------------------------------------------------------------------------------- */
     void parseFile();
+    /* ----------------------------------------------------------------------------------------------- */
+    /*! Функция разбора структуры .lnk и список быстрого доступа, если она присутствует.
+        @return void                                                                                   */
+    /* ----------------------------------------------------------------------------------------------- */
+    void parseLNKStruct(std::vector<unsigned char> headerValue);
+    /* ----------------------------------------------------------------------------------------------- */
+    /*! Функция разбора структуры список быстрого доступа, если он присутствует.
+        @return void                                                                                   */
+    /* ----------------------------------------------------------------------------------------------- */
+    void parseJumpListStruct();
 };
 
 #endif //LNK_JUMP_LIST_PARSER_SHELLLINKANDJUMPLISTHANDLER_H

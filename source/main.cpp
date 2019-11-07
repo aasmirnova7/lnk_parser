@@ -1,4 +1,3 @@
-#include <bitset>
 #include "utils/ParserUtils.h"
 
 using namespace std;
@@ -11,65 +10,6 @@ using namespace std;
  *    Исправить UUID timestamp
  * 7) убрать закомментированные строки в самом конце перед сдачей программы
  */
-
-void testTime() {
-    // ok : 1 d5 6b 3c 13 e1 6 cf
-
-//    std::vector<unsigned int> vec1;
-//    // 24 65 e5 27 17 d7 e9 11
-//    vec1.push_back(0x11);
-//    vec1.push_back(0xe9);
-////    vec1.push_back(0x11);
-//    vec1.push_back(0xd7);
-//    vec1.push_back(0x17);
-////    vec1.push_back(0xd7);
-////    vec1.push_back(0xe9);
-////    vec1.push_back(0x11);
-//
-//    vec1.push_back(0x24);
-//    vec1.push_back(0x65);
-//    vec1.push_back(0xe5);
-//    vec1.push_back(0x27);
-////    vec1.push_back(0x17);
-////    vec1.push_back(0xd7);
-////    vec1.push_back(0xe9);
-////    vec1.push_back(0x11);
-//
-////    vec1.push_back(0x01);
-////    vec1.push_back(0xd5);
-////    vec1.push_back(0xd1);
-////    vec1.push_back(0x71);
-////
-////    vec1.push_back(0x89);
-////    vec1.push_back(0x4e);
-////    vec1.push_back(0xd9);
-////    vec1.push_back(0x83);
-////
-//////1 d5 65 a5 8f c9 c4 5d
-//////83 d9 4e 89 - d1 71 - 11 e9
-//    std::vector<unsigned int> vec = vec1;// Utils::getSidForComparing(vec1,0);
-//    unsigned int result = (vec[0] << 8) | vec[1];
-//    unsigned int result2 = (vec[2] << 8) | vec[3];
-//    long long int result3 = (result << 16) | result2;
-//    cout << " result3  = " << dec << result3  << " hex = " << hex << result3 << endl;
-//
-//    unsigned int result4 = (vec[4] << 8) | vec[5];
-//    unsigned int result5 = (vec[6] << 8) | vec[7];
-//    long long int result6 = (result4 << 16) | result5;
-//    cout << " result6  = " << dec << result6  << " hex = " << hex << result6 << endl;
-//
-//    long long int result7 = (result3 << 32) | result6;
-//    cout << " result7 = " << dec << result7  << " hex = " << hex << result7 ;
-//
-//    long long int time_l = result7;
-//    time_t rawtime = Utils::convertWindowsTimeToUnixTime(time_l);
-//    struct tm * timeinfo;
-//
-//    //time(&rawtime);
-//    timeinfo = localtime(&rawtime);
-//    cout << " time = " << asctime(timeinfo) << endl;
-////    //printf ("Current local time and date: %s", asctime(timeinfo));
-}
 
 /**
  * @brief Точка входа в программу.
@@ -118,21 +58,5 @@ int main(int argc, char* argv[]) {
     char c;
     cout << "Press any key to continue . . . " << endl;
     cin >> c;
-
-
-//    int byteArray[]={0x00, 0x00, 0x00, 0xF8, 0xFF, 0x8F, 0x57, 0x40} ;
-//    unsigned int f = 0xC0000000;
-//    bitset<32> set(f);
-//
-//    cout << "set[0] = " << hex << set[0] << "set[31] = " << set[31]<< endl;
-//    for(int i = 0; i < set.size(); ++i)
-//        cout << "set[i] = " << dec << i << " : " << hex << set[i] << endl;
-//    if(set[0] == 1) {
-//        f = -f;
-//    }
-//    cout << " f = " << dec << (float)f << endl;
-//    cout << " f = " << dec << (double)f << endl;
-
-
     return 0;
 }

@@ -1,7 +1,3 @@
-//
-// Created by user on 30.08.2019.
-//
-
 #include "Utils.h"
 #include "../lnkStructure/LinkTargetIDList.h"
 #include <vector>
@@ -125,7 +121,7 @@ int Utils::lenTwoBytesFromPos(std::vector<unsigned int> vec, int pos){
     return result;
 }
 
-void Utils::print_vec(vector<unsigned int> vec) {
+void Utils::print_vec(std::vector<unsigned int> vec) {
     int count = 0;
     for (int x: vec) {
         if(count >= 25) {
@@ -197,7 +193,7 @@ int Utils::getCountOfBytesBeforeNullTerminator(std::vector<unsigned char>::const
         ++countBytesBeforeNullTerminated;
         ++itCopy;
     }
-    return countBytesBeforeNullTerminated + 3;  // Правильно, но нужно подумать, почему
+    return countBytesBeforeNullTerminated + 3;
 }
 int Utils::getCountOfBytesBeforeNullTerminatorInt(std::vector<unsigned int>::const_iterator it) {
     int countBytesBeforeNullTerminated = 0;
@@ -207,7 +203,7 @@ int Utils::getCountOfBytesBeforeNullTerminatorInt(std::vector<unsigned int>::con
         ++countBytesBeforeNullTerminated;
         ++itCopy;
     }
-    return countBytesBeforeNullTerminated + 3;  // Правильно, но нужно подумать, почему
+    return countBytesBeforeNullTerminated + 3;
 }
 
 std::vector<LinkTargetIDList::ItemIDList> Utils::fillItemIdList(int count, std::vector<unsigned char>::const_iterator it) {
@@ -279,20 +275,6 @@ void Utils::printMacAddr(std::vector<unsigned int> vec, int pos) {
     cout << hex << vec[pos+10] <<  ":" << vec[pos+11] << ":" << vec[pos+12] << ":"
         << vec[pos+13] << ":" << vec[pos+14]  << ":" << vec[pos+15] << endl;
 }
-
-//std::vector<unsigned int> Utils::getSidForComparing(std::vector<unsigned int> vec, int pos) {
-//    std::vector<unsigned int> tmpVec;
-//    tmpVec.push_back(vec[3 + pos]); tmpVec.push_back(vec[2 + pos]);
-//    tmpVec.push_back(vec[1 + pos]); tmpVec.push_back(vec[0 + pos]);
-//    tmpVec.push_back(vec[5 + pos]); tmpVec.push_back(vec[4  + pos]);
-//    tmpVec.push_back(vec[7 + pos]); tmpVec.push_back(vec[6 + pos]);
-//    tmpVec.push_back(vec[8 + pos]); tmpVec.push_back(vec[9 + pos]);
-//    tmpVec.push_back(vec[10 + pos]); tmpVec.push_back(vec[11 + pos]);
-//    tmpVec.push_back(vec[12 + pos]); tmpVec.push_back(vec[13 + pos]);
-//    tmpVec.push_back(vec[14 + pos]); tmpVec.push_back(vec[15 + pos]);
-//
-//    return tmpVec;
-//}
 
 std::string Utils::getClsidType(std::vector<unsigned int> vec) {
     for (int i = 0; clsid_list[i].clsid != GUID_Unknown; i++) {

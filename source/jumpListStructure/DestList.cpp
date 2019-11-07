@@ -1,11 +1,7 @@
-//
-// Created by ann19 on 28.09.2019.
-//
-
 #include "DestList.h"
 #include "../utils/ReadStream.h"
 
-DestList::DestList(ReadStream* rs, int startPosition) {
+void DestList::parseDestListStructure(ReadStream* rs, int startPosition) {
     std::vector<unsigned char> header =  rs->read(startPosition,32);
     startPosition += 32;
 

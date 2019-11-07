@@ -1,7 +1,3 @@
-//
-// Created by user on 29.08.2019.
-//
-
 #ifndef LNK_JUMP_LIST_PARSER_READSTREAM_H
 #define LNK_JUMP_LIST_PARSER_READSTREAM_H
 
@@ -13,7 +9,7 @@
 #include <algorithm>
 #include <string>
 
-/*!
+/**
     @class ReadStream
     Класс для чтения данных из заданного файла                                                        */
 class ReadStream {

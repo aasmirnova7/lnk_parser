@@ -1,7 +1,3 @@
-//
-// Created by ann19 on 10.10.2019.
-//
-
 #include "ParserUtils.h"
 
 using namespace std;
@@ -71,7 +67,7 @@ const ParserUtils::appId_type appId_list[] = {
         { "Unknown", "Unknown AppId" } /* ,
         * You can specify new AppId in this list: */};
 
-std::string ParserUtils::getAppIdType(string appId) {
+std::string ParserUtils::getAppIdType(std::string appId) {
     for (int i = 0; appId_list[i].appId != "Unknown"; i++) {
         if (appId == appId_list[i].appId) {
             return appId_list[i].name;
@@ -80,7 +76,7 @@ std::string ParserUtils::getAppIdType(string appId) {
     return "Unknown AppId";
 }
 
-bool ParserUtils::programCanParseFile(string filePath) {
+bool ParserUtils::programCanParseFile(std::string filePath) {
     int len = filePath.size();
     int lnkPosExtension = len < 4 ? len : len - 4;
     int destPosExtension = len < 25 ? len : len - 25;

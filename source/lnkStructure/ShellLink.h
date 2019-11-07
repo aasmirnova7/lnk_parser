@@ -1,7 +1,3 @@
-//
-// Created by user on 29.08.2019.
-//
-
 #ifndef LNK_JUMP_LIST_PARSER_SHELLLINK_H
 #define LNK_JUMP_LIST_PARSER_SHELLLINK_H
 
@@ -13,7 +9,7 @@
 #include "StringData.h"
 #include "ExtraData.h"
 
-/*!
+/**
     @class ShellLink
     Класс производит разбор структур для Shell Link (.LNK) Binary File Format.
     Докуметация формата: [MS-SHLLINK]: Shell Link (.LNK) Binary File Format
@@ -26,13 +22,6 @@ private:
     /// Поле для проверки успешности разбора информации в текущем ShellLink.
     bool thisShellLinkHasErrors = false;
 public:
-    /* ----------------------------------------------------------------------------------------------- */
-    /*! Конструктор с параметрами.
-        @param rs Поток для чтения данных из файла
-        @param startPosition Позиция начала чтения из потока rs                                        */
-    /* ----------------------------------------------------------------------------------------------- */
-    ShellLink(ReadStream* rs, int startPosition);
-
     /* ----------------------------------------------------------------------------------------------- */
     /*! Функция для получения позиции окончания текущей структуры ShellLink от начала файла в байтах.
         @return int Количство байт от начала файла.                                                    */
@@ -48,6 +37,13 @@ public:
         @return void                                                                                   */
     /* ----------------------------------------------------------------------------------------------- */
     void resetAllFlags();
+    /* ----------------------------------------------------------------------------------------------- */
+    /*! Функция разбора текущей ShellLink структуры.
+        @param rs Поток для чтения данных из файла
+        @param startPosition Позиция начала чтения из потока rs
+        @return void                                                                                   */
+    /* ----------------------------------------------------------------------------------------------- */
+    void parseShellLinkStructure(ReadStream* rs, int startPosition);
 };
 
 #endif //LNK_JUMP_LIST_PARSER_SHELLLINK_H

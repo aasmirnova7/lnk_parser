@@ -1,7 +1,3 @@
-//
-// Created by ann19 on 28.09.2019.
-//
-
 #ifndef LNK_JUMP_LIST_PARSER_DESTLISTHEADER_H
 #define LNK_JUMP_LIST_PARSER_DESTLISTHEADER_H
 
@@ -9,7 +5,7 @@
 #include <vector>
 #include "../utils/Utils.h"
 
-/*!
+/**
     @class DestListHeader
     Класс описывает хранение и разбор заголовка для списков быстрого доступа.                         */
 class DestListHeader {

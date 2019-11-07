@@ -1,6 +1,3 @@
-//
-// Created by user on 30.08.2019.
-//
 #include "ExtraData.h"
 
 #pragma clang diagnostic push
@@ -22,9 +19,7 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
             std::copy(blockSize.begin(), blockSize.begin() + 4, std::back_inserter(TerminalBlock));
             break;
         }
-
         int len = Utils::lenFourBytes(blockSize);
-        //cout << dec << " len = " << len << endl;
 
         vector<unsigned char> signatureTmp  = readStream->read(tmpReadFrom + 4 ,4);
         reverse(signatureTmp.begin(), signatureTmp.end());
@@ -33,7 +28,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         if (len == 0x000000CC && !ShellLinkHeader::EnableTargetMetadataIsSet() &&
             !consolePropsIsSet && signature == 0xa0000002) { // чтобы пройти дальше в случе ошибки
             /* CONSOLE_PROPS struct*/
-            //cout << "CONSOLE_PROPS struct " << endl;
             vector<unsigned char> consolePropsStruct  = readStream->read(tmpReadFrom,204);
             auto it = consolePropsStruct.begin();
 
@@ -94,7 +88,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         if (len == 0x0000000C && !ShellLinkHeader::EnableTargetMetadataIsSet() &&
             !consoleFEIsSet && signature == 0xa0000004) {
             /* CONSOLE_FE_PROPS struct*/
-            //cout << " CONSOLE_FE_PROPS struct" << endl;
             vector<unsigned char> consoleFEPropsStruct  = readStream->read(tmpReadFrom,12);
             auto it = consoleFEPropsStruct.begin();
 
@@ -110,7 +103,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (ShellLinkHeader::HasDarwinIDIsSet() && len ==  0x00000314 && !drownPropsIsSet && signature == 0xa0000006) {
             /* DARWIN_PROPS struct*/
-            //cout << "DARWIN_PROPS struct" << endl;
             vector<unsigned char> darwinPropsStruct  = readStream->read(tmpReadFrom,788);
             auto it = darwinPropsStruct.begin();
 
@@ -128,7 +120,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (ShellLinkHeader::HasExpStringIsSet() && len ==  0x00000314 && !environmentPropsIsSet && signature == 0xa0000001) {
             /* ENVIRONMENT_PROPS struct*/
-            //cout << "ENVIRONMENT_PROPS struct" << endl;
             vector<unsigned char> environmentPropsStruct  = readStream->read(tmpReadFrom,788);
             auto it = environmentPropsStruct.begin();
 
@@ -146,7 +137,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (ShellLinkHeader::HasExpIconIsSet() && len ==  0x00000314 && !iconEnvironmentPropsIsSet && signature == 0xa0000007) {
             /* ICON_ENVIRONMENT_PROPS struct*/
-            //cout << "ENVIRONMENT_PROPS struct" << endl;
             vector<unsigned char> iconEnvironmentPropsStruct  = readStream->read(tmpReadFrom,788);
             auto it = iconEnvironmentPropsStruct.begin();
 
@@ -165,7 +155,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         if (len ==  0x0000001C && !ShellLinkHeader::EnableTargetMetadataIsSet() &&
             !knownFolderPropsIsSet && signature == 0xa000000b) {
             /* KNOWN_FOLDER_PROPS struct*/
-            //cout << "KNOWN_FOLDER_PROPS struct" << endl;
             vector<unsigned char> knownFolderPropsStruct  = readStream->read(tmpReadFrom,28);
             auto it = knownFolderPropsStruct.begin();
 
@@ -181,9 +170,8 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
             knownFolderPropsIsSet = true;
             continue;
         }
-        if ((ShellLinkHeader::EnableTargetMetadataIsSet() || (len >=  0x0000000C && !propertyStorePropsIsSet)) && signature == 0xa0000009) { // костыль, чтобы не упустить парсинг TRACKER_PROPS
+        if ((ShellLinkHeader::EnableTargetMetadataIsSet() || (len >=  0x0000000C && !propertyStorePropsIsSet)) && signature == 0xa0000009) {
             /* PROPERTY_STORE_PROPS struct*/
-            //cout << "PROPERTY_STORE_PROPS struct" << endl;
             vector<unsigned char> propertyStoreBlockSize  = readStream->read(tmpReadFrom,4);
             std::copy(propertyStoreBlockSize.begin(), propertyStoreBlockSize.end(),
                       std::back_inserter(PROPERTY_STORE_PROPS.BlockSize));
@@ -272,7 +260,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (ShellLinkHeader::RunWithShimLayerIsSet() && len >= 0x00000088 && !shimPropsIsSet && signature == 0xa0000008) {
             /* SHIM_PROPS struct*/
-            //cout << "HIM_PROPS struct" << endl;
             vector<unsigned char> shimPropsBlockSize  = readStream->read(tmpReadFrom,4);
             std::copy(shimPropsBlockSize.begin(), shimPropsBlockSize.end(),
                       std::back_inserter(SHIM_PROPS.BlockSize));
@@ -292,7 +279,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (len == 0x00000010 && !sFolderPropsIsSet && signature == 0xa0000005) {
             /* SPECIAL_FOLDER_PROPS struct*/
-            //cout << "SPECIAL_FOLDER_PROPS struct" << endl;
             vector<unsigned char> specialFolderPropsStruct  = readStream->read(tmpReadFrom,16);
             auto it = specialFolderPropsStruct.begin();
 
@@ -310,7 +296,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (!ShellLinkHeader::ForceNoLinkTrackIsSet() && len == 0x00000060 && !trackerPropsIsSet && signature == 0xa0000003) {
             /* TRACKER_PROPS struct*/
-            //cout << "TRACKER_PROPS struct " << endl;
             vector<unsigned char> trackerPropsStruct  = readStream->read(tmpReadFrom,96);
             auto it = trackerPropsStruct.begin();
 
@@ -335,7 +320,6 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
         }
         if (len >= 0x0000000A && !vistaAndAboveIDListPropsIsSet && signature == 0xa000000c) {
             /* VISTA_AND_ABOVE_IDLIST_PROPS struct*/
-            //cout << "VISTA_AND_ABOVE_IDLIST_PROPS struct" << endl;
             vector<unsigned char> vistaBlockSize  = readStream->read(tmpReadFrom,4);
             std::copy(vistaBlockSize.begin(), vistaBlockSize.end(),
                       std::back_inserter(VISTA_AND_ABOVE_IDLIST_PROPS.BlockSize));
@@ -395,7 +379,6 @@ void ExtraData::reverseAllFields() {
         reverse(CONSOLE_PROPS.FontSize.begin(), CONSOLE_PROPS.FontSize.end());
         reverse(CONSOLE_PROPS.FontFamily.begin(), CONSOLE_PROPS.FontFamily.end());
         reverse(CONSOLE_PROPS.FontWeight.begin(), CONSOLE_PROPS.FontWeight.end());
-       // reverse(CONSOLE_PROPS.FaceName.begin(), CONSOLE_PROPS.FaceName.end());   // 64 bytes (Unicode string)
         reverse(CONSOLE_PROPS.CursorSize.begin(), CONSOLE_PROPS.CursorSize.end());
         reverse(CONSOLE_PROPS.FullScreen.begin(), CONSOLE_PROPS.FullScreen.end());
         reverse(CONSOLE_PROPS.QuickEdit.begin(), CONSOLE_PROPS.QuickEdit.end());
@@ -423,21 +406,16 @@ void ExtraData::reverseAllFields() {
         /* ENVIRONMENT_PROPS struct*/
         reverse(ENVIRONMENT_PROPS.BlockSize.begin(), ENVIRONMENT_PROPS.BlockSize.end());
         reverse(ENVIRONMENT_PROPS.BlockSignature.begin(), ENVIRONMENT_PROPS.BlockSignature.end());
-        //reverse(ENVIRONMENT_PROPS.TargetAnsi.begin(), ENVIRONMENT_PROPS.TargetAnsi.end());
-        //reverse(ENVIRONMENT_PROPS.TargetUnicode.begin(), ENVIRONMENT_PROPS.TargetUnicode.end());
     }
     if (iconEnvironmentPropsIsSet) {
         /* ICON_ENVIRONMENT_PROPS struct*/
         reverse(ICON_ENVIRONMENT_PROPS.BlockSize.begin(), ICON_ENVIRONMENT_PROPS.BlockSize.end());
         reverse(ICON_ENVIRONMENT_PROPS.BlockSignature.begin(), ICON_ENVIRONMENT_PROPS.BlockSignature.end());
-        //reverse(ICON_ENVIRONMENT_PROPS.TargetAnsi.begin(), ICON_ENVIRONMENT_PROPS.TargetAnsi.end());
-        //reverse(ICON_ENVIRONMENT_PROPS.TargetUnicode.begin(), ICON_ENVIRONMENT_PROPS.TargetUnicode.end());
     }
     if (knownFolderPropsIsSet) {
         /* KNOWN_FOLDER_PROPS struct*/
         reverse(KNOWN_FOLDER_PROPS.BlockSize.begin(), KNOWN_FOLDER_PROPS.BlockSize.end());
         reverse(KNOWN_FOLDER_PROPS.BlockSignature.begin(), KNOWN_FOLDER_PROPS.BlockSignature.end());
-        //reverse(KNOWN_FOLDER_PROPS.KnownFolderID.begin(), KNOWN_FOLDER_PROPS.KnownFolderID.end());
         reverse(KNOWN_FOLDER_PROPS.Offset.begin(), KNOWN_FOLDER_PROPS.Offset.end());
     }
     if (propertyStorePropsIsSet) {
@@ -447,7 +425,6 @@ void ExtraData::reverseAllFields() {
         /* parse of SerializedPropertyStorage */
         for (int j = 0; j < PROPERTY_STORE_PROPS.PropertyStore.size(); ++j) {
             reverse(PROPERTY_STORE_PROPS.PropertyStore[j].Version.begin(), PROPERTY_STORE_PROPS.PropertyStore[j].Version.end());
-            //reverse(PROPERTY_STORE_PROPS.PropertyStore[j].FormatID.begin(), PROPERTY_STORE_PROPS.PropertyStore[j].FormatID.end());
             for (int i = 0; i <  PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue.size(); ++i) {
                 reverse(PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].NameSizeOrId.begin(),
                         PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].NameSizeOrId.end());
@@ -486,9 +463,6 @@ void ExtraData::reverseAllFields() {
         reverse(TRACKER_PROPS.BlockSignature.begin(), TRACKER_PROPS.BlockSignature.end());
         reverse(TRACKER_PROPS.Length.begin(), TRACKER_PROPS.Length.end());
         reverse(TRACKER_PROPS.Version.begin(), TRACKER_PROPS.Version.end());
-        //reverse(TRACKER_PROPS.MachineID.begin(), TRACKER_PROPS.MachineID.end());
-        //reverse(TRACKER_PROPS.Droid.begin(), TRACKER_PROPS.Droid.end());
-        //reverse(TRACKER_PROPS.DroidBirth.begin(), TRACKER_PROPS.DroidBirth.end());
     }
     if (vistaAndAboveIDListPropsIsSet) {
         /* VISTA_AND_ABOVE_IDLIST_PROPS struct*/
@@ -1595,7 +1569,6 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of GUID (Packet Version) packets." << endl;
             cout << "              Value:                ";
             int countOfInt =  (value.Value.size() - 4)/16;
-            //reverse(value.Value.begin(), value.Value.end());
             for(int i=4; i<countOfInt; i += 16){
                 cout << "                     GUID:  ";
                 Utils::printSid(value.Value, i);
@@ -1734,7 +1707,7 @@ void ExtraData::printExtraData() {
         Utils::defaultOffsetDocInfo << "This value MUST be greater than or equal to 12." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(PROPERTY_STORE_PROPS.BlockSignature);
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000009." << endl;
-        cout << "   PropertyStore:                   " << endl;                             // A serialized property storage structure ([MS-PROPSTORE] section 2.2).
+        cout << "   PropertyStore:                   " << endl;
         for (int j = 0; j < PROPERTY_STORE_PROPS.PropertyStore.size(); ++j) {
             cout << "   Serialized Property Storage " << j+1 << endl;
             cout << "          StorageSize:              " << dec << Utils::lenFourBytes(PROPERTY_STORE_PROPS.PropertyStore[j].StorageSize)
@@ -1816,10 +1789,6 @@ void ExtraData::printExtraData() {
         cout << "   Droid:                           " << endl;
         cout << "     Droid volume identifier:       "; Utils::printSid(TRACKER_PROPS.Droid, 16); cout << endl;
         cout << "     Droid file identifier:         "; Utils::printSid(TRACKER_PROPS.Droid, 0); cout << endl;
-        // TODO: Исправить UUID timestamp
-        //reverse(TRACKER_PROPS.Droid.begin(), TRACKER_PROPS.Droid.end());
-       // cout << "     UUID timestamp:                "; Utils::getDateFromPos(TRACKER_PROPS.Droid, 16);
-        //reverse(TRACKER_PROPS.Droid.begin(), TRACKER_PROPS.Droid.end());
         cout << "     UUID Sequence number:          " << dec << Utils::vectTwoToUnsignedInt(TRACKER_PROPS.Droid, 24) << endl;
         cout << "     Mac address:                   "; Utils::printMacAddr(TRACKER_PROPS.Droid, 16);
         cout << "   DroidBirth:                      " << endl;

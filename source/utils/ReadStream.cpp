@@ -1,18 +1,10 @@
-//
-// Created by user on 23.08.2019.
-//
-
 #include <iostream>
-#include <fstream>
 #include <vector>
-#include <iomanip>
-#include <algorithm>
 #include "ReadStream.h"
 
 using namespace std;
 
-    //Конструктор, открывающий файл
-    ReadStream::ReadStream(string filePath) {
+    ReadStream::ReadStream(std::string filePath) {
         f.open(filePath, std::ios::binary);
         if(!f.is_open())
             cout << "Shortcut or Jump List file is not opened. "
@@ -21,7 +13,6 @@ using namespace std;
             fileIsOpen = true;
     }
 
-    //Деструктор, закрывающий файл
     ReadStream::~ReadStream(){
         f.close();
     }

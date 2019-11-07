@@ -1,7 +1,3 @@
-//
-// Created by ann19 on 28.09.2019.
-//
-
 #ifndef LNK_JUMP_LIST_PARSER_DESTLISTENTRYARRAY_H
 #define LNK_JUMP_LIST_PARSER_DESTLISTENTRYARRAY_H
 
@@ -11,7 +7,7 @@
 #include "../utils/ReadStream.h"
 #include "DestListHeader.h"
 
-/*!
+/**
     @class DestListEntryArray
     Класс описывает хранение и разбор структуры DestListEntryArray для списков быстрого доступа.       */
 class DestListEntryArray {

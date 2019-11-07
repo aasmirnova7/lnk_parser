@@ -1,6 +1,3 @@
-//
-// Created by user on 23.08.2019.
-//
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -487,10 +484,6 @@ ShellLinkHeader::ShellLinkHeader(std::vector<unsigned char> header){
         return HasIconLocationSet;
     }
     bool ShellLinkHeader::HasStringDataIsSet(){
-//        cout << " HasNameSet = " << HasNameSet << " HasRelativePathSet = " << HasRelativePathSet <<
-//        " HasWorkingDirSet = " <<HasWorkingDirSet << " HasArgumentsSet = " << HasArgumentsSet <<
-//        " HasIconLocationSet = " << HasIconLocationSet << endl;`
-
         if (HasNameSet == true || HasRelativePathSet == true || HasWorkingDirSet == true ||
                 HasArgumentsSet == true || HasIconLocationSet == true)
             return true;

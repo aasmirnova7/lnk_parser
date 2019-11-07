@@ -1,7 +1,3 @@
-//
-// Created by user on 29.08.2019.
-//
-
 #ifndef LNK_JUMP_LIST_PARSER_LINKTARGETIDLIST_H
 #define LNK_JUMP_LIST_PARSER_LINKTARGETIDLIST_H
 
@@ -16,7 +12,7 @@
 #define  TYPE_DRIVE             0x2f
 #define  TYPE_CLSID             0x1f
 
-/*!
+/**
     @class LinkTargetIDList
     Класс производит разбор структуры LinkTargetIDList для Shell Link (.LNK) Binary File Format.
     Докуметация структуры: 2.2 LinkTargetIDList
