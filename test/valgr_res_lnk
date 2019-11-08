@@ -1,0 +1,444 @@
+anna@anna-VirtualBox:~/Documents/lnk_parser$ valgrind --tool=memcheck ./lnk_jump_list_parser
+==16585== Memcheck, a memory error detector
+==16585== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==16585== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==16585== Command: ./lnk_jump_list_parser
+==16585== 
+Please enter the path of the shortcut file you wish to parse:
+/home/anna/Documents/lnk_parser/test/Opera.lnk
+Select a report to output:
+Press
+  1      To console;
+  2      To new file;
+  3      Not generate result;
+1
+File:                               /home/anna/Documents/lnk_parser/test/Opera.lnk
+
+[ShellLink structure 1]:  Start Position offset (in hex style) = 0
+_____________ShellLinkHeader in HEX style________________
+HeaderSize:                         0 0 0 4c 
+LinkCLSID:                          0 2 14 1 - 0 0 - 0 0 - c0 0 - 0 0 0 0 0 46
+LinkFlags:                          0 0 0 9b 
+FileAttributes:                     0 0 0 20 
+CreationTime:                       1 d5 65 a5 8f c9 c4 5d 
+AccessTime:                         1 d5 65 a5 8f ca 60 80 
+WriteTime:                          1 d5 62 31 36 54 4 dc 
+FileSize:                           0 17 32 18 
+IconIndex:                          0 0 0 0 
+ShowCommand:                        0 0 0 1 
+HotKey:                             0 0 
+Reserved1:                          0 0 
+Reserved2:                          0 0 0 0 
+Reserved3:                          0 0 0 0 
+_________________________________________________________
+____________________ShellLinkHeader______________________
+HeaderSize:                         76 bytes
+LinkCLSID:                          0 2 14 1 - 0 0 - 0 0 - c0 0 - 0 0 0 0 0 46
+LinkFlags:                          
+                                    HasLinkTargetIDList:
+                                      The shell link is saved with an item ID list (IDList). 
+                                      If this bit is set, a LinkTargetIDList structure MUST follow the ShellLinkHeader. 
+                                      If this bit is not set, this structure MUST NOT be present.
+                                    HasLinkInfo:
+                                      The shell link is saved with link information.
+                                      If this bit is set, a LinkInfo structure MUST be present.
+                                      If this bit is not set, this structure MUST NOT be present.
+                                    HasRelativePath:
+                                      The shell link is saved with a relative path string.
+                                      If this bit is set, a RELATIVE_PATH StringData structure MUST be present.
+                                      If this bit is not set, this structure MUST NOT be present.
+                                    HasWorkingDir:
+                                      The shell link is saved with a working directory string.
+                                      If this bit is set, a WORKING_DIR StringData structure MUST be present.
+                                      If this bit is not set, this structure MUST NOT be present.
+                                    IsUnicode:
+                                      The shell link contains Unicode encoded strings. This bit SHOULD be set.
+                                      If this bit is set, the StringData section contains Unicode-encoded strings; 
+                                      otherwise, it contains strings that are encoded using the system default code page.
+FileAttributes:                     
+                                    FILE_ATTRIBUTE_ARCHIVE
+                                      The file or directory is an archive file. 
+                                      Applications use this flag to mark files for backup or removal.
+CreationTime:                       Sat Sep  7 20:56:23 2019
+AccessTime:                         Sat Sep  7 20:56:23 2019
+WriteTime:                          Tue Sep  3 11:25:58 2019
+FileSize:                           1520152 bytes
+IconIndex:                          0 0 0 0 
+ShowCommand:                        SW_SHOWNORMAL
+                                      The application is open and its window is open in a normal fashion.
+HotKey:                             No key assigned, No modifier key is being used.
+Reserved1:                          0 0 
+Reserved2:                          0 0 0 0 
+Reserved3:                          0 0 0 0 
+_________________________________________________________
+_________________LinkTargetIdList in Hex Style___________________
+IDListSize:                         2 1e 
+IDList:                             
+   ItemID 1
+       ItemIDSize:                  0 3a 
+       Data:                        1f 44 47 1a 3 59 72 3f a7 44 89 c5 55 95 fe 6b 30 ee 26 0 1 0 26 0 ef 
+                                    be 10 0 0 0 69 fe e9 c 7b 65 d5 1 3a 2 bb b4 7e 65 d5 1 4c 33 c9 b4 
+                                    7e 65 d5 1 14 0 
+   ItemID 2
+       ItemIDSize:                  0 82 
+       Data:                        74 0 1c 0 43 46 53 46 16 0 31 0 0 0 0 0 27 4f 83 66 12 0 41 70 70 
+                                    44 61 74 61 0 0 0 74 1a 59 5e 96 df d3 48 8d 67 17 33 bc ee 28 ba c5 cd 
+                                    fa df 9f 67 56 41 89 47 c5 c7 6b c0 b6 7f 40 0 9 0 4 0 ef be 27 4f 83 
+                                    66 27 4f af 66 2e 0 0 0 d7 59 1 0 0 0 1 0 0 0 0 0 0 0 0 0 
+                                    0 0 0 0 0 0 3a b8 77 0 41 0 70 0 70 0 44 0 61 0 74 0 61 0 0 
+                                    0 42 0 
+   ItemID 3
+       ItemIDSize:                  0 50 
+       Data:                        31 0 0 0 0 0 27 4f b8 8e 10 0 4c 6f 63 61 6c 0 3c 0 9 0 4 0 ef 
+                                    be 27 4f 83 66 27 4f b9 8e 2e 0 0 0 ea 59 1 0 0 0 1 0 0 0 0 0 
+                                    0 0 0 0 0 0 0 0 0 0 dd 32 b 0 4c 0 6f 0 63 0 61 0 6c 0 0 
+                                    0 14 0 
+   ItemID 4
+       ItemIDSize:                  0 5a 
+       Data:                        31 0 0 0 0 0 27 4f 91 8d 10 0 50 72 6f 67 72 61 6d 73 0 0 42 0 9 
+                                    0 4 0 ef be 27 4f 29 6b 27 4f 91 8d 2e 0 0 0 b4 17 2 0 0 0 1 0 
+                                    0 0 0 0 0 0 0 0 0 0 0 0 0 0 aa 92 f6 0 50 0 72 0 6f 0 67 
+                                    0 72 0 61 0 6d 0 73 0 0 0 18 0 
+   ItemID 5
+       ItemIDSize:                  0 50 
+       Data:                        31 0 0 0 0 0 27 4f c 8f 10 0 4f 70 65 72 61 0 3c 0 9 0 4 0 ef 
+                                    be 27 4f 91 8d 27 4f c 8f 2e 0 0 0 6e 63 2 0 0 0 1 0 0 0 0 0 
+                                    0 0 0 0 0 0 0 0 0 0 49 57 5f 0 4f 0 70 0 65 0 72 0 61 0 0 
+                                    0 14 0 
+   ItemID 6
+       ItemIDSize:                  0 66 
+       Data:                        32 0 18 32 17 0 23 4f 40 43 20 0 6c 61 75 6e 63 68 65 72 2e 65 78 65 0 
+                                    0 4a 0 9 0 4 0 ef be 27 4f c 8f 27 4f c 8f 2e 0 0 0 6a b2 2 0 
+                                    0 0 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 24 57 17 1 6c 0 61 
+                                    0 75 0 6e 0 63 0 68 0 65 0 72 0 2e 0 65 0 78 0 65 0 0 0 1c 0 
+   TerminalID:                      0 0 
+_________________________________________________________
+____________________LinkTargetIdList______________________
+IDListSize:                         542 bytes
+IDList:                             
+   ItemID 1
+       ItemIDSize:                  58 bytes
+       Data:                        TYPE_CLSID: 59 3 1a 47 - 3f 72 - 44 a7 - 89 c5 - 55 95 fe 6b 30 ee : Users
+   ItemID 2
+       ItemIDSize:                  130 bytes
+       Data:                        UNKNOWN type for ItemID
+   ItemID 3
+       ItemIDSize:                  80 bytes
+       Data:                        TYPE_DIRECTORY: 
+                                      Short Name: Local
+                                      Long Name:  Local
+
+   ItemID 4
+       ItemIDSize:                  90 bytes
+       Data:                        TYPE_DIRECTORY: 
+                                      Short Name: Programs
+                                      Long Name:  Programs
+
+   ItemID 5
+       ItemIDSize:                  80 bytes
+       Data:                        TYPE_DIRECTORY: 
+                                      Short Name: Opera
+                                      Long Name:  Opera
+
+   ItemID 6
+       ItemIDSize:                  102 bytes
+       Data:                        TYPE_FILE: 
+                                      Short Name: launcher.exe
+                                      Long Name:  launcher.exe
+
+   TerminalID:                      0 0 
+_________________________________________________________
+_____________LinkInfo in HEX style________________
+LinkInfoSize:                       0 0 0 67 
+LinkInfoHeaderSize:                 0 0 0 1c 
+LinkFlags:                          0 0 0 1 
+VolumeIDOffset:                     0 0 0 1c 
+LocalBasePathOffset:                0 0 0 2d 
+CommonNetworkRelativeLinkOffset:    0 0 0 0 
+CommonPathSuffixOffset:             0 0 0 66 
+VolumeID:
+      VolumeIDSize:                 0 0 0 11 
+      DriveType:                    0 0 0 3 
+      DriveSerialNumber:            e8 1a c4 c2 
+      VolumeLabelOffset:            0 0 0 10 
+      Data:                         0 
+LocalBasePath:                      0 65 78 65 2e 72 65 68 63 6e 75 61 6c 5c 61 72 65 70 4f 5c 73 6d 61 72 67 
+                                    6f 72 50 5c 6c 61 63 6f 4c 5c 61 74 61 44 70 70 41 5c 39 31 6e 6e 61 5c 73 
+                                    72 65 73 55 5c 3a 43 
+CommonPathSuffix:                   0 
+_________________________________________________________
+________________________LinkInfo_________________________
+LinkInfoSize:                       103 bytes
+LinkInfoHeaderSize:                 28 bytes. Offsets to the optional fields are not specified.
+LinkFlags:                          VolumeIDAndLocalBasePath
+                                      If set, the VolumeID and LocalBasePath fields are present, 
+                                      and their locations are specified by the values of the VolumeIDOffset and LocalBasePathOffset fields, respectively. 
+                                      If the value of the LinkInfoHeaderSize field is greater than or equal to 0x00000024, 
+                                      the LocalBasePathUnicode field is present, and its location is specified by the value of the LocalBasePathOffsetUnicode field.
+VolumeIDOffset:                     28 bytes (offset in bytes from the start of the LinkInfo structure). 
+                                      If the VolumeIDAndLocalBasePath flag is NOT set, this value MUST be zero.
+LocalBasePathOffset:                45 bytes (offset in bytes from the start of the LinkInfo structure). 
+                                      If the VolumeIDAndLocalBasePath flag is NOT set, this value MUST be zero.
+CommonNetworkRelativeLinkOffset:    0 bytes (offset in bytes from the start of the LinkInfo structure). 
+                                      If the CommonNetworkRelativeLinkAndPathSuffix flag is NOT set, this value MUST be zero.
+CommonPathSuffixOffset:             102 bytes (offset in bytes from the start of the LinkInfo structure)
+VolumeID:
+      VolumeIDSize:                 17 bytes
+      DriveType:                    DRIVE_FIXED
+                                      The drive has fixed media, such as a hard drive or flash drive.
+      DriveSerialNumber:            e81a-c4c2
+      VolumeLabelOffset:            16 bytes (offset in bytes from the start of the VolumeID structure)
+      Data:                         
+LocalBasePath:                      C:\Users\ann19\AppData\Local\Programs\Opera\launcher.exe
+CommonPathSuffix:                   
+_________________________________________________________
+_______________StringData in HEX style___________________
+RELATIVE_PATH:                      
+      CountCharacters:              0 2f 
+      String:                       0 65 0 78 0 65 0 2e 0 72 0 65 0 68 0 63 0 6e 0 75 0 61 0 6c 0 
+                                    5c 0 61 0 72 0 65 0 70 0 4f 0 5c 0 73 0 6d 0 61 0 72 0 67 0 6f 
+                                    0 72 0 50 0 5c 0 6c 0 61 0 63 0 6f 0 4c 0 5c 0 61 0 74 0 61 0 
+                                    44 0 70 0 70 0 41 0 5c 0 2e 0 2e 0 5c 0 2e 0 2e 
+WORKING_DIR:                        
+      CountCharacters:              0 2b 
+      String:                       0 61 0 72 0 65 0 70 0 4f 0 5c 0 73 0 6d 0 61 0 72 0 67 0 6f 0 
+                                    72 0 50 0 5c 0 6c 0 61 0 63 0 6f 0 4c 0 5c 0 61 0 74 0 61 0 44 
+                                    0 70 0 70 0 41 0 5c 0 39 0 31 0 6e 0 6e 0 61 0 5c 0 73 0 72 0 
+                                    65 0 73 0 55 0 5c 0 3a 0 43 
+_________________________________________________________
+______________________StringData________________________
+RELATIVE_PATH:                      
+      CountCharacters:              47 Unicode characters, 94 bytes. 
+      String:                       ..\..\AppData\Local\Programs\Opera\launcher.exe
+WORKING_DIR:                        
+      CountCharacters:              43 Unicode characters, 86 bytes. 
+      String:                       C:\Users\ann19\AppData\Local\Programs\Opera
+_________________________________________________________
+________________ExtraData in HEX style___________________
+KNOWN_FOLDER_PROPS: 
+   BlockSize:                       0 0 0 1c 
+   BlockSignature:                  a0 0 0 b 
+   KnownFolderID:                   f3 ce f 7c - 49 1 - 4a cc - 86 48 - d5 d4 4b 4 ef 8f
+   Offset:                          0 0 0 3a 
+PROPERTY_STORE_PROPS: 
+   BlockSize:                       0 0 1 70 
+   BlockSignature:                  a0 0 0 9 
+   PropertyStore:                   
+   Serialized Property Storage 1
+          StorageSize:              0 0 0 8d 
+          Version:                  53 50 53 31 
+          FormatID:                 46 58 8a e2 - 4c bc - 43 38 - bb fc - 13 93 26 98 6d ce
+        SerializedPropertyValue 1:
+           ValueSize                0 0 0 71 
+           Id                       0 0 0 4 
+           Reserved                 0 
+           Value (TypedPropertyValue structure):
+              Type:                 0 1f 
+              Padding:              0 0 
+              Value:                0 0 0 0 0 31 0 30 0 30 0 31 0 2d 0 38 0 31 0 38 0 32 0 35 0 
+                                    30 0 35 0 32 0 32 0 33 0 2d 0 38 0 36 0 36 0 39 0 30 0 33 0 35 
+                                    0 31 0 31 0 31 0 2d 0 31 0 33 0 38 0 30 0 32 0 32 0 32 0 37 0 
+                                    39 0 31 0 2d 0 31 0 32 0 2d 0 35 0 2d 0 31 0 2d 0 53 0 0 0 2f 
+          TerminalIdentifier:       0 0 0 0 
+   Serialized Property Storage 2
+          StorageSize:              0 0 0 9e 
+          Version:                  53 50 53 31 
+          FormatID:                 9f 4c 28 55 - 9f 79 - 4b 39 - a8 d0 - e1 d4 2d e1 d5 f3
+        SerializedPropertyValue 1:
+           ValueSize                0 0 0 1d 
+           Id                       0 0 0 1a 
+           Reserved                 0 
+           Value (TypedPropertyValue structure):
+              Type:                 0 48 
+              Padding:              0 0 
+              Value:                55 44 30 44 11 5d 87 b7 44 87 a 34 e7 62 91 52 
+        SerializedPropertyValue 2:
+           ValueSize                0 0 0 65 
+           Id                       0 0 0 5 
+           Reserved                 0 
+           Value (TypedPropertyValue structure):
+              Type:                 0 1f 
+              Padding:              0 0 
+              Value:                0 0 0 0 0 32 0 38 0 39 0 38 0 37 0 38 0 37 0 36 0 35 0 31 0 
+                                    2e 0 72 0 65 0 73 0 77 0 6f 0 72 0 42 0 62 0 65 0 57 0 61 0 72 
+                                    0 65 0 70 0 4f 0 2e 0 65 0 72 0 61 0 77 0 74 0 66 0 6f 0 53 0 
+                                    61 0 72 0 65 0 70 0 4f 0 0 0 29 
+          TerminalIdentifier:       0 0 0 0 
+   Serialized Property Storage 3
+          StorageSize:              0 0 0 39 
+          Version:                  53 50 53 31 
+          FormatID:                 44 6d 16 b1 - 8d ad - 48 70 - a7 48 - 40 2e a4 3d 78 8c
+        SerializedPropertyValue 1:
+           ValueSize                0 0 0 1d 
+           Id                       0 0 0 68 
+           Reserved                 0 
+           Value (TypedPropertyValue structure):
+              Type:                 0 48 
+              Padding:              0 0 
+              Value:                92 ae 5b 3a 8f a5 93 bf 4c 68 a9 68 c9 15 b0 8b 
+          TerminalIdentifier:       0 0 0 0 
+   TerminalId:                      0 0 0 0 
+SPECIAL_FOLDER_PROPS: 
+   BlockSize:                       0 0 0 10 
+   BlockSignature:                  a0 0 0 5 
+   SpecialFolderID:                 ff ff ff ff 
+   Offset:                          0 0 0 3a 
+TRACKER_PROPS: 
+   BlockSize:                       0 0 0 60 
+   BlockSignature:                  a0 0 0 3 
+   Length:                          0 0 0 58 
+   Version:                         0 0 0 0 
+   MachineID:                       64 65 73 6b 74 6f 70 2d 64 36 39 6a 31 61 65 0 
+   Droid:                           c8 9a f9 62 6c 3 b6 41 a7 2 33 5 52 87 9f a8 89 4e d9 83 71 d1 e9 11 bb 
+                                    da ac e0 10 58 c2 c5 
+   DroidBirth:                      c8 9a f9 62 6c 3 b6 41 a7 2 33 5 52 87 9f a8 89 4e d9 83 71 d1 e9 11 bb 
+                                    da ac e0 10 58 c2 c5 
+TerminalBlock:                      0 0 0 0 
+_________________________________________________________
+_______________________ExtraData_________________________
+KNOWN_FOLDER_PROPS: 
+   BlockSize:                       28 bytes
+                                      This value MUST be 28.
+   BlockSignature:                  a0 0 0 b 
+                                      This value MUST be 0xA000000B.
+   KnownFolderID:                   f3 ce f 7c - 49 1 - 4a cc - 86 48 - d5 d4 4b 4 ef 8f : UsersFiles
+   Offset:                          58 bytes.
+                                      Specifies the location of the ItemID of the first child segment of the IDList specified by KnownFolderID. 
+                                      This value is the offset, in bytes, into the link target IDList.
+PROPERTY_STORE_PROPS: 
+   BlockSize:                       368 bytes
+                                      This value MUST be greater than or equal to 12.
+   BlockSignature:                  a0 0 0 9 
+                                      This value MUST be 0xA0000009.
+   PropertyStore:                   
+   Serialized Property Storage 1
+          StorageSize:              141 bytes
+          Version:                  53 50 53 31 
+                                      Has to be equal to 0x53505331.
+          FormatID:                 46 58 8a e2 - 4c bc - 43 38 - bb fc - 13 93 26 98 6d ce : Not found
+          SerializedPropertyValue 1:
+            ValueSize:              113 bytes
+            Id:                     4
+            Reserved:               0 
+                                      MUST be 0x00.
+            Value (TypedPropertyValue structure):
+              Type:                 VT_LPWSTR: 
+                                      MUST be a UnicodeString.
+              Value:                
+                 CodePageString:    
+                     Length:        98 bytes
+                                      The length in 16-bit Unicode characters of the Characters field, 
+                                      including the null terminator, but not including padding (if any). 
+                     Characters:    S-1-5-21-1972220831-1115309668-3225052818-1001
+                                      If Length is nonzero, this field MUST be a null-terminated array 
+                                      of 16-bit Unicode characters followed by zero padding to a multiple of 4 bytes. 
+                                      If Length is zero, this field MUST be zero bytes in length.
+              Padding:              0 0 
+                                      MUST be set to zero, and any nonzero value SHOULD be rejected.
+          TerminalIdentifier:       0 0 0 0 
+   Serialized Property Storage 2
+          StorageSize:              158 bytes
+          Version:                  53 50 53 31 
+                                      Has to be equal to 0x53505331.
+          FormatID:                 9f 4c 28 55 - 9f 79 - 4b 39 - a8 d0 - e1 d4 2d e1 d5 f3 : Not found
+          SerializedPropertyValue 1:
+            ValueSize:              29 bytes
+            Id:                     26
+            Reserved:               0 
+                                      MUST be 0x00.
+            Value (TypedPropertyValue structure):
+              Type:                 VT_CLSID: 
+                                      MUST be a GUID (Packet Version).
+              Value:                e7 62 91 52 - a 34 - 44 87 - b7 87 - 5d 11 44 30 44 55 : Not found
+              Padding:              0 0 
+                                      MUST be set to zero, and any nonzero value SHOULD be rejected.
+          SerializedPropertyValue 2:
+            ValueSize:              101 bytes
+            Id:                     5
+            Reserved:               0 
+                                      MUST be 0x00.
+            Value (TypedPropertyValue structure):
+              Type:                 VT_LPWSTR: 
+                                      MUST be a UnicodeString.
+              Value:                
+                 CodePageString:    
+                     Length:        86 bytes
+                                      The length in 16-bit Unicode characters of the Characters field, 
+                                      including the null terminator, but not including padding (if any). 
+                     Characters:    OperaSoftware.OperaWebBrowser.1567878982
+                                      If Length is nonzero, this field MUST be a null-terminated array 
+                                      of 16-bit Unicode characters followed by zero padding to a multiple of 4 bytes. 
+                                      If Length is zero, this field MUST be zero bytes in length.
+              Padding:              0 0 
+                                      MUST be set to zero, and any nonzero value SHOULD be rejected.
+          TerminalIdentifier:       0 0 0 0 
+   Serialized Property Storage 3
+          StorageSize:              57 bytes
+          Version:                  53 50 53 31 
+                                      Has to be equal to 0x53505331.
+          FormatID:                 44 6d 16 b1 - 8d ad - 48 70 - a7 48 - 40 2e a4 3d 78 8c : Not found
+          SerializedPropertyValue 1:
+            ValueSize:              29 bytes
+            Id:                     104
+            Reserved:               0 
+                                      MUST be 0x00.
+            Value (TypedPropertyValue structure):
+              Type:                 VT_CLSID: 
+                                      MUST be a GUID (Packet Version).
+              Value:                c9 15 b0 8b - a9 68 - 4c 68 - bf 93 - a5 8f 3a 5b ae 92 : Not found
+              Padding:              0 0 
+                                      MUST be set to zero, and any nonzero value SHOULD be rejected.
+          TerminalIdentifier:       0 0 0 0 
+   TerminalId:                      0 0 0 0 
+SPECIAL_FOLDER_PROPS: 
+   BlockSize:                       16 bytes
+                                      This value MUST be 16.
+   BlockSignature:                  a0 0 0 5 
+                                      This value MUST be 0xA0000005.
+   SpecialFolderID:                 4294967295 : Unknown
+   Offset:                          58 bytes.
+                                      Specifies the location of the ItemID of the first child segment of the IDList specified by SpecialFolderID. 
+                                      This value is the offset, in bytes, into the link target IDList.
+TRACKER_PROPS: 
+   BlockSize:                       96 bytes
+                                      This value MUST be 96.
+   BlockSignature:                  a0 0 0 3 
+                                      This value MUST be 0xA0000003.
+   Length:                          88 bytes
+                                      This value MUST be 88 bytes.
+   Version:                         0
+                                      This value MUST be 0.
+   MachineID (NetBIOS name):        desktop-d69j1ae
+   Droid:                           
+     Droid volume identifier:       83 d9 4e 89 - d1 71 - 11 e9 - bb da - ac e0 10 58 c2 c5
+     Droid file identifier:         62 f9 9a c8 - 3 6c - 41 b6 - a7 2 - 33 5 52 87 9f a8
+     UUID Sequence number:          48090
+     Mac address:                   ac:e0:10:58:c2:c5
+   DroidBirth:                      
+     Birth droid volume identifier: 83 d9 4e 89 - d1 71 - 11 e9 - bb da - ac e0 10 58 c2 c5
+     Birth droid file identifier:   62 f9 9a c8 - 3 6c - 41 b6 - a7 2 - 33 5 52 87 9f a8
+TerminalBlock:                      0 0 0 0 
+_________________________________________________________
+
+
+
+The total number of Shell Link = 1
+The number of Shell Link with errors while parsing = 0
+Press any key to continue . . . 
+q
+==16585== 
+==16585== HEAP SUMMARY:
+==16585==     in use at exit: 9,272 bytes in 3 blocks
+==16585==   total heap usage: 2,884 allocs, 2,881 frees, 231,816 bytes allocated
+==16585== 
+==16585== LEAK SUMMARY:
+==16585==    definitely lost: 528 bytes in 1 blocks
+==16585==    indirectly lost: 8,192 bytes in 1 blocks
+==16585==      possibly lost: 0 bytes in 0 blocks
+==16585==    still reachable: 552 bytes in 1 blocks
+==16585==         suppressed: 0 bytes in 0 blocks
+==16585== Rerun with --leak-check=full to see details of leaked memory
+==16585== 
+==16585== For counts of detected and suppressed errors, rerun with: -v
+==16585== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
