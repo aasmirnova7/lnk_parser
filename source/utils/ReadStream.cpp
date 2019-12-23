@@ -12,18 +12,19 @@ using namespace std;
         else
             fileIsOpen = true;
     }
-
     ReadStream::~ReadStream(){
         f.close();
     }
 
     bool ReadStream::isFileOpen() {
+        // std::cout << "__isFileOpen start__" << std::endl;
         return fileIsOpen;
     }
 
     /* Метод чтения массива символов-байт с указанной позиции
        который возвращает этот массив */
     vector<unsigned char> ReadStream::read(int position, int count) {
+        // vstd::cout << "__read start__" << std::endl;
         vector<unsigned char> ivector;
 
         if(!f.is_open())

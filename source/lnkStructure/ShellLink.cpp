@@ -4,11 +4,13 @@
 using namespace std;
 
 void ShellLink::parseShellLinkStructure(ReadStream* rs, int startPosition) {
+    // std::cout << "__parseShellLinkStructure start__" << std::endl;
     cout << " Start Position offset (in hex style) = " << hex <<  startPosition << endl;
     std::vector<unsigned char> header =  rs->read(startPosition,76);
     startPosition += 76;
 
-    ShellLinkHeader shellLinkHeader = ShellLinkHeader(header);
+    ShellLinkHeader shellLinkHeader = ShellLinkHeader();
+    shellLinkHeader.fillShellLinkHeader(header);
     shellLinkHeader.printHeaderInHexStyle();
     shellLinkHeader.printHeader();
     bool valid = shellLinkHeader.isHeaderValid();
@@ -19,52 +21,72 @@ void ShellLink::parseShellLinkStructure(ReadStream* rs, int startPosition) {
         if (shellLinkHeader.HasLinkTargetIDListIsSet()) {
             std::vector<unsigned char> LTIDListSize =  rs->read(startPosition,2);
             reverse(LTIDListSize.begin(), LTIDListSize.end());
-            int linkTargetIDListSize = Utils::lenTwoBytes(LTIDListSize);
+            int linkTargetIDListSize = Utils::lenTwoBytesChar(LTIDListSize);
 
-            std::vector<unsigned char> linkTargetIdListVect = rs->read(startPosition, linkTargetIDListSize + 2);
-            linkTargetIdList = LinkTargetIDList(linkTargetIdListVect);
-            linkTargetIdList.printLinkTargetIdListInHexStyle();
-            linkTargetIdList.printLinkTargetIdList();
+            if(linkTargetIDListSize != 0) {
+                std::vector<unsigned char> linkTargetIdListVect = rs->read(startPosition, linkTargetIDListSize + 2);
+                linkTargetIdList = LinkTargetIDList();
+                linkTargetIdList.fillLinkTargetIDList(linkTargetIdListVect);
+                linkTargetIdList.printLinkTargetIdListInHexStyle();
+                linkTargetIdList.printLinkTargetIdList();
 
-            /* Обработка ошибок осуществляется следующим образом:
-             * Если при парсинге возникают ситуации:
-             *  1) Размер какой-либо ItemID = 0;
-             *  2) Размер какой-либо ItemID превышает суммарный размер LinkTargetIDList;
-             * Тогда разбор текущей ShellLink не продолжается и возвращается пердыдущая стартовая позиция
-             * (после парсинга ShellLinkHeader), кратная 16.
-             * Далее снова продолжается поиск новой ShellLink структуры*/
-            // 0 = false, 1 = true
-            if (linkTargetIdList.LinkTargetIdHasErrors()) {
+                /* Обработка ошибок осуществляется следующим образом:
+                 * Если при парсинге возникают ситуации:
+                 *  1) Размер какой-либо ItemID = 0;
+                 *  2) Размер какой-либо ItemID превышает суммарный размер LinkTargetIDList;
+                 * Тогда разбор текущей ShellLink не продолжается и возвращается пердыдущая стартовая позиция
+                 * (после парсинга ShellLinkHeader), кратная 16.
+                 * Далее снова продолжается поиск новой ShellLink структуры*/
+                // 0 = false, 1 = true
+                if (linkTargetIdList.LinkTargetIdHasErrors()) {
+                    cout << "There is some error in this LinkTargetIDList structure." << endl
+                         << "Program will try to find next Shell Link Stream." << endl;
+                    int reminder = startPosition % 16;
+                    ShellLinkOffsetEnd = startPosition + 16 - reminder;
+                    thisShellLinkHasErrors = true;
+                } else
+                    startPosition = startPosition + linkTargetIDListSize + 2; // учитываем заголовок
+            } else {
                 cout << "There is some error in this LinkTargetIDList structure." << endl
                      << "Program will try to find next Shell Link Stream." << endl;
                 int reminder = startPosition % 16;
                 ShellLinkOffsetEnd = startPosition + 16 - reminder;
                 thisShellLinkHasErrors = true;
-            } else
-                startPosition = startPosition + linkTargetIDListSize + 2; // учитываем заголовок
+            }
         }
 
-        if(shellLinkHeader.HasLinkInfoIsSet() && !linkTargetIdList.LinkTargetIdHasErrors()) {
+        if(shellLinkHeader.HasLinkInfoIsSet() && !linkTargetIdList.LinkTargetIdHasErrors() && !thisShellLinkHasErrors) {
             std::vector<unsigned char> LIS =  rs->read(startPosition,4);
             reverse(LIS.begin(), LIS.end());
-            int linkInfoSize = Utils::lenFourBytes(LIS);
+            int linkInfoSize = Utils::lenFourBytesChar(LIS);
 
-            std::vector<unsigned char> linkInfoSizeVect =  rs->read(startPosition, linkInfoSize);
-            LinkInfo linkInfo = LinkInfo(linkInfoSizeVect);
-            linkInfo.printLinkInfoInHexStyle();
-            linkInfo.printLinkInfo();
-            startPosition = startPosition + linkInfoSize; // +4
+            if(linkInfoSize != 0) {
+                std::vector<unsigned char> linkInfoSizeVect =  rs->read(startPosition, linkInfoSize);
+                LinkInfo linkInfo = LinkInfo();
+                linkInfo.fillLinkInfo(linkInfoSizeVect);
+                linkInfo.printLinkInfoInHexStyle();
+                linkInfo.printLinkInfo();
+                startPosition = startPosition + linkInfoSize; // +4
+            } else {
+                cout << "There is some error in this LinkTargetIDList structure." << endl
+                     << "Program will try to find next Shell Link Stream." << endl;
+                int reminder = startPosition % 16;
+                ShellLinkOffsetEnd = startPosition + 16 - reminder;
+                thisShellLinkHasErrors = true;
+            }
         }
 
-        if(shellLinkHeader.HasStringDataIsSet() && !linkTargetIdList.LinkTargetIdHasErrors()) {
-            StringData stringData = StringData(rs, startPosition);
+        if(shellLinkHeader.HasStringDataIsSet() && !linkTargetIdList.LinkTargetIdHasErrors() && !thisShellLinkHasErrors) {
+            StringData stringData = StringData();
+            stringData.fillStringData(rs, startPosition);
             stringData.printStringDataInHexStyle();
             stringData.printStringData();
             startPosition = startPosition + stringData.getStringDataStructureSize();
         }
 
-        if (!linkTargetIdList.LinkTargetIdHasErrors()) {
-            ExtraData extraData = ExtraData(rs, startPosition);
+        if (!linkTargetIdList.LinkTargetIdHasErrors() && !thisShellLinkHasErrors) {
+            ExtraData extraData = ExtraData();
+            extraData.fillExtraData(rs, startPosition);
             extraData.printExtraDataInHexStyle();
             extraData.printExtraData();
             ShellLinkOffsetEnd = (extraData.getExtraDataOffsetEnd() == 0) ?
@@ -74,12 +96,15 @@ void ShellLink::parseShellLinkStructure(ReadStream* rs, int startPosition) {
 }
 
 int ShellLink::getShellLinkOffsetEnd() {
+    // std::cout << "__getShellLinkOffsetEnd start__" << std::endl;
     return ShellLinkOffsetEnd;
 }
 bool ShellLink::isThisShellLinkHasErrors() {
+    // std::cout << "__isThisShellLinkHasErrors start__" << std::endl;
     return thisShellLinkHasErrors;
 }
 void ShellLink::resetAllFlags() {
+    // std::cout << "__resetAllFlags start__" << std::endl;
     ShellLinkHeader::setHltidListIsSet(false);
     ShellLinkHeader::setHliIsSet(false);
     ShellLinkHeader::setHasNameSet(false);

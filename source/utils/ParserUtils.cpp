@@ -68,6 +68,7 @@ const ParserUtils::appId_type appId_list[] = {
         * You can specify new AppId in this list: */};
 
 std::string ParserUtils::getAppIdType(std::string appId) {
+    // std::cout << "__getAppIdType start__" << std::endl;
     for (int i = 0; appId_list[i].appId != "Unknown"; i++) {
         if (appId == appId_list[i].appId) {
             return appId_list[i].name;
@@ -77,6 +78,7 @@ std::string ParserUtils::getAppIdType(std::string appId) {
 }
 
 bool ParserUtils::programCanParseFile(std::string filePath) {
+    // std::cout << "__programCanParseFile start__" << std::endl;
     int len = filePath.size();
     int lnkPosExtension = len < 4 ? len : len - 4;
     int destPosExtension = len < 25 ? len : len - 25;
@@ -101,6 +103,7 @@ bool ParserUtils::programCanParseFile(std::string filePath) {
 }
 
 void  ParserUtils::startParsing() {
+    // std::cout << "__startParsing start__" << std::endl;
     string filePath, storageType;
     cout << "Please enter the path of the shortcut file you wish to parse:" << endl;
     std::getline (std::cin,filePath);
@@ -112,7 +115,7 @@ void  ParserUtils::startParsing() {
     cout << "  2      To new file;" << endl;
     cout << "  3      Not generate result;" << endl;
     std::getline (std::cin,storageType);
-    int storageTarget = std::atoi(storageType.c_str());
+    unsigned int storageTarget = std::atoi(storageType.c_str());
 
     switch(storageTarget) {
         case 1: {

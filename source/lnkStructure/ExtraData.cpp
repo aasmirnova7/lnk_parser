@@ -4,14 +4,16 @@
 #pragma clang diagnostic ignored "-Wc++11-narrowing"
 using namespace std;
 
-ExtraData::ExtraData(ReadStream *readStream, int readFrom) {
-    fillExtraData(readStream, readFrom);
-}
-
 void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
+    // std::cout << "__fillExtraData start__" << std::endl;
     int tmpReadFrom = readFrom;
+    int counter = 0; // Счётчик попыток распарсить структуру ExtraData для избежания зацикливания в сложных случаях.
 
     while (true) {
+        if(counter > 100) {
+            cout << "There is some errors wile ExtraData parsing." << endl;
+            break;
+        }
         vector<unsigned char> blockSize  = readStream->read(tmpReadFrom,4);
         reverse(blockSize.begin(), blockSize.end());
 
@@ -19,11 +21,13 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
             std::copy(blockSize.begin(), blockSize.begin() + 4, std::back_inserter(TerminalBlock));
             break;
         }
-        int len = Utils::lenFourBytes(blockSize);
+        int len = Utils::lenFourBytesChar(blockSize);
+        if(len == 0)
+            break;
 
         vector<unsigned char> signatureTmp  = readStream->read(tmpReadFrom + 4 ,4);
         reverse(signatureTmp.begin(), signatureTmp.end());
-        unsigned int signature = Utils::lenFourBytes(signatureTmp);
+        unsigned int signature = Utils::lenFourBytesChar(signatureTmp);
 
         if (len == 0x000000CC && !ShellLinkHeader::EnableTargetMetadataIsSet() &&
             !consolePropsIsSet && signature == 0xa0000002) { // чтобы пройти дальше в случе ошибки
@@ -177,7 +181,7 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
                       std::back_inserter(PROPERTY_STORE_PROPS.BlockSize));
 
             reverse(propertyStoreBlockSize.begin(), propertyStoreBlockSize.end());
-            int lenTmp = Utils::lenFourBytes(propertyStoreBlockSize);
+            int lenTmp = Utils::lenFourBytesChar(propertyStoreBlockSize);
             int lenOfPropStore = lenTmp;
 
             vector<unsigned char> propertyStorePropsStruct  = readStream->read(tmpReadFrom, lenTmp - 4);
@@ -221,7 +225,7 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
                     std::copy(tmpIt, tmpIt + 1, std::back_inserter(tmpStringOrIntegerName.Reserved));
                     tmpIt = tmpIt + 1;
                     sizeOfValue -= 9;
-                    setStringNameStructInPropsStorage(tmpSerializedPropertyStorage);
+                    ExtraData::setStringNameStructInPropsStorage(tmpSerializedPropertyStorage);
                     if (isStringNameStructInPropsStorage) {
                         /* for StringName */
                         std::reverse(tmpStringOrIntegerName.NameSizeOrId.begin(), tmpStringOrIntegerName.NameSizeOrId.end());
@@ -265,7 +269,7 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
                       std::back_inserter(SHIM_PROPS.BlockSize));
 
             reverse(shimPropsBlockSize.begin(), shimPropsBlockSize.end());
-            int lenTmp = Utils::lenFourBytes(shimPropsBlockSize);
+            int lenTmp = Utils::lenFourBytesChar(shimPropsBlockSize);
 
             vector<unsigned char> shimPropsStruct  = readStream->read(tmpReadFrom,lenTmp);
             auto it = shimPropsStruct.begin() + 4;
@@ -325,7 +329,7 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
                       std::back_inserter(VISTA_AND_ABOVE_IDLIST_PROPS.BlockSize));
 
             reverse(vistaBlockSize.begin(), vistaBlockSize.end());
-            int lenTmp = Utils::lenFourBytes(vistaBlockSize);
+            int lenTmp = Utils::lenFourBytesChar(vistaBlockSize);
 
             vector<unsigned char> vistaStruct  = readStream->read(tmpReadFrom,lenTmp);
             auto it = vistaStruct.begin() + 4;
@@ -338,17 +342,20 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
             tmpReadFrom = tmpReadFrom + lenTmp;
             vistaAndAboveIDListPropsIsSet = true;
         }
+        ++counter;
     }
 
     ExtraDataOffsetEnd = tmpReadFrom;
-    reverseAllFields();
+    ExtraData::reverseAllFields();
 }
 
 int ExtraData::getExtraDataOffsetEnd() {
+    // getExtraDataOffsetEnd start__" << std::endl;
     return ExtraDataOffsetEnd;
 }
 
 void ExtraData::setStringNameStructInPropsStorage(PropertyStorePropsStruct::SerializedPropertyStorage tmpSerializedPropertyStorage) {
+    // std::cout << "__setStringNameStructInPropsStorage start__" << std::endl;
     if (tmpSerializedPropertyStorage.FormatID[0] == 0xD5 && tmpSerializedPropertyStorage.FormatID[1] == 0xCD &&
         tmpSerializedPropertyStorage.FormatID[2] == 0xD5 && tmpSerializedPropertyStorage.FormatID[3] == 0x05 &&
         tmpSerializedPropertyStorage.FormatID[4] == 0x2E && tmpSerializedPropertyStorage.FormatID[5] == 0x9C &&
@@ -360,8 +367,9 @@ void ExtraData::setStringNameStructInPropsStorage(PropertyStorePropsStruct::Seri
         ) { isStringNameStructInPropsStorage = true;}
 }
 
-/* Reverse All field (read left -> rigth) */
+/* Reverse All field (read left -> right) */
 void ExtraData::reverseAllFields() {
+    // std::cout << "__reverseAllFields start__" << std::endl;
     if (consolePropsIsSet) {
         /* CONSOLE_PROPS struct*/
         reverse(CONSOLE_PROPS.BlockSize.begin(), CONSOLE_PROPS.BlockSize.end());
@@ -472,6 +480,7 @@ void ExtraData::reverseAllFields() {
     }
 }
 void ExtraData::parseFillAttributes(bool popupFillAttributes) {
+    // std::cout << "__parseFillAttributes start__" << std::endl;
     if (popupFillAttributes) {
         for (int i = 0; i < CONSOLE_PROPS.PopupFillAttributes.size(); ++i) {
             if (CONSOLE_PROPS.PopupFillAttributes[i] & FOREGROUND_BLUE) cout << "FOREGROUND_BLUE: " <<
@@ -513,6 +522,7 @@ void ExtraData::parseFillAttributes(bool popupFillAttributes) {
     }
 }
 void ExtraData::parseFontFamily() {
+    // std::cout << "__parseFontFamily start__" << std::endl;
     // Первые 2 байта - font family
     for (int i = 0; i < CONSOLE_PROPS.PopupFillAttributes.size() - 2; ++i) {
         if (CONSOLE_PROPS.FontFamily[i] & FF_DONTCARE) cout << "FF_DONTCARE: "<<
@@ -543,6 +553,7 @@ void ExtraData::parseFontFamily() {
     }
 }
 void ExtraData::parseFontWeight() {
+    // std::cout << "__parseFontWeight start__" << std::endl;
     int len = Utils::lenFourBytes(CONSOLE_PROPS.FontWeight);
     if (len >= 700)
         cout << "A bold font." << endl;
@@ -550,6 +561,7 @@ void ExtraData::parseFontWeight() {
         cout << "A regular-weight font." << endl;
 }
 void ExtraData::parseCursorSize() {
+    // std::cout << "__parseCursorSize start__" << std::endl;
     int len = Utils::lenFourBytes(CONSOLE_PROPS.CursorSize);
     cout << dec << len;
     if (len <= 25)
@@ -560,30 +572,35 @@ void ExtraData::parseCursorSize() {
         cout << "A large cursor." << endl;
 }
 void ExtraData::parseFullScreen() {
+    // std::cout << "__parseFullScreen start__" << std::endl;
     if (Utils::lenFourBytes(CONSOLE_PROPS.FullScreen) > 0x00000000)
         cout << "Full-screen mode is on." << endl;
     else
         cout << "Full-screen mode is off." << endl;
 }
 void ExtraData::parseQuickEdit() {
+    // std::cout << "__parseQuickEdit start__" << std::endl;
     if (Utils::lenFourBytes(CONSOLE_PROPS.QuickEdit) > 0x00000000)
         cout << "QuickEdit mode is on." << endl;
     else
         cout << "QuickEdit mode is off." << endl;
 }
 void ExtraData::parseInsertMode() {
+    // std::cout << "__parseInsertMode start__" << std::endl;
     if (Utils::lenFourBytes(CONSOLE_PROPS.InsertMode) > 0x00000000)
         cout << "Insert mode is enabled." << endl;
     else
         cout << "Insert mode is disabled." << endl;
 }
 void ExtraData::parseAutoPosition() {
+    // std::cout << "__parseAutoPosition start__" << std::endl;
     if (Utils::lenFourBytes(CONSOLE_PROPS.AutoPosition) > 0x00000000)
         cout << "The console window is positioned automatically." << endl;
     else
         cout << "The values of the WindowOriginX and WindowOriginY fields are used to position the console window." << endl;
 }
 void ExtraData::parseHistoryNoDup() {
+    // std::cout << "__parseHistoryNoDup start__" << std::endl;
     if (Utils::lenFourBytes(CONSOLE_PROPS.HistoryNoDup) > 0x00000000)
         cout << "Duplicates are allowed." << endl;
     else
@@ -591,6 +608,7 @@ void ExtraData::parseHistoryNoDup() {
 }
 
 int ExtraData::parseCodePageStream(ExtraData::PropertyStorePropsStruct::StringOrIntegerName::TypedPropertyValue value, int from) {
+    // std::cout << "__parseCodePageStream start__" << std::endl;
     cout << Utils::defaultOffsetDocInfo << "MUST be a CodePageString." << endl;
     cout << "              Value:                " << endl;
     cout << "                 CodePageString:    " << endl;
@@ -605,9 +623,9 @@ int ExtraData::parseCodePageStream(ExtraData::PropertyStorePropsStruct::StringOr
     if(len > 0) {;
         int posNullTerminator = Utils::getCountOfBytesBeforeNullTerminatorInt(value.Value.begin());
         if(len == 0x04B0) {
-            Utils::print_vec_unicode(value.Value, from + 4, from + posNullTerminator);
+            Utils::print_vec_unicode_from_to(value.Value, from + 4, from + posNullTerminator);
         } else {
-            Utils::print_vec_unicode(value.Value, from + 4, from + posNullTerminator);
+            Utils::print_vec_unicode_from_to(value.Value, from + 4, from + posNullTerminator);
         }
     }
     cout << Utils::defaultOffsetDocInfo << "If Size is nonzero and the CodePage property set's CodePage property " <<
@@ -620,19 +638,21 @@ int ExtraData::parseCodePageStream(ExtraData::PropertyStorePropsStruct::StringOr
     return len + 4;
 }
 int ExtraData::getVectorHeader(std::vector<unsigned int> val) {
+    // std::cout << "__getVectorHeader start__" << std::endl;
     int len = Utils::lenFourBytes(val);
     cout << "              VectorHeader:         " << endl;
     cout << "                 Length:            " << dec << len << " bytes. " << endl;
     return len;
 }
 int ExtraData::getArrayHeader(std::vector<unsigned int> val) {
+    // std::cout << "__getArrayHeader start__" << std::endl;
     cout << "              ArrayHeader:          " << endl;
     cout << "                 Type:              "; Utils::print_vec_from_to(val, 0, 4);
     cout << Utils::defaultOffsetDocInfo << "MUST be set to the value obtained by clearing " <<
             Utils::defaultOffsetDocInfo << "the VT_ARRAY (0x2000) bit of this array property's PropertyType value." << endl;
         unsigned int flag = Utils::vectFourBytesToUnsignedInt(val, 0);
         ExtraData::PropertyStorePropsStruct::StringOrIntegerName::TypedPropertyValue tmpVal;
-        parseTypedPropertyValueTypeAndValue(false, flag, tmpVal);
+        ExtraData::parseTypedPropertyValueTypeAndValue(false, flag, tmpVal);
     int countOfDimen = Utils::lenFourBytesFromPos(val, 4);
     cout << "                 NumDimensions:     " << Utils::lenFourBytesFromPos(val, 4) << endl;
     cout << Utils::defaultOffsetDocInfo << "n unsigned integer representing the number of dimensions " <<
@@ -656,17 +676,18 @@ int ExtraData::getArrayHeader(std::vector<unsigned int> val) {
     return len;
 }
 void ExtraData::parseCURRENCY(std::vector<unsigned int> val, int pos) {
-    // TODO: нужно сичтать число от 8 байт и ставить запятую через 4 цифры с конца
+    // std::cout << "__parseCURRENCY start__" << std::endl;
     cout << Utils::defaultOffsetDocInfo << "MUST be a CURRENCY (Packet Version)." << endl;
     cout << "              Value:                ";
-    cout << "$ "; Utils::lenFourBytesFromPos(val, pos); cout << endl;
+    cout << "$ " << (double)Utils::vectEightBytesToUnsignedInt(val, pos)/10000 << endl;
 }
 void ExtraData::parseVT_ERROR(std::vector<unsigned int> val, int from, int to) {
-    // TODO: распарсить значения из
-    //  https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/705fb797-2175-4a90-b5a3-3918024b10b8
-    Utils::print_vec_from_to(val, from, to);
+    // std::cout << "__parseVT_ERROR start__" << std::endl;
+    long long int errorVal = Utils::vectEightBytesToUnsignedInt(val, from);
+    ExtraDataUtils::parseError(errorVal );
 }
 void ExtraData::parseVT_BOOL(std::vector<unsigned int> val, int pos){
+    // std::cout << "__parseVT_BOOL start__" << std::endl;
     reverse(val.begin(), val.end());
     if(val[pos] == 0x00 && val[pos+1] == 0x00)
         cout << "VARIANT_FALSE = 0x0000 ";
@@ -676,6 +697,7 @@ void ExtraData::parseVT_BOOL(std::vector<unsigned int> val, int pos){
     reverse(val.begin(), val.end());
 }
 int ExtraData::parseUnicodeString(std::vector<unsigned int> val, int pos) {
+    // std::cout << "__parseUnicodeString start__" << std::endl;
     cout << "                 CodePageString:    " << endl;
     int len = Utils::lenFourBytesFromPos(val, pos);
     if(len == 0 && val.size() > 4)
@@ -686,7 +708,7 @@ int ExtraData::parseUnicodeString(std::vector<unsigned int> val, int pos) {
          Utils::defaultOffsetDocInfo << "including the null terminator, but not including padding (if any). " << endl;
     cout << "                     Characters:    ";
     if(len > 0) {
-        Utils::print_vec_unicode(val, pos+4, val.size());
+        Utils::print_vec_unicode_from_to(val, pos+4, val.size());
     } else
         cout << endl;
     reverse(val.begin(), val.end());
@@ -697,17 +719,19 @@ int ExtraData::parseUnicodeString(std::vector<unsigned int> val, int pos) {
     return len;// + 4;
 }
 int ExtraData::parseClipboardData(std::vector<unsigned int> val, int pos) {
+    // std::cout << "__parseClipboardData start__" << std::endl;
     cout << "                ClipboardData:      " << endl;
     int len = Utils::lenFourBytesFromPos(val, pos);
     cout << "                     Size:          " << len << " bytes" << endl <<
          Utils::defaultOffsetDocInfo << "The total size in bytes of the Format and Data fields, not including padding (if any)." << endl;
     cout << "                     Format:        " << Utils::lenFourBytesFromPos(val, pos+4) << endl <<
          Utils::defaultOffsetDocInfo << "An application-specific identifier for the format of the data in the Data field." << endl;
-    cout << "                     Data:          "; Utils::print_vec_unicode(val, pos+8, pos + len - 8);
+    cout << "                     Data:          "; Utils::print_vec_unicode_from_to(val, pos+8, pos + len - 8);
     cout << Utils::defaultOffsetDocInfo << "MUST be an array of bytes, followed by zero padding to a multiple of 4 bytes." << endl;
     return len + 4;
 }
 void ExtraData::parseDECIMAL(std::vector<unsigned int> val, int pos) {
+    // std::cout << "__parseDECIMAL start__" << std::endl;
     cout << "                DECIMAL:            " << endl;
     cout << "                 wReserved:         " << val[pos] << " " << val[pos+1] <<
          Utils::defaultOffsetDocInfo << "MUST be set to zero and MUST be ignored. " << endl;
@@ -731,6 +755,7 @@ void ExtraData::parseDECIMAL(std::vector<unsigned int> val, int pos) {
 
 void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int flag,
         ExtraData::PropertyStorePropsStruct::StringOrIntegerName::TypedPropertyValue value) {
+    // std::cout << "__parseTypedPropertyValueTypeAndValueL start__" << std::endl;
     if (flag == VT_EMPTY) {
         cout << "VT_EMPTY: " << endl;
         if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be zero bytes in length." << endl;
@@ -762,29 +787,29 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
         return;
     }
     if (flag == VT_R4) {
-        // TODO: не понятно, как переводить floating-point number
         cout << "VT_R4: " << endl;
         if (parseType) {
             cout << Utils::defaultOffsetDocInfo << "MUST be a 4-byte (single-precision) IEEE floating-point number." << endl;
             cout << "              Value:                ";
-            Utils::print_vec(value.Value);
+            unsigned  int tmpVal = Utils::lenFourBytes(value.Value);
+            cout  << *(reinterpret_cast<float *>(&tmpVal)) << endl;
         } else cout << Utils::defaultOffsetDocInfo << "Type is 4-byte (single-precision) IEEE floating-point number, and the minimum property set version is 0." << endl;
         return;
     }
     if (flag == VT_R8) {
-        // TODO: не понятно, как переводить floating-point number
         cout << "VT_R8: " << endl;
         if (parseType) {
             cout << Utils::defaultOffsetDocInfo << "MUST be an 8-byte (double-precision) IEEE floating-point number." << endl;
             cout << "              Value:                ";
-            Utils::print_vec(value.Value);
+            long long int tmpVal = Utils::vectEightBytesToUnsignedInt(value.Value, 0);
+            cout  << *(reinterpret_cast<double *>(&tmpVal)) << endl;
         }
         else cout << Utils::defaultOffsetDocInfo << "Type is 8-byte (double-precision) IEEE floating-point number, and the minimum property set version is 0." << endl;
         return;
     }
     if (flag == VT_CY) {
         cout << "VT_CY: " << endl;
-        if (parseType) parseCURRENCY(value.Value, 0);
+        if (parseType) ExtraData::parseCURRENCY(value.Value, 0);
         else cout << Utils::defaultOffsetDocInfo << "Type is CURRENCY, and the minimum property set version is 0." << endl;
         return;
     }
@@ -794,7 +819,7 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
         else
             cout << "VT_LPSTR: " << endl;
 
-        if (parseType) parseCodePageStream(value, 0);
+        if (parseType) ExtraData::parseCodePageStream(value, 0);
         else cout << Utils::defaultOffsetDocInfo << "Type is CodePageString, and the minimum property set version is 0." << endl;
         return;
     }
@@ -803,7 +828,7 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
         if (parseType) {
             cout << Utils::defaultOffsetDocInfo << "MUST be a 32-bit unsigned integer representing an HRESULT, as specified in [MS-DTYP]." << endl;
             cout << "              Value:                ";
-            parseVT_ERROR(value.Value, 0, value.Value.size());
+            ExtraData::parseVT_ERROR(value.Value, 0, value.Value.size());
         } else cout << Utils::defaultOffsetDocInfo << "Type is HRESULT, and the minimum property set version is 0." << endl;
         return;
     }
@@ -812,7 +837,7 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
         if (parseType) {
             cout << Utils::defaultOffsetDocInfo << "MUST be a VARIANT_BOOL as specified in [MS-OAUT], followed by zero padding to 4 bytes." << endl;
             cout << "              Value:                ";
-            parseVT_BOOL(value.Value, 0);
+            ExtraData::parseVT_BOOL(value.Value, 0);
         } else cout << Utils::defaultOffsetDocInfo << "Type is VARIANT_BOOL, and the minimum property set version is 0." << endl;
         return;
     }
@@ -826,13 +851,13 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int lenTmp = 0;
             if (flag == VT_DECIMAL) cout << Utils::defaultOffsetDocInfo << "MUST be a DECIMAL (Packet Version). " << endl;
             if (flag == VT_ARRAY_VT_DECIMAL) {
-                lenTmp = getArrayHeader(value.Value);
+                lenTmp = ExtraData::getArrayHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of DECIMAL (Packet Version) packets." << endl;
             }
             cout << "              Value:                ";
             int countOfIntegers = (value.Value.size() - lenTmp)/16;
             for(int i=lenTmp; i < countOfIntegers; i += 16)
-                parseDECIMAL(value.Value, i);
+                ExtraData::parseDECIMAL(value.Value, i);
         } else {
             if (flag == VT_DECIMAL)
                 cout << Utils::defaultOffsetDocInfo << "Type is DECIMAL, and the minimum property set version is 0." << endl;
@@ -921,7 +946,7 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
         if (parseType) {
             cout << Utils::defaultOffsetDocInfo << "MUST be a UnicodeString." << endl;
             cout << "              Value:                " << endl;
-            parseUnicodeString(value.Value, 0);
+            ExtraData::parseUnicodeString(value.Value, 0);
         } else cout << Utils::defaultOffsetDocInfo << "Type is UnicodeString, and the minimum property set version is 0." << endl;
         return;
     }
@@ -962,7 +987,7 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
         if (parseType) {
             cout << Utils::defaultOffsetDocInfo << "MUST be an IndirectPropertyName. " << endl <<
                  Utils::defaultOffsetDocInfo << "The storage representing the (non-simple) property set MUST have a stream element with this name." << endl;
-            parseCodePageStream(value, 0);
+            ExtraData::parseCodePageStream(value, 0);
         } else {
             if(flag == VT_STREAM)
                 cout << Utils::defaultOffsetDocInfo << "Type is Stream, and the minimum property set version is 0. VT_STREAM is not allowed in a simple property set." << endl;
@@ -982,7 +1007,7 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
         if (parseType) {
             cout << Utils::defaultOffsetDocInfo << "MUST be a ClipboardData." << endl;
             cout << "              Value:                ";
-            parseClipboardData(value.Value, 0);
+            ExtraData::parseClipboardData(value.Value, 0);
         } else cout << Utils::defaultOffsetDocInfo << "Type is PropertyIdentifier, and the minimum property set version is 0." << endl;
         return;
     }
@@ -1009,7 +1034,7 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             Utils::printSid(value.Value, 0);
             cout << " : " << Utils::getClsidType(value.Value) << endl;
             cout << "                     StreamName:    " << endl;
-            parseCodePageStream(value, 16);
+            ExtraData::parseCodePageStream(value, 16);
         } else cout << Utils::defaultOffsetDocInfo << "Type is Stream with application-specific version GUID (VersionedStream). " << endl <<
                   Utils::defaultOffsetDocInfo << "The minimum property set version is 0. VT_VERSIONED_STREAM is not allowed in a simple property set." << endl;
         return;
@@ -1024,12 +1049,12 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int lenTmp = 0;
             if (flag == VT_VECTOR_VT_I2) {
                 lenTmp = 4;
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 16-bit signed integers, " << endl <<
                      Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
             }
             if (flag == VT_ARRAY_VT_I2){
-                lenTmp = getArrayHeader(value.Value);
+                lenTmp = ExtraData::getArrayHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 16-bit signed integers, " << endl <<
                      Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
             }
@@ -1057,11 +1082,11 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int lenTmp = 0;
             if (flag == VT_VECTOR_VT_I4) {
                 lenTmp = 4;
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo<< "MUST be a VectorHeader followed by a sequence of 32-bit signed integers." << endl;
             }
             if (flag == VT_ARRAY_VT_I4) {
-                lenTmp = getArrayHeader(value.Value);
+                lenTmp = ExtraData::getArrayHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 32-bit signed integers." << endl;
             }
             cout << "              Value:                ";
@@ -1079,7 +1104,6 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
         return;
     }
     if ((flag == VT_VECTOR_VT_R4 ) || (flag == VT_ARRAY_VT_R4) ) {
-        // TODO: 4-byte (single-precision) IEEE floating-point numbers
         if (flag == VT_VECTOR_VT_R4)
             cout << "VT_VECTOR_VT_R4: " << endl;
         if (flag == VT_ARRAY_VT_R4)
@@ -1089,19 +1113,20 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int lenTmp = 0;
             if (flag == VT_VECTOR_VT_R4){
                 lenTmp = 4;
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 4-byte (single-precision) IEEE floating-point numbers." << endl;
 
             }
             if (flag == VT_ARRAY_VT_R4){
-                lenTmp = getArrayHeader(value.Value);
+                lenTmp = ExtraData::getArrayHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 4-byte (single-precision) IEEE floating-point numbers." << endl;
             }
             cout << "              Value:                ";
             int countOfIntegers = (value.Value.size() - lenTmp)/4;
             for(int i=lenTmp; i < countOfIntegers; i += 4){
-                cout << "                     Signed Int:    " << endl ;
-                cout << Utils::defaultOffset << dec << (signed int)Utils::lenFourBytesFromPos(value.Value, i) << endl;
+                cout << "                  Single-precision: " << endl;
+                unsigned int tmpVal = Utils::lenFourBytesFromPos(value.Value, i);
+                cout << Utils::defaultOffset << dec << *(reinterpret_cast<float *>(&tmpVal)) << endl;
             }
         } else {
             if (flag == VT_VECTOR_VT_R4)
@@ -1112,7 +1137,6 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
         return;
     }
     if ((flag == VT_VECTOR_VT_R8) || (flag == VT_ARRAY_VT_R8)) {
-        // TODO: 8-byte (single-precision) IEEE floating-point numbers
         if (flag == VT_VECTOR_VT_R8)
             cout << "VT_VECTOR_VT_R8: " << endl;
         if (flag == VT_ARRAY_VT_R8)
@@ -1122,15 +1146,20 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int lenTmp = 0;
             if (flag == VT_VECTOR_VT_R8) {
                 lenTmp = 4;
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 8-byte (double-precision) IEEE floating-point numbers." << endl;
             }
             if (flag == VT_ARRAY_VT_R8) {
-                lenTmp  = getArrayHeader(value.Value);
+                lenTmp  = ExtraData::getArrayHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 8-byte (double-precision) IEEE floating-point numbers." << endl;
             }
             cout << "              Value:                ";
-            Utils::print_vec(value.Value);
+            int countOfIntegers = (value.Value.size() - lenTmp)/4;
+            for(int i=lenTmp; i < countOfIntegers; i += 4){
+                cout << "                  Double-precision: " << endl;
+                long long int tmpVal = Utils::vectEightBytesToUnsignedInt(value.Value, i);
+                cout << Utils::defaultOffset << dec << *(reinterpret_cast<float *>(&tmpVal)) << endl;
+            }
         } else {
             if (flag == VT_VECTOR_VT_R8)
                 cout << Utils::defaultOffsetDocInfo << "Type is Vector of 8-byte (double-precision) IEEE floating-point numbers, and the minimum property set version is 0." << endl;
@@ -1149,18 +1178,18 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int lenTMP = 0;
             if (flag == VT_VECTOR_VT_CY) {
                 lenTMP = 4;
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of CURRENCY (Packet Version) packets." << endl;
             }
             if (flag == VT_ARRAY_VT_CY) {
-                lenTMP = getArrayHeader(value.Value);
+                lenTMP = ExtraData::getArrayHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of CURRENCY (Packet Version) packets." << endl;
             }
             cout << "              Value:                ";
             int countOfCurrency =  (value.Value.size() - lenTMP)/4;
             for(int i=lenTMP; i<countOfCurrency; i += 4){
                 cout << "                     CURRENCY:      " << endl ;
-                parseCURRENCY(value.Value, i);
+                ExtraData::parseCURRENCY(value.Value, i);
             }
         } else {
             if (flag == VT_VECTOR_VT_CY)
@@ -1184,11 +1213,11 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
                 cout << Utils::defaultOffsetDocInfo << "MUST be a DATE (Packet Version)." << endl;
             if(flag == VT_VECTOR_VT_DATE) {
                 lenTMP = 4;
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of DATE (Packet Version) packets." << endl;
             }
             if (flag == VT_ARRAY_VT_DATE) {
-                lenTMP = getArrayHeader(value.Value);
+                lenTMP = ExtraData::getArrayHeader(value.Value);
                 if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of DATE (Packet Version) packets." << endl;
             }
             cout << "              Value:                ";
@@ -1196,8 +1225,7 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             for(int i=lenTMP; i<countOfDates ; i += 8){
                 cout << "                     Date:      " << endl ;
                 cout << Utils::defaultOffset;
-                // TODO: parse Date
-                //Utils::getDateFromPos(value.Value, i);
+                Utils::getDateFromPos(value.Value, i);
             }
             cout << endl;
         } else {
@@ -1219,12 +1247,12 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
         if (parseType) {
             int lenTmp = 0;
             if (flag == VT_FILETIME) {
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be FILETIME (Packet Version) packets." << endl;
             }
             if(flag == VT_VECTOR_VT_DATE) {
                 lenTmp = 4;
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of FILETIME (Packet Version) packets." << endl;
             }
             cout << "              Value:                ";
@@ -1255,12 +1283,12 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int lenTmp = 0;
             if ((flag == VT_VECTOR_VT_LPSTR) || (flag == VT_VECTOR_VT_BSTR)) {
                 lenTmp = 4;
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of CodePageString packets." << endl;
 
             }
             if (flag == VT_ARRAY_VT_BSTR) {
-                lenTmp = getArrayHeader(value.Value);
+                lenTmp = ExtraData::getArrayHeader(value.Value);
                 if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of CodePageString packets." << endl;
             }
             cout << "              Value:                ";
@@ -1268,7 +1296,7 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int codePageLen, i = lenTmp;
             do {
                 cout << "                     CodePageString:" << endl ;
-                codePageLen = parseCodePageStream(value, i);
+                codePageLen = ExtraData::parseCodePageStream(value, i);
                 i += codePageLen;
                 size -= codePageLen;
             } while(size > 0);
@@ -1290,18 +1318,18 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int lenTmp = 0;
             if (flag == VT_VECTOR_VT_ERROR) {
                 lenTmp = 4;
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 32-bit unsigned integers representing HRESULTs, as specified in [MS-DTYP]." << endl;
             }
             if (flag == VT_ARRAY_VT_ERROR) {
-                lenTmp = getArrayHeader(value.Value);
+                lenTmp = ExtraData::getArrayHeader(value.Value);
                 if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 32-bit unsigned integers representing HRESULTs, as specified in [MS-DTYP]." << endl;
             }
             cout << "              Value:                ";
             int countOfErrors =  (value.Value.size() - lenTmp)/4;
             for(int i=lenTmp; i<countOfErrors; i += 4){
                 cout << "                     VT_ERROR      :" << endl ;
-                parseVT_ERROR(value.Value, i, i + 4);
+                ExtraData::parseVT_ERROR(value.Value, i, i + 4);
             }
         } else {
             if (flag == VT_VECTOR_VT_ERROR)
@@ -1321,18 +1349,18 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int lenTmp = 0;
             if (flag == VT_VECTOR_VT_BOOL) {
                 lenTmp = 4;
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of VARIANT_BOOL as specified in [MS-OAUT], followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
             }
             if (flag == VT_ARRAY_VT_BOOL) {
-                lenTmp = getArrayHeader(value.Value);
+                lenTmp = ExtraData::getArrayHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of VARIANT_BOOL as specified in [MS-OAUT], followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
             }
             cout << "              Value:                ";
             int countOfErrors =  (value.Value.size() - lenTmp)/2;
             for(int i=lenTmp; i<countOfErrors; i += 2){
                 cout << "                     VT_BOOL       :" << endl ;
-                parseVT_BOOL(value.Value, i);
+                ExtraData::parseVT_BOOL(value.Value, i);
             }
         } else {
             if (flag == VT_VECTOR_VT_BOOL)
@@ -1342,8 +1370,8 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             }
         return;
     }
+    // TODO: sequence of TypedPropertyValue packets: Пока не сделано. Сделан вывод в 16-ричном режиме
     if ((flag == VT_VECTOR_VT_VARIANT) || (flag == VT_ARRAY_VT_VARIANT)) {
-        // TODO: sequence of TypedPropertyValue packets
         if (flag == VT_VECTOR_VT_VARIANT)
             cout << "VT_VECTOR_VT_VARIANT: " << endl;
         if (flag == VT_ARRAY_VT_VARIANT)
@@ -1353,11 +1381,11 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int lenTmp = 0;
             if (flag == VT_VECTOR_VT_VARIANT) {
                 lenTmp = 4;
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of TypedPropertyValue packets." << endl;
             }
             if (flag == VT_ARRAY_VT_VARIANT) {
-                lenTmp = getArrayHeader(value.Value);
+                lenTmp = ExtraData::getArrayHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of TypedPropertyValue packets." << endl;
             }
             cout << "              Value:                ";
@@ -1380,12 +1408,12 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int lemTmp = 0;
             if (flag == VT_VECTOR_VT_I1) {
                 lemTmp = 4;
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 1-byte signed integers, " << endl <<
                      Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
             }
             if (flag == VT_ARRAY_VT_I1) {
-                lemTmp = getArrayHeader(value.Value);
+                lemTmp = ExtraData::getArrayHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 1-byte signed integers, " << endl <<
                         Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
             }
@@ -1413,12 +1441,12 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int lenTmp = 0;
             if (flag == VT_VECTOR_VT_UI1) {
                 lenTmp = 4;
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 1-byte unsigned integers, " << endl <<
                      Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
             }
             if (flag == VT_ARRAY_VT_UI1) {
-                lenTmp = getArrayHeader(value.Value);
+                lenTmp = ExtraData::getArrayHeader(value.Value);
                 if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 1-byte unsigned integers, " << endl <<
                                     Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
             }
@@ -1446,13 +1474,13 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int lenTmp = 0;
             if (flag == VT_VECTOR_VT_UI2) {
                 lenTmp = 4;
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 2-byte unsigned integers, " << endl <<
                      Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
 
             }
             if (flag == VT_ARRAY_VT_UI2) {
-                lenTmp = getArrayHeader(value.Value);
+                lenTmp = ExtraData::getArrayHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 2-byte unsigned integers, " << endl <<
                         Utils::defaultOffsetDocInfo << "followed by zero padding to a total length that is a multiple of 4 bytes." << endl;
             }
@@ -1480,11 +1508,11 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             int lenTmp = 0;
             if (flag == VT_VECTOR_VT_UI4) {
                 lenTmp = 4;
-                getVectorHeader(value.Value);
+                ExtraData::getVectorHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 4-byte unsigned integers." << endl;
             }
             if ((flag == VT_ARRAY_VT_UI4) || (flag == VT_ARRAY_VT_UINT) ) {
-                lenTmp = getArrayHeader(value.Value);
+                lenTmp = ExtraData::getArrayHeader(value.Value);
                 cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 4-byte unsigned integers." << endl;
             }
             cout << "              Value:                ";
@@ -1505,7 +1533,7 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
     if (flag == VT_VECTOR_VT_I8) {
         cout << "VT_VECTOR_VT_I8: " << endl;
         if (parseType) {
-            getVectorHeader(value.Value);
+            ExtraData::getVectorHeader(value.Value);
             cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 8-byte signed integers." << endl;
             cout << "              Value:                ";
             int countOfInt =  (value.Value.size() - 4)/8;
@@ -1518,7 +1546,7 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
     if (flag == VT_VECTOR_VT_UI8) {
         cout << "VT_VECTOR_VT_UI8: " << endl;
         if (parseType) {
-            getVectorHeader(value.Value);
+            ExtraData::getVectorHeader(value.Value);
             cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of 8-byte unsigned integers." << endl;
             cout << "              Value:                ";
             int countOfInt =  (value.Value.size() - 4)/8;
@@ -1531,14 +1559,14 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
     if (flag == VT_VECTOR_VT_LPWSTR) {
         cout << "VT_VECTOR_VT_LPWSTR: " << endl;
         if (parseType) {
-            getVectorHeader(value.Value);
+            ExtraData::getVectorHeader(value.Value);
             cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of UnicodeString packets." << endl;
             cout << "              Value:                ";
             int size =  value.Value.size() - 4;
             int unicodeStrLen, i = 4;
             do {
                 cout << "                     UnicodeString:" << endl ;
-                unicodeStrLen = parseUnicodeString(value.Value, i);
+                unicodeStrLen = ExtraData::parseUnicodeString(value.Value, i);
                 i += unicodeStrLen;
                 size -= unicodeStrLen;
             } while(size > 0);
@@ -1548,14 +1576,14 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
     if (flag == VT_VECTOR_VT_CF) {
         cout << "VT_VECTOR_VT_CF: " << endl;
         if (parseType) {
-            getVectorHeader(value.Value);
+            ExtraData::getVectorHeader(value.Value);
             cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of ClipboardData packets." << endl;
             cout << "              Value:                ";
             int size =  value.Value.size() - 4;
             int clipboardDatLen, i = 4;
             do {
                 cout << "                     ClipboardData: " << endl ;
-                clipboardDatLen = parseClipboardData(value.Value, i);
+                clipboardDatLen = ExtraData::parseClipboardData(value.Value, i);
                 i += clipboardDatLen;
                 size -= clipboardDatLen;
             } while(size > 0);
@@ -1565,7 +1593,7 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
     if (flag == VT_VECTOR_VT_CLSID) {
         cout << "VT_VECTOR_VT_CLSID: " << endl;
         if (parseType) {
-            getVectorHeader(value.Value);
+            ExtraData::getVectorHeader(value.Value);
             cout << Utils::defaultOffsetDocInfo << "MUST be a VectorHeader followed by a sequence of GUID (Packet Version) packets." << endl;
             cout << "              Value:                ";
             int countOfInt =  (value.Value.size() - 4)/16;
@@ -1580,7 +1608,7 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
     if (flag == VT_ARRAY_VT_INT) {
         cout << "VT_ARRAY_VT_INT: " << endl;
         if (parseType) {
-            int lenTmp = getArrayHeader(value.Value);
+            int lenTmp = ExtraData::getArrayHeader(value.Value);
             cout << Utils::defaultOffsetDocInfo << "MUST be an ArrayHeader followed by a sequence of 4-byte signed integers." << endl;
             int countOfInt =  (value.Value.size() - lenTmp)/4;
             for(int i=lenTmp; i<countOfInt; i += 4)
@@ -1593,19 +1621,22 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
     return;
 }
 void ExtraData::parseColorTableUtils(int posStart) {
+    // std::cout << "__parseColorTableUtils start__" << std::endl;
     cout << Utils::defaultOffset << CONSOLE_PROPS.ColorTable[posStart] << " " << CONSOLE_PROPS.ColorTable[posStart + 1] << " " <<
          CONSOLE_PROPS.ColorTable[posStart + 2] << " " << CONSOLE_PROPS.ColorTable[posStart + 3] << endl;
 }
 void ExtraData::parseColorTable() {
+    // std::cout << "__parseColorTable start__" << std::endl;
     for(int i = 0 ; i < 15; ++i){
         cout << Utils::defaultOffset << i << ":" << endl;
-        parseColorTableUtils(4*i);
+        ExtraData::parseColorTableUtils(4*i);
     }
     cout << Utils::defaultOffsetDocInfo << "A table of 16 32-bit, unsigned integers specifying the RGB colors" << endl <<
         Utils::defaultOffsetDocInfo << " RGB(Red, Green, Blue) format: #RR GG BB" << endl;
 }
 
 void ExtraData::printExtraData() {
+    // std::cout << "__printExtraData start__" << std::endl;
     cout << "_______________________ExtraData_________________________" << endl;
 
     if (consolePropsIsSet) {
@@ -1615,8 +1646,8 @@ void ExtraData::printExtraData() {
             Utils::defaultOffsetDocInfo << "This value MUST be 204." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(CONSOLE_PROPS.BlockSignature);
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000002." << endl;
-        cout << "   FillAttributes:                  "; parseFillAttributes(false); cout << endl;
-        cout << "   PopupFillAttributes:             "; parseFillAttributes(true); cout << endl;
+        cout << "   FillAttributes:                  "; ExtraData::parseFillAttributes(false); cout << endl;
+        cout << "   PopupFillAttributes:             "; ExtraData::parseFillAttributes(true); cout << endl;
         cout << "   ScreenBufferSizeX:               " << dec << Utils::lenTwoBytes(CONSOLE_PROPS.ScreenBufferSizeX) << " characters" << endl;
         cout << "   ScreenBufferSizeY:               " << dec << Utils::lenTwoBytes(CONSOLE_PROPS.ScreenBufferSizeY) << " characters" << endl;
         cout << "   WindowSizeX:                     " << dec << Utils::lenTwoBytes(CONSOLE_PROPS.WindowSizeX) << " characters" << endl;
@@ -1632,19 +1663,19 @@ void ExtraData::printExtraData() {
             int width = ((CONSOLE_PROPS.FontSize[2] << 8) | CONSOLE_PROPS.FontSize[3]);
             cout << "       Font height:                 " << dec << height << " pixels" << endl;
             cout << "       Font width:                  " << dec << width << " pixels" << endl;
-        cout << "   FontFamily:                      "; parseFontFamily();
-        cout << "   FontWeight:                      "; parseFontWeight();
+        cout << "   FontFamily:                      "; ExtraData::parseFontFamily();
+        cout << "   FontWeight:                      "; ExtraData::parseFontWeight();
         cout << "   FaceName:                        "; Utils::print_vec_unicode(CONSOLE_PROPS.FaceName);
-        cout << "   CursorSize:                      "; parseCursorSize();
-        cout << "   FullScreen:                      "; parseFullScreen();
-        cout << "   QuickEdit:                       "; parseQuickEdit();
-        cout << "   InsertMode:                      "; parseInsertMode();
-        cout << "   AutoPosition:                    "; parseAutoPosition();
+        cout << "   CursorSize:                      "; ExtraData::parseCursorSize();
+        cout << "   FullScreen:                      "; ExtraData::parseFullScreen();
+        cout << "   QuickEdit:                       "; ExtraData::parseQuickEdit();
+        cout << "   InsertMode:                      "; ExtraData::parseInsertMode();
+        cout << "   AutoPosition:                    "; ExtraData::parseAutoPosition();
         cout << "   HistoryBufferSize:               " << dec << Utils::lenFourBytes(CONSOLE_PROPS.HistoryBufferSize) << " characters" << endl;
         cout << "   NumberOfHistoryBuffers:          " << dec << Utils::lenFourBytes(CONSOLE_PROPS.NumberOfHistoryBuffers) << endl;
-        cout << "   HistoryNoDup:                    "; parseHistoryNoDup();
+        cout << "   HistoryNoDup:                    "; ExtraData::parseHistoryNoDup();
         // Сделан просто вывод в hex формате без перевода в название цвета (не понятно, почему 16 записеё и по 4 байта)
-        cout << "   ColorTable:                      "; parseColorTable();
+        cout << "   ColorTable:                      "; ExtraData::parseColorTable();
     }
     if (consoleFEIsSet) {
         /* CONSOLE_FE_PROPS struct*/
@@ -1653,8 +1684,6 @@ void ExtraData::printExtraData() {
             Utils::defaultOffsetDocInfo << "This value MUST be 12." << endl;
         cout << "   BlockSignature:                  "; Utils::print_vec(CONSOLE_FE_PROPS.BlockSignature);
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000004." << endl;
-        // TODO: дописать парсинг: (очень много значений) - нужен ли детальный парсинг?
-        // For details concerning the structure and meaning of language code identifiers, see [MS-LCID].
         cout << "   CodePage:                        "; Utils::print_vec(CONSOLE_FE_PROPS.CodePage);
     }
     if (drownPropsIsSet) {
@@ -1740,7 +1769,7 @@ void ExtraData::printExtraData() {
                 }
                 cout << "            Value (TypedPropertyValue structure):" << endl;
                 cout << "              Type:                 ";
-                parseTypedPropertyValueTypeAndValue(true, Utils::vectTwoToUnsignedInt(
+                ExtraData::parseTypedPropertyValueTypeAndValue(true, Utils::vectTwoToUnsignedInt(
                                                     PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].Value.Type, 0),
                                                     PROPERTY_STORE_PROPS.PropertyStore[j].SerializedPropertyValue[i].Value);
                 cout << "              Padding:              ";
@@ -1769,7 +1798,7 @@ void ExtraData::printExtraData() {
         cout << "   BlockSignature:                  "; Utils::print_vec(SPECIAL_FOLDER_PROPS.BlockSignature);
             cout << Utils::defaultOffsetDocInfo << "This value MUST be 0xA0000005." << endl;
         cout << "   SpecialFolderID:                 " << dec << Utils::lenFourBytes(SPECIAL_FOLDER_PROPS.SpecialFolderID) <<  " : " <<
-            getSpecialFolderType(Utils::vectFourBytesToUnsignedInt(SPECIAL_FOLDER_PROPS.SpecialFolderID, 0)) << endl;
+            ExtraData::getSpecialFolderType(Utils::vectFourBytesToUnsignedInt(SPECIAL_FOLDER_PROPS.SpecialFolderID, 0)) << endl;
         cout << "   Offset:                          " << dec << Utils::lenFourBytes(SPECIAL_FOLDER_PROPS.Offset) << " bytes." << endl <<
             Utils::defaultOffsetDocInfo << "Specifies the location of the ItemID of the first child segment of the IDList specified by SpecialFolderID. " << endl <<
             Utils::defaultOffsetDocInfo << "This value is the offset, in bytes, into the link target IDList." << endl;
@@ -1817,6 +1846,7 @@ void ExtraData::printExtraData() {
 }
 
 void ExtraData::printExtraDataInHexStyle() {
+    // std::cout << "__printExtraDataInHexStyle start__" << std::endl;
     cout << "________________ExtraData in HEX style___________________" << endl;
 
     if (consolePropsIsSet) {
@@ -1978,6 +2008,7 @@ void ExtraData::printExtraDataInHexStyle() {
 }
 
 std::string ExtraData::getSpecialFolderType(unsigned int type) {
+    // std::cout << "__getSpecialFolderType( start__" << std::endl;
     switch (type) {
         case SF_Desktop:				{ return "Desktop"; } break;
         case SF_Internet:				{ return "Internet"; } break;
@@ -2045,6 +2076,5 @@ std::string ExtraData::getSpecialFolderType(unsigned int type) {
             return "Unknown";
     }
 }
-
 
 #pragma clang diagnostic pop

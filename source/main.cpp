@@ -4,10 +4,7 @@ using namespace std;
 
 /*
  * Таким образом, нерешённые проблемы:
- * 3) Для ExtraData в parseTypedPropertyValueTypeAndValue нужно допарсить, протестировать, поправить то, что уже найдено
  * 4) Для CONSOLE_FE_PROPS.CodePage не распаршен тип, так как там очень много значений
- * 5) По возможности нужно попытаться извлекать ещё доп информацию из LinkTargetIdList
- *    Исправить UUID timestamp
  * 7) убрать закомментированные строки в самом конце перед сдачей программы
  */
 
@@ -20,12 +17,14 @@ using namespace std;
  * @return int Статус завершения программы
  */
 int main(int argc, char* argv[]) {
+
+    // 81 method
     // пока путь указон явно для удобства тестирования
     string destPath = "C:\\Users\\ann19\\AppData\\Roaming\\Microsoft\\Windows\\Recent\\AutomaticDestinations\\";
     string customPath  = "C:\\Users\\ann19\\AppData\\Roaming\\Microsoft\\Windows\\Recent\\CustomDestinations\\";
 
 //    ShellLinkAndJumpListHandler handler =
-//            ShellLinkAndJumpListHandler("C:\\Users\\ann19\\OneDrive\\Desktop\\4cb9c5750d51c07f.automaticDestinations-ms");
+//            ShellLinkAndJumpListHandler("C:\\Users\\ann19\\OneDrive\\Desktop\\d00655d2aa12ff6d.automaticDestinations-ms");
 //    handler.parseFile();
 //    ShellLinkAndJumpListHandler handler1 =
 //            ShellLinkAndJumpListHandler(customPath + "b8ab77100df80ab2.customDestinations-ms");
@@ -53,6 +52,7 @@ int main(int argc, char* argv[]) {
 //    handler1.parseFile();
 
     // Раскомментировать при полной готовности программы
+    //cout << "__main start__" << endl;
     ParserUtils::startParsing();
 
     char c;

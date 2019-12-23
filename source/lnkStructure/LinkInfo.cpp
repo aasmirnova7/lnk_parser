@@ -5,11 +5,8 @@
 
 using namespace std;
 
-LinkInfo::LinkInfo(std::vector<unsigned char> linkInfo) {
-    fillLinkInfo(linkInfo);
-}
-
 void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
+    // std::cout << "__fillLinkInfo start__" << std::endl;
     auto it = linkInfo.begin();
    /* mandatory fields */
     copy(it, it + 4, std::back_inserter(LinkInfoSize));                         // 4 byte
@@ -141,7 +138,7 @@ void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
     /* VolumeIDAndLocalBasePath flag is set and the value of the LinkInfoHeaderSize
        field is greater than or equal to 0x00000024. */
     if (LinkInfoFlags[3] == VolumeIDAndLocalBasePath && Utils::lenFourBytes(LinkInfoHeaderSize) >= 0x00000024) {
-        int countBytesBeforeNullTerminated  = getCountOfBytesBeforeNullTerminatorForLBP(it);
+        int countBytesBeforeNullTerminated  = LinkInfo::getCountOfBytesBeforeNullTerminatorForLBP(it);
         copy(it, it + countBytesBeforeNullTerminated, std::back_inserter(LocalBasePathUnicode));
         it = it + countBytesBeforeNullTerminated;
     }
@@ -151,10 +148,11 @@ void LinkInfo::fillLinkInfo(std::vector<unsigned char> linkInfo) {
         int countBytesBeforeNullTerminated  = Utils::getCountOfBytesBeforeNullTerminator(it);
         copy(it, it + countBytesBeforeNullTerminated, std::back_inserter(CommonPathSuffixUnicode));
     }
-    reverseAllFields();
+    LinkInfo::reverseAllFields();
 }
 
 int LinkInfo::getCountOfBytesBeforeNullTerminatorForLBP(std::vector<unsigned char>::const_iterator it) {
+    // std::cout << "__getCountOfBytesBeforeNullTerminatorForLBP start__" << std::endl;
     int countBytesBeforeNullTerminated = 0;
     auto itCopy = it;
     // Получаем сколько байт нужно считать до нультермитатора
@@ -171,6 +169,7 @@ int LinkInfo::getCountOfBytesBeforeNullTerminatorForLBP(std::vector<unsigned cha
 
 /* Reverse All field (read left -> rigth) */
 void LinkInfo::reverseAllFields() {
+    // std::cout << "__reverseAllFields start__" << std::endl;
     reverse(VolumeIDOffset.begin(), VolumeIDOffset.end());
     reverse(LocalBasePathOffset.begin(), LocalBasePathOffset.end());
     reverse(CommonNetworkRelativeLinkOffset.begin(), CommonNetworkRelativeLinkOffset.end());
@@ -209,6 +208,7 @@ void LinkInfo::reverseAllFields() {
 }
 
 void LinkInfo::parseLinkInfoFlags() {
+    // std::cout << "__parseLinkInfoFlags start__" << std::endl;
     if (LinkInfoFlags[3] == VolumeIDAndLocalBasePath) {
         cout << "VolumeIDAndLocalBasePath" << endl;
         cout << Utils::defaultOffsetDocInfo << "If set, the VolumeID and LocalBasePath fields are present, " << endl <<
@@ -223,6 +223,7 @@ void LinkInfo::parseLinkInfoFlags() {
     }
 }
 void LinkInfo::parseDriveType() {
+    // std::cout << "__parseDriveType start__" << std::endl;
     if (VolumeID.DriveType[3] == DRIVE_UNKNOWN)
         cout << "DRIVE_UNKNOWN" << endl << Utils::defaultOffsetDocInfo <<
             "The drive type cannot be determined." << endl;
@@ -246,6 +247,7 @@ void LinkInfo::parseDriveType() {
             "The drive is a RAM disk." << endl;
 }
 void LinkInfo::parseCommonNetworkRelativeLinkFlags() {
+    // std::cout << "__parseCommonNetworkRelativeLinkFlags start__" << std::endl;
     if (CommonNetworkRelativeLink.CommonNetworkRelativeLinkFlags[3] == ValidDevice)
         cout << "ValidDevice" << endl << Utils::defaultOffsetDocInfo <<
             "If set, the DeviceNameOffset field contains an offset to the device name." << endl;
@@ -254,6 +256,7 @@ void LinkInfo::parseCommonNetworkRelativeLinkFlags() {
             "If set, the NetProviderType field contains the network provider type." << endl;
 }
 void LinkInfo::parseNetworkProviderType() {
+    // std::cout << "__parseNetworkProviderType start__" << std::endl;
     if (CommonNetworkRelativeLink.NetworkProviderType[3] == WNNC_NET_AVID)
         cout << "WNNC_NET_AVID" << endl;
     if (CommonNetworkRelativeLink.NetworkProviderType[3] == WNNC_NET_DOCUSPACE)
@@ -339,6 +342,7 @@ void LinkInfo::parseNetworkProviderType() {
 }
 
 void LinkInfo::parseLinkInfoHeaderSize() {
+    // std::cout << "__parseLinkInfoHeaderSize start__" << std::endl;
     int len = Utils::lenFourBytes(LinkInfoHeaderSize);
     cout << dec << len << " bytes. ";
     if (len == 0x0000001C)
@@ -349,10 +353,11 @@ void LinkInfo::parseLinkInfoHeaderSize() {
 }
 
 void LinkInfo::printLinkInfo() {
+    // std::cout << "__printLinkInfo start__" << std::endl;
     cout << "________________________LinkInfo_________________________" << endl;
     cout << "LinkInfoSize:                       " << dec << Utils::lenFourBytes(LinkInfoSize) << " bytes" << endl;
-    cout << "LinkInfoHeaderSize:                 "; parseLinkInfoHeaderSize();
-    cout << "LinkFlags:                          "; parseLinkInfoFlags();
+    cout << "LinkInfoHeaderSize:                 "; LinkInfo::parseLinkInfoHeaderSize();
+    cout << "LinkFlags:                          "; LinkInfo::parseLinkInfoFlags();
     cout << "VolumeIDOffset:                     " << dec <<
         Utils::lenFourBytes(VolumeIDOffset) << " bytes (offset in bytes from the start of the LinkInfo structure). " << endl <<
         Utils::defaultOffsetDocInfo << "If the VolumeIDAndLocalBasePath flag is NOT set, this value MUST be zero." << endl;
@@ -374,7 +379,7 @@ void LinkInfo::printLinkInfo() {
         cout << "VolumeID:" << endl;
         cout << "      VolumeIDSize:                 " << dec <<
             Utils::lenFourBytes(VolumeID.VolumeIDSize) << " bytes" << endl;
-        cout << "      DriveType:                    "; parseDriveType();
+        cout << "      DriveType:                    "; LinkInfo::parseDriveType();
         cout << "      DriveSerialNumber:            " << hex <<  VolumeID.DriveSerialNumber[0] << VolumeID.DriveSerialNumber[1]
             << "-" << VolumeID.DriveSerialNumber[2] << VolumeID.DriveSerialNumber[3] << endl;
         if(VolumeID.VolumeLabelOffset[3] == 0x00000010) {  // По документации 0x00000014
@@ -397,14 +402,14 @@ void LinkInfo::printLinkInfo() {
         cout << "CommonNetworkRelativeLink:" << endl;
         cout << "           CommonNetworkRelativeLinkSize:         " << dec <<
              Utils::lenFourBytes(CommonNetworkRelativeLink.CommonNetworkRelativeLinkSize) << " bytes" << endl;
-        cout << "           CommonNetworkRelativeLinkFlags:         "; parseCommonNetworkRelativeLinkFlags();
+        cout << "           CommonNetworkRelativeLinkFlags:         "; LinkInfo::parseCommonNetworkRelativeLinkFlags();
         cout << "           NetNameOffset:                          " <<
             Utils::lenFourBytes(CommonNetworkRelativeLink.NetNameOffset) <<
             " bytes (offset in bytes from the start of the CommonNetworkRelativeLink structure)" << endl;
         cout << "           DeviceNameOffset:                       " <<
             Utils::lenFourBytes(CommonNetworkRelativeLink.DeviceNameOffset) <<
             " bytes (offset in bytes from the start of the CommonNetworkRelativeLink structure)" << endl;
-        cout << "           NetworkProviderType:                    "; parseNetworkProviderType();
+        cout << "           NetworkProviderType:                    "; LinkInfo::parseNetworkProviderType();
         if (CommonNetworkRelativeLink.NetNameOffset[3] > 0x00000014) {
             cout << "           NetNameOffsetUnicode:             " <<
                 Utils::lenFourBytes(CommonNetworkRelativeLink.NetNameOffsetUnicode) <<
@@ -450,6 +455,7 @@ void LinkInfo::printLinkInfo() {
 }
 
 void LinkInfo::printLinkInfoInHexStyle() {
+    // std::cout << "__printLinkInfoInHexStyle start__" << std::endl;
     cout << "_____________LinkInfo in HEX style________________" << endl;
     cout << "LinkInfoSize:                       "; Utils::print_vec(LinkInfoSize);
     cout << "LinkInfoHeaderSize:                 "; Utils::print_vec(LinkInfoHeaderSize);

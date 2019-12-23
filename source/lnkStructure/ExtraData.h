@@ -10,6 +10,7 @@
 #include "LinkTargetIDList.h"
 #include "ExtraDataConstants.h"
 #include "ExtraData.h"
+#include "ExtraDataUtils.h"
 #include "ShellLinkHeader.h"
 #include "../utils/Utils.h"
 
@@ -18,6 +19,7 @@
     Класс производит разбор ExtraData для Shell Link (.LNK) Binary File Format.
     Докуметация структуры: 2.5 ExtraData
     https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-shllink/c41e062d-f764-4f13-bd4f-ea812ab9a4d1 */
+// 28 +
 class ExtraData {
 private:
     /* ----------------------------------------------------------------------------------------------- */
@@ -304,13 +306,6 @@ private:
     int ExtraDataOffsetEnd;
 
     /* ----------------------------------------------------------------------------------------------- */
-    /*! Функиця для разбора данных структуры ExtraData.
-        @param readStream Поток для чтения из файла
-        @param readFrom Позиция начала чтения из потока rs
-        @return void                                                                                   */
-    /* ----------------------------------------------------------------------------------------------- */
-    void fillExtraData(ReadStream *readStream, int readFrom);
-    /* ----------------------------------------------------------------------------------------------- */
     /*! Функция отображения справа налево всех полей структуры DestListHeader.
         @return void                                                                                   */
     /* ----------------------------------------------------------------------------------------------- */
@@ -457,11 +452,12 @@ private:
 
 public:
     /* ----------------------------------------------------------------------------------------------- */
-    /*! Конструктор с параметрами.
-        @param readStream Поток для чтения данных из файла
-        @param readFrom Позиция начала чтения из потока rs                                             */
+    /*! Функиця для разбора данных структуры ExtraData.
+        @param readStream Поток для чтения из файла
+        @param readFrom Позиция начала чтения из потока rs
+        @return void                                                                                   */
     /* ----------------------------------------------------------------------------------------------- */
-    ExtraData(ReadStream *readStream, int readFrom);
+    void fillExtraData(ReadStream *readStream, int readFrom);
 
     /* ----------------------------------------------------------------------------------------------- */
     /*! Функция вывода разобранной информации, содержащейся в ExtraData, в текстовом формате.

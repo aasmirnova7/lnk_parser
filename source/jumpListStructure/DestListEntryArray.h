@@ -10,6 +10,7 @@
 /**
     @class DestListEntryArray
     Класс описывает хранение и разбор структуры DestListEntryArray для списков быстрого доступа.       */
+    // 4 +
 class DestListEntryArray {
 private:
     /* ----------------------------------------------------------------------------------------------- */
@@ -55,15 +56,6 @@ private:
     std::vector<DestListEntry> destListEntryArray;
 
     /* ----------------------------------------------------------------------------------------------- */
-    /*! Функиця для разбора данных в вектор destListEntryArray
-        @param rs Поток для чтения из файла
-        @param readFrom Позиция начала чтения из потока rs
-        @param header Заголовок структуры DestList списка быстрого доступа
-        @return void                                                                                   */
-    /* ----------------------------------------------------------------------------------------------- */
-    void fillDestListEntryArray(ReadStream *rs, int readFrom, DestListHeader header);
-
-    /* ----------------------------------------------------------------------------------------------- */
     /*! Функция отображения справа налево всех полей структуры DestListEntry.
         @param tmpDestListEntry Структура DestListEntry для вектора структур destListEntryArray.
         @return void                                                                                   */
@@ -72,12 +64,13 @@ private:
 
 public:
     /* ----------------------------------------------------------------------------------------------- */
-    /*! Конструктор с параметрами.
-        @param readStream Поток для чтения данных из файла
+    /*! Функиця для разбора данных в вектор destListEntryArray
+        @param rs Поток для чтения из файла
         @param readFrom Позиция начала чтения из потока rs
-        @param header Заголовок структуры DestList списка быстрого доступа                             */
+        @param header Заголовок структуры DestList списка быстрого доступа
+        @return void                                                                                   */
     /* ----------------------------------------------------------------------------------------------- */
-    DestListEntryArray(ReadStream *readStream, int readFrom, DestListHeader header);
+    void fillDestListEntryArray(ReadStream *rs, int readFrom, DestListHeader header);
 
     /* ----------------------------------------------------------------------------------------------- */
     /*! Функция вывода разобранной информации, содержащейся в DestListEntryArray, в 16-ричном формате.

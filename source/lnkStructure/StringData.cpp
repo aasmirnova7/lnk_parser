@@ -5,17 +5,14 @@
 
 using  namespace std;
 
-StringData::StringData(ReadStream *readStream, int readFrom) {
-    fillStringData(readStream, readFrom);
-}
-
 void StringData::fillStringData(ReadStream *readStream, int readFrom) {
+    // std::cout << "__fillStringData start__" << std::endl;
     int tmpReadFrom = readFrom;
 
     if(ShellLinkHeader::HasNameIsSet()) {
         vector<unsigned char> nameStringSize  = readStream->read(tmpReadFrom,2);
         reverse(nameStringSize.begin(), nameStringSize.end());
-        int len = Utils::lenTwoBytes(nameStringSize) * 2;   // Unicode chars
+        int len = Utils::lenTwoBytesChar(nameStringSize) * 2;   // Unicode chars
         std::copy(nameStringSize.begin(), nameStringSize.end(),
                   std::back_inserter(NAME_STRING.CountCharacters));
 
@@ -30,7 +27,7 @@ void StringData::fillStringData(ReadStream *readStream, int readFrom) {
     if(ShellLinkHeader::HasRelativePathIsSet()) {
         vector<unsigned char> RelativePathSize  = readStream->read(tmpReadFrom,2);
         reverse(RelativePathSize.begin(), RelativePathSize.end());
-        int len = Utils::lenTwoBytes(RelativePathSize) * 2;   // Unicode chars
+        int len = Utils::lenTwoBytesChar(RelativePathSize) * 2;   // Unicode chars
         std::copy(RelativePathSize.begin(), RelativePathSize.end(),
                   std::back_inserter(RELATIVE_PATH.CountCharacters));
 
@@ -45,7 +42,7 @@ void StringData::fillStringData(ReadStream *readStream, int readFrom) {
     if(ShellLinkHeader::HasWorkingDirIsSet()) {
         vector<unsigned char> WorkingDirSize  = readStream->read(tmpReadFrom,2);
         reverse(WorkingDirSize.begin(), WorkingDirSize.end());
-        int len = Utils::lenTwoBytes(WorkingDirSize) * 2;   // Unicode chars
+        int len = Utils::lenTwoBytesChar(WorkingDirSize) * 2;   // Unicode chars
         std::copy(WorkingDirSize.begin(), WorkingDirSize.end(),
                   std::back_inserter(WORKING_DIR.CountCharacters));
 
@@ -59,7 +56,7 @@ void StringData::fillStringData(ReadStream *readStream, int readFrom) {
     if(ShellLinkHeader::HasArgumentsIsSet()) {
         vector<unsigned char> argumentsSize  = readStream->read(tmpReadFrom,2);
         reverse(argumentsSize.begin(), argumentsSize.end());
-        int len = Utils::lenTwoBytes(argumentsSize) * 2;   // Unicode chars
+        int len = Utils::lenTwoBytesChar(argumentsSize) * 2;   // Unicode chars
         std::copy(argumentsSize.begin(), argumentsSize.end(),
                   std::back_inserter(COMMAND_LINE_ARGUMENTS.CountCharacters));
 
@@ -74,7 +71,7 @@ void StringData::fillStringData(ReadStream *readStream, int readFrom) {
     if(ShellLinkHeader::HasIconLocationIsSet()) {
         vector<unsigned char> IconLocationSize  = readStream->read(tmpReadFrom,2);
         reverse(IconLocationSize.begin(), IconLocationSize.end());
-        int len = Utils::lenTwoBytes(IconLocationSize) * 2;   // Unicode chars
+        int len = Utils::lenTwoBytesChar(IconLocationSize) * 2;   // Unicode chars
         std::copy(IconLocationSize.begin(), IconLocationSize.end(),
                   std::back_inserter(ICON_LOCATION.CountCharacters));
 
@@ -88,10 +85,12 @@ void StringData::fillStringData(ReadStream *readStream, int readFrom) {
 }
 
 void StringData::printStringDataUtilInHexStyle(StringDataStruct sdStruct) {
+    // std::cout << "__printStringDataUtilInHexStyle start__" << std::endl;
     cout << "      CountCharacters:              "; Utils::print_vec(sdStruct.CountCharacters);
     cout << "      String:                       "; Utils::print_vec(sdStruct.String);
 }
 void StringData::printStringDataUtil(StringDataStruct sdStruct) {
+    // std::cout << "__printStringDataUtil start__" << std::endl;
     int len = Utils::lenTwoBytes(sdStruct.CountCharacters);
     cout << "      CountCharacters:              " << dec << len << " Unicode characters, "
          << dec << len * 2 << " bytes. " << endl;
@@ -102,54 +101,57 @@ void StringData::printStringDataUtil(StringDataStruct sdStruct) {
 }
 
 void StringData::printStringData() {
+    // std::cout << "__printStringData start__" << std::endl;
     cout << "______________________StringData________________________" << endl;
     if(ShellLinkHeader::HasNameIsSet()) {
         cout << "NAME_STRING:                        " << endl;
-        printStringDataUtil(NAME_STRING);
+        StringData::printStringDataUtil(NAME_STRING);
     }
     if(ShellLinkHeader::HasRelativePathIsSet()) {
         cout << "RELATIVE_PATH:                      " << endl;
-        printStringDataUtil(RELATIVE_PATH);
+        StringData::printStringDataUtil(RELATIVE_PATH);
     }
     if(ShellLinkHeader::HasWorkingDirIsSet()) {
         cout << "WORKING_DIR:                        " << endl;
-        printStringDataUtil(WORKING_DIR);
+        StringData::printStringDataUtil(WORKING_DIR);
     }
     if(ShellLinkHeader::HasArgumentsIsSet()) {
         cout << "COMMAND_LINE_ARGUMENTS:             " << endl;
-        printStringDataUtil(COMMAND_LINE_ARGUMENTS);
+        StringData::printStringDataUtil(COMMAND_LINE_ARGUMENTS);
     }
     if(ShellLinkHeader::HasIconLocationIsSet()) {
         cout << "ICON_LOCATION:                      " << endl;
-        printStringDataUtil(ICON_LOCATION);
+        StringData::printStringDataUtil(ICON_LOCATION);
     }
     cout << "_________________________________________________________" << endl;
 }
 void StringData::printStringDataInHexStyle() {
+    // std::cout << "__printStringDataInHexStyle start__" << std::endl;
     cout << "_______________StringData in HEX style___________________" << endl;
     if(ShellLinkHeader::HasNameIsSet()) {
         cout << "NAME_STRING:                        " << endl;
-        printStringDataUtilInHexStyle(NAME_STRING);
+        StringData::printStringDataUtilInHexStyle(NAME_STRING);
     }
     if(ShellLinkHeader::HasRelativePathIsSet()) {
         cout << "RELATIVE_PATH:                      " << endl;
-        printStringDataUtilInHexStyle(RELATIVE_PATH);
+        StringData::printStringDataUtilInHexStyle(RELATIVE_PATH);
     }
     if(ShellLinkHeader::HasWorkingDirIsSet()) {
         cout << "WORKING_DIR:                        " << endl;
-        printStringDataUtilInHexStyle(WORKING_DIR);
+        StringData::printStringDataUtilInHexStyle(WORKING_DIR);
     }
     if(ShellLinkHeader::HasArgumentsIsSet()) {
         cout << "COMMAND_LINE_ARGUMENTS:             " << endl;
-        printStringDataUtilInHexStyle(COMMAND_LINE_ARGUMENTS);
+        StringData::printStringDataUtilInHexStyle(COMMAND_LINE_ARGUMENTS);
     }
     if(ShellLinkHeader::HasIconLocationIsSet()) {
         cout << "ICON_LOCATION:                      " << endl;
-        printStringDataUtilInHexStyle(ICON_LOCATION);
+        StringData::printStringDataUtilInHexStyle(ICON_LOCATION);
     }
     cout << "_________________________________________________________" << endl;
 }
 
 int StringData::getStringDataStructureSize() {
+    // std::cout << "__getStringDataStructureSize start__" << std::endl;
     return StringDataSize;
 }

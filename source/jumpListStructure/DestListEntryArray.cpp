@@ -5,11 +5,8 @@
 
 using namespace std;
 
-DestListEntryArray::DestListEntryArray(ReadStream *readStream, int readFrom, DestListHeader header) {
-    fillDestListEntryArray(readStream, readFrom, header);
-}
-
 void DestListEntryArray::fillDestListEntryArray(ReadStream *rs, int readFrom, DestListHeader header) {
+    // std::cout << "__fillDestListEntryArray start__" << std::endl;
     int count = header.getTotalNumberOfCurrentEntries();
     int tmpReadFrom = readFrom;
 
@@ -20,54 +17,52 @@ void DestListEntryArray::fillDestListEntryArray(ReadStream *rs, int readFrom, De
         tmpReadFrom = 130 + tmpReadFrom;
         auto it = firstPartOfEntry.begin();
 
-        std::copy(it, it + 8, std::back_inserter(tmpDestListEntry.Checksum));
-        it += 8;
-        std::copy(it, it + 16, std::back_inserter(tmpDestListEntry.VolumeId));
-        it += 16;
-        std::copy(it, it + 16, std::back_inserter(tmpDestListEntry.ObjectId));
-        it += 16;
-        std::copy(it , it + 16, std::back_inserter(tmpDestListEntry.BirthVolumeId));
-        it += 16;
-        std::copy(it, it + 16, std::back_inserter(tmpDestListEntry.BirthObjectId));
-        it += 16;
-        std::copy(it , it + 16, std::back_inserter(tmpDestListEntry.NetBIOSName));
-        it += 16;
-        std::copy(it, it + 4, std::back_inserter(tmpDestListEntry.EntryId));
-        tmpReadFrom = 4 + tmpReadFrom;
-        it += 4;
-        std::copy(it , it + 8, std::back_inserter(tmpDestListEntry.Reserved1));
-        it += 8;
-        std::copy(it , it + 8, std::back_inserter(tmpDestListEntry.MSFileTime));
-        it += 8;
-        std::copy(it , it + 4, std::back_inserter(tmpDestListEntry.EntryPinStatus));
-        it += 4;
-        std::copy(it , it + 4, std::back_inserter(tmpDestListEntry.Reserved2));
-        it += 4;
-        std::copy(it , it + 4, std::back_inserter(tmpDestListEntry.AccessedCount));
-        it += 4;
-        std::copy(it , it + 8, std::back_inserter(tmpDestListEntry.Reserved3));
-        it += 8;
-        std::copy(it, it + 2, std::back_inserter(tmpDestListEntry.LengthOfUnicodeData));
-        reverse(tmpDestListEntry.LengthOfUnicodeData.begin(), tmpDestListEntry.LengthOfUnicodeData.end());
-        int len = Utils::lenTwoBytes(tmpDestListEntry.LengthOfUnicodeData);
-        len *= 2; // Because it is unicode characters
-        //cout << " len = " << dec << len  << endl;
-        std::vector<unsigned char> entryStringData =  rs->read(tmpReadFrom, len);
-        std::copy(entryStringData.begin(), entryStringData.end(), std::back_inserter(tmpDestListEntry.EntryStringData));
-        tmpReadFrom = len + tmpReadFrom;
-        reverseAllFields(&tmpDestListEntry);
-        destListEntryArray.push_back(tmpDestListEntry);
-        --count;
+       if(firstPartOfEntry.size() != 0) {
+            std::copy(it, it + 8, std::back_inserter(tmpDestListEntry.Checksum));
+            it += 8;
+            std::copy(it, it + 16, std::back_inserter(tmpDestListEntry.VolumeId));
+            it += 16;
+            std::copy(it, it + 16, std::back_inserter(tmpDestListEntry.ObjectId));
+            it += 16;
+            std::copy(it , it + 16, std::back_inserter(tmpDestListEntry.BirthVolumeId));
+            it += 16;
+            std::copy(it, it + 16, std::back_inserter(tmpDestListEntry.BirthObjectId));
+            it += 16;
+            std::copy(it , it + 16, std::back_inserter(tmpDestListEntry.NetBIOSName));
+            it += 16;
+            std::copy(it, it + 4, std::back_inserter(tmpDestListEntry.EntryId));
+            tmpReadFrom = 4 + tmpReadFrom;
+            it += 4;
+            std::copy(it , it + 8, std::back_inserter(tmpDestListEntry.Reserved1));
+            it += 8;
+            std::copy(it , it + 8, std::back_inserter(tmpDestListEntry.MSFileTime));
+            it += 8;
+            std::copy(it , it + 4, std::back_inserter(tmpDestListEntry.EntryPinStatus));
+            it += 4;
+            std::copy(it , it + 4, std::back_inserter(tmpDestListEntry.Reserved2));
+            it += 4;
+            std::copy(it , it + 4, std::back_inserter(tmpDestListEntry.AccessedCount));
+            it += 4;
+            std::copy(it , it + 8, std::back_inserter(tmpDestListEntry.Reserved3));
+            it += 8;
+            std::copy(it, it + 2, std::back_inserter(tmpDestListEntry.LengthOfUnicodeData));
+            reverse(tmpDestListEntry.LengthOfUnicodeData.begin(), tmpDestListEntry.LengthOfUnicodeData.end());
+            int len = Utils::lenTwoBytes(tmpDestListEntry.LengthOfUnicodeData);
+            len *= 2; // Because it is unicode characters
+            //cout << " len = " << dec << len  << endl;
+            std::vector<unsigned char> entryStringData =  rs->read(tmpReadFrom, len);
+            std::copy(entryStringData.begin(), entryStringData.end(), std::back_inserter(tmpDestListEntry.EntryStringData));
+            tmpReadFrom = len + tmpReadFrom;
+            DestListEntryArray::reverseAllFields(&tmpDestListEntry);
+            destListEntryArray.push_back(tmpDestListEntry);
+            --count;
+        } else break;
     }
 }
 
 void DestListEntryArray::reverseAllFields(DestListEntry* tmpDestListEntry) {
+    // std::cout << "__reverseAllFields start__" << std::endl;
     reverse(tmpDestListEntry->Checksum.begin(), tmpDestListEntry->Checksum.end());
-    //reverse(tmpDestListEntry->VolumeId.begin(), tmpDestListEntry->VolumeId.end());
-   // reverse(tmpDestListEntry->ObjectId.begin(), tmpDestListEntry->ObjectId.end());
-   // reverse(tmpDestListEntry->BirthVolumeId.begin(), tmpDestListEntry->BirthVolumeId.end());
-    //reverse(tmpDestListEntry->BirthObjectId.begin(), tmpDestListEntry->BirthObjectId.end());
-    //reverse(tmpDestListEntry.NetBIOSName.begin(), tmpDestListEntry.NetBIOSName.end());
     reverse(tmpDestListEntry->EntryId.begin(), tmpDestListEntry->EntryId.end());
     reverse(tmpDestListEntry->Reserved1.begin(), tmpDestListEntry->Reserved1.end());
     reverse(tmpDestListEntry->MSFileTime.begin(), tmpDestListEntry->MSFileTime.end());
@@ -75,11 +70,10 @@ void DestListEntryArray::reverseAllFields(DestListEntry* tmpDestListEntry) {
     reverse(tmpDestListEntry->Reserved2.begin(), tmpDestListEntry->Reserved2.end());
     reverse(tmpDestListEntry->AccessedCount.begin(), tmpDestListEntry->AccessedCount.end());
     reverse(tmpDestListEntry->Reserved3.begin(), tmpDestListEntry->Reserved3.end());
-    //reverse(tmpDestListEntry.LengthOfUnicodeData.begin(), tmpDestListEntry.LengthOfUnicodeData.end());
-    //reverse(tmpDestListEntry.EntryStringData.begin(), tmpDestListEntry.EntryStringData.end());
 }
 
 void DestListEntryArray::printDestListEntryArrayInHexStyle() {
+    // std::cout << "__printDestListEntryArrayInHexStyle start__" << std::endl;
     cout << "________________DestList in HEX style____________________" << endl;
     for(int i = 0; i < destListEntryArray.size(); ++i) {
         cout << "DestListEntry " << dec << i + 1<< endl;
@@ -103,6 +97,7 @@ void DestListEntryArray::printDestListEntryArrayInHexStyle() {
     cout << "_________________________________________________________" << endl;
 }
 void DestListEntryArray::printDestListEntryArray() {
+    // std::cout << "__printDestListEntryArray start__" << std::endl;
     cout << "_______________________DestList__________________________" << endl;
     for(int i = 0; i < destListEntryArray.size(); ++i) {
         cout << "DestListEntry " << dec << i + 1 << endl;
@@ -131,5 +126,4 @@ void DestListEntryArray::printDestListEntryArray() {
         cout << endl;
     }
     cout << "_________________________________________________________" << endl;
-
 }

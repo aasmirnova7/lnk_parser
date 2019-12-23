@@ -2,14 +2,17 @@
 #include "../utils/ReadStream.h"
 
 void DestList::parseDestListStructure(ReadStream* rs, int startPosition) {
+    // std::cout << "__parseDestListStructure start__" << std::endl;
     std::vector<unsigned char> header =  rs->read(startPosition,32);
     startPosition += 32;
 
-    DestListHeader destListHeader =  DestListHeader(header);
+    DestListHeader destListHeader =  DestListHeader();
+    destListHeader.fillDestListHeader(header);
     destListHeader.printDestListHeaderInHexStyle();
     destListHeader.printDestListHeader();
 
-    DestListEntryArray destListEntryArray = DestListEntryArray(rs, startPosition, header);
+    DestListEntryArray destListEntryArray = DestListEntryArray();
+    destListEntryArray.fillDestListEntryArray(rs, startPosition, destListHeader);
     destListEntryArray.printDestListEntryArrayInHexStyle();
     destListEntryArray.printDestListEntryArray();
 }

@@ -17,6 +17,7 @@
     Класс производит разбор структуры LinkTargetIDList для Shell Link (.LNK) Binary File Format.
     Докуметация структуры: 2.2 LinkTargetIDList
     https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-shllink/881d7a83-07a5-4702-93e3-f9fc34c3e1e4 */
+    // 4
 class LinkTargetIDList {
 private:
     /// Поле содержит размер структуры IDList. Занимает 2 байта.
@@ -26,14 +27,6 @@ private:
 
     /// Поле показывающее были ли ошибки во время разбора структуры IDList.
     bool hasErrors = false;
-
-    /* ----------------------------------------------------------------------------------------------- */
-    /*! Функиця для разбора данных в структуре LinkTargetIDList.
-        @param linkTargetIdList Вектор символов, содержащий всю информацию для LinkTargetIDList.
-        @return void                                                                                   */
-    /* ----------------------------------------------------------------------------------------------- */
-    void fillLinkTargetIDList(std::vector<unsigned char> linkTargetIdList);
-
 public:
     /* ----------------------------------------------------------------------------------------------- */
     /*! \brief Структура ItemIDList для вектора структур IDList.                                       */
@@ -52,12 +45,11 @@ public:
     std::vector<ItemIDList> IDList;
 
     /* ----------------------------------------------------------------------------------------------- */
-    /*! Конструктор с параметрами.
-        @param linkTargetIdList Вектор символов, содержащий всю информацию для структуры LinkTargetIDList.*/
+    /*! Функиця для разбора данных в структуре LinkTargetIDList.
+        @param linkTargetIdList Вектор символов, содержащий всю информацию для LinkTargetIDList.
+        @return void                                                                                   */
     /* ----------------------------------------------------------------------------------------------- */
-    LinkTargetIDList(std::vector<unsigned char> linkTargetIdList);
-    /// Конструктор по умолчанию.
-    LinkTargetIDList();
+    void fillLinkTargetIDList(std::vector<unsigned char> linkTargetIdList);
 
     /* ----------------------------------------------------------------------------------------------- */
     /*! Функция вывода разобранной информации, содержащейся в LinkTargetIDList, в 16-ричном формате.

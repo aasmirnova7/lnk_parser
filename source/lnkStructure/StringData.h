@@ -5,10 +5,11 @@
 #include "../utils/ReadStream.h"
 
 /**
-    @class StringDat
+    @class StringData
     Класс производит разбор структуры StringDat для Shell Link (.LNK) Binary File Format.
     Докуметация структуры: 2.4 StringData
     https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-shllink/17b69472-0f34-4bcf-b290-eccdb8de224b */
+    // 6 +
 class StringData {
 private:
     /// Поле содержит размер структуры StringData в байтах
@@ -49,6 +50,7 @@ private:
         @return void                                                                                   */
     /* ----------------------------------------------------------------------------------------------- */
     void printStringDataUtil(StringDataStruct sdStruct);
+public:
     /* ----------------------------------------------------------------------------------------------- */
     /*! Функиця для разбора данных структуры StringData.
         @param readStream Поток для чтения из файла
@@ -56,14 +58,6 @@ private:
         @return void                                                                                   */
     /* ----------------------------------------------------------------------------------------------- */
     void fillStringData(ReadStream *readStream, int readFrom);
-
-public:
-    /* ----------------------------------------------------------------------------------------------- */
-    /*! Конструктор с параметрами.
-        @param readStream Поток для чтения данных из файла
-        @param readFrom Позиция начала чтения из потока rs                                             */
-    /* ----------------------------------------------------------------------------------------------- */
-    StringData(ReadStream *readStream, int readFrom);
 
     /* ----------------------------------------------------------------------------------------------- */
     /*! Функция вывода разобранной информации, содержащейся в StringData, в текстовом формате.

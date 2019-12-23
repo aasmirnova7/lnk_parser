@@ -14,6 +14,7 @@
     Класс производит разбор структур для Shell Link (.LNK) Binary File Format.
     Докуметация формата: [MS-SHLLINK]: Shell Link (.LNK) Binary File Format
     https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-shllink/16cb4ca1-9339-4d0c-a68d-bf1d6cc0f943 */
+    // 4 +
 class ShellLink {
 private:
     /// Поле для хранения информации о позиции окончания структуры ShellLink

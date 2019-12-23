@@ -9,18 +9,23 @@ ShellLinkAndJumpListHandler::ShellLinkAndJumpListHandler(std::string filePath) {
         fileIsOpen = true;
 }
 void ShellLinkAndJumpListHandler::parseFile() {
+    // std::cout << "__parseFile start__" << std::endl;
     std::vector<unsigned char> headerValue;
     do {
         headerValue =  rs->read(startPosition,4);
 
         reverse(headerValue.begin(), headerValue.end());
-        unsigned int hValue = Utils::lenFourBytes(headerValue);
+        unsigned int hValue = Utils::lenFourBytesChar(headerValue);
 
+//        private static final int EXT_VERSION_WINXP = 3;
+//        private static final int EXT_VERSION_VISTA = 7;
+//        private static final int EXT_VERSION_WIN7 = 8;
+//        private static final int EXT_VERSION_WIN8 = 9; // same for win10
         if(hValue == 0x0000004c) { /* Decode ShellLink Stream = CustDest Jump List */
-            this->parseLNKStruct(headerValue);
+            ShellLinkAndJumpListHandler::parseLNKStruct(headerValue);
         }
         if(hValue == 0x00000004)
-            this->parseJumpListStruct();
+            ShellLinkAndJumpListHandler::parseJumpListStruct();
 
         startPosition += 4;
     } while(headerValue.size() != 0);
@@ -30,9 +35,10 @@ void ShellLinkAndJumpListHandler::parseFile() {
 }
 
 void ShellLinkAndJumpListHandler::parseLNKStruct(std::vector<unsigned char> headerValue) {
+    // std::cout << "__parseLNKStruct start__" << std::endl;
     /* Decode ShellLink Stream = CustDest Jump List */
     headerValue =  rs->read(startPosition + 4,4);
-    if (Utils::lenFourBytes(headerValue) != 0x01140200) { // Если следующее поле не CLSI -> ищем структуры далее
+    if (Utils::lenFourBytesChar(headerValue) != 0x01140200) { // Если следующее поле не CLSI -> ищем структуры далее
         startPosition += 4;
         return;
     }
@@ -51,9 +57,12 @@ void ShellLinkAndJumpListHandler::parseLNKStruct(std::vector<unsigned char> head
 }
 
 void ShellLinkAndJumpListHandler::parseJumpListStruct() {
+    // std::cout << "__parseJumpListStruct start__" << std::endl;
+    if (countOfShellLink == 0)
+        return;
     std::vector<unsigned char>  countOfEntries =  rs->read(startPosition + 4,4);
     reverse(countOfEntries.begin(), countOfEntries.end());
-    unsigned int count = Utils::lenFourBytes(countOfEntries);
+    unsigned int count = Utils::lenFourBytesChar(countOfEntries);
     if(count != countOfShellLink) {
         startPosition += 4;
         return;
@@ -63,5 +72,6 @@ void ShellLinkAndJumpListHandler::parseJumpListStruct() {
     return;
 }
 bool ShellLinkAndJumpListHandler::isFileOpen() {
+    // std::cout << "__isFileOpen start__" << std::endl;
     return fileIsOpen;
 }
