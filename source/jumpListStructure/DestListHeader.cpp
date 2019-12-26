@@ -48,6 +48,8 @@ void DestListHeader::printDestListHeader() {
     // std::cout << "__printDestListHeader start__" << std::endl;
     cout << "____________________DestListHeader______________________" << endl;
     cout << "Version:                            " << dec<< Utils::lenFourBytes(Version) << endl;
+        cout << Utils::defaultOffsetDocInfo << "1 - for Windows 7" << endl;
+        cout << Utils::defaultOffsetDocInfo << "4 - for Windows 10" << endl;
     cout << "TotalNumberOfCurrentEntries:        " << dec<< Utils::lenFourBytes(TotalNumberOfCurrentEntries) << endl;
     cout << "TotalNumberOfPinnedEntries:         " << dec<< Utils::lenFourBytes(TotalNumberOfPinnedEntries) << endl;
     cout << "Unknown:                            "; Utils::print_vec(Unknown);

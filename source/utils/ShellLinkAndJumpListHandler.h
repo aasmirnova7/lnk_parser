@@ -48,9 +48,9 @@ public:
     void parseLNKStruct(std::vector<unsigned char> headerValue);
     /* ----------------------------------------------------------------------------------------------- */
     /*! Функция разбора структуры список быстрого доступа, если он присутствует.
-        @return void                                                                                   */
+        @return bool Возвращает true (1), если найдены структуры для JumpList; false (0) - иначе.                                                                            */
     /* ----------------------------------------------------------------------------------------------- */
-    void parseJumpListStruct();
+    bool parseJumpListStruct();
 };
 
 #endif //LNK_JUMP_LIST_PARSER_SHELLLINKANDJUMPLISTHANDLER_H

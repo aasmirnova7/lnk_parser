@@ -15,9 +15,8 @@ void ShellLink::parseShellLinkStructure(ReadStream* rs, int startPosition) {
     shellLinkHeader.printHeader();
     bool valid = shellLinkHeader.isHeaderValid();
 
-    LinkTargetIDList linkTargetIdList;
-
     if(valid) {
+        LinkTargetIDList linkTargetIdList;
         if (shellLinkHeader.HasLinkTargetIDListIsSet()) {
             std::vector<unsigned char> LTIDListSize =  rs->read(startPosition,2);
             reverse(LTIDListSize.begin(), LTIDListSize.end());
@@ -42,15 +41,17 @@ void ShellLink::parseShellLinkStructure(ReadStream* rs, int startPosition) {
                     cout << "There is some error in this LinkTargetIDList structure." << endl
                          << "Program will try to find next Shell Link Stream." << endl;
                     int reminder = startPosition % 16;
-                    ShellLinkOffsetEnd = startPosition + 16 - reminder;
+                    ShellLinkOffsetEnd = startPosition - reminder;
                     thisShellLinkHasErrors = true;
-                } else
+                } else {
+                    linkTargetIDListSize = (linkTargetIDListSize % 2) == 0 ? linkTargetIDListSize : linkTargetIDListSize + 1;
                     startPosition = startPosition + linkTargetIDListSize + 2; // учитываем заголовок
+                }
             } else {
                 cout << "There is some error in this LinkTargetIDList structure." << endl
                      << "Program will try to find next Shell Link Stream." << endl;
                 int reminder = startPosition % 16;
-                ShellLinkOffsetEnd = startPosition + 16 - reminder;
+                ShellLinkOffsetEnd = startPosition - reminder;
                 thisShellLinkHasErrors = true;
             }
         }
@@ -62,16 +63,24 @@ void ShellLink::parseShellLinkStructure(ReadStream* rs, int startPosition) {
 
             if(linkInfoSize != 0) {
                 std::vector<unsigned char> linkInfoSizeVect =  rs->read(startPosition, linkInfoSize);
-                LinkInfo linkInfo = LinkInfo();
-                linkInfo.fillLinkInfo(linkInfoSizeVect);
-                linkInfo.printLinkInfoInHexStyle();
-                linkInfo.printLinkInfo();
-                startPosition = startPosition + linkInfoSize; // +4
+                if(linkInfoSize != linkInfoSizeVect.size()) {
+                    cout << "There is some error in this LinkInfo structure." << endl
+                         << "Program will try to find next Shell Link Stream." << endl;
+                    int reminder = startPosition % 16;
+                    ShellLinkOffsetEnd = startPosition - reminder;
+                    thisShellLinkHasErrors = true;
+                } else {
+                    LinkInfo linkInfo = LinkInfo();
+                    linkInfo.fillLinkInfo(linkInfoSizeVect);
+                    linkInfo.printLinkInfoInHexStyle();
+                    linkInfo.printLinkInfo();
+                    startPosition = startPosition + linkInfoSize; // +4
+                }
             } else {
                 cout << "There is some error in this LinkTargetIDList structure." << endl
                      << "Program will try to find next Shell Link Stream." << endl;
                 int reminder = startPosition % 16;
-                ShellLinkOffsetEnd = startPosition + 16 - reminder;
+                ShellLinkOffsetEnd = startPosition - reminder;
                 thisShellLinkHasErrors = true;
             }
         }
@@ -92,6 +101,13 @@ void ShellLink::parseShellLinkStructure(ReadStream* rs, int startPosition) {
             ShellLinkOffsetEnd = (extraData.getExtraDataOffsetEnd() == 0) ?
                                  startPosition : extraData.getExtraDataOffsetEnd();
         }
+    } else {
+        /* Обработка ошибок осуществляется следующим образом
+         * Если ShellLinkHeader невалидный,  тогда разбор текущей ShellLink
+         * не продолжается и возвращается стартовая позиция после парсинга ShellLinkHeader */
+        cout << "There is some error in this ShellLinkHeader structure." << endl
+             << "Program will try to find next Shell Link Stream." << endl;
+        ShellLinkOffsetEnd = startPosition;
     }
 }
 

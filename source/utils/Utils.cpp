@@ -324,8 +324,10 @@ bool Utils::compareClsidType(std::vector<unsigned int> vec, std::string clsid) {
 
 void Utils::parseItemData(std::vector<unsigned int> data) {
     // std::cout << "__parseItemData start__" << std::endl;
-    if(data.size() == 0)        // For cases when  ItemID has len = 0
+    if(data.size() == 0) {  // For cases when  ItemID has len = 0
+        cout << endl;
         return;
+    }
     unsigned int type = data[0];
     switch (type) {
         case TYPE_FILE_OLD:
