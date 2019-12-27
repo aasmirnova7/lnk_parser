@@ -11,7 +11,7 @@ You can get the last version of source codes from github.com
 
 ```git clone https://github.com/aasmirnova7/lnk_parser```
 
-The build system for lnk_parser is [cmake](https://cmake.org/)
+The build system for lnk_jump_list_parser is [cmake](https://cmake.org/)
 
 #### Windows and Unix
 On Windows and Unix platforms you can compile & build library with following commands
