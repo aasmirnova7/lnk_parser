@@ -734,7 +734,7 @@ void ExtraDataUtils::parseError(long long int errorType) {
         break;
         case CO_E_RUNAS_SYNTAX:
         cout << Utils::defaultOffset << "CO_E_RUNAS_SYNTAX" << endl;
-        cout << Utils::defaultOffsetDocInfo << "A RunAs specification must be <domain name>\<user name> or simply <user name>." << endl;
+        cout << Utils::defaultOffsetDocInfo << "A RunAs specification must be <domain name>\\<user name> or simply <user name>." << endl;
         break;
         case CO_E_CREATEPROCESS_FAILURE:
         cout << Utils::defaultOffset << "CO_E_CREATEPROCESS_FAILURE" << endl;
@@ -1086,7 +1086,7 @@ void ExtraDataUtils::parseError(long long int errorType) {
         break;
         case CO_E_WRONGTRUSTEENAMESYNTAX:
         cout << Utils::defaultOffset << "CO_E_WRONGTRUSTEENAMESYNTAX" << endl;
-        cout << Utils::defaultOffsetDocInfo << "One of the trustee strings provided by the user did not conform to the <Domain>\<Name> syntax and it was not the *\" string\"." << endl;
+        cout << Utils::defaultOffsetDocInfo << "One of the trustee strings provided by the user did not conform to the <Domain>\\<Name> syntax and it was not the *\" string\"." << endl;
         break;
         case CO_E_INVALIDSID:
         cout << Utils::defaultOffset << "CO_E_INVALIDSID" << endl;
