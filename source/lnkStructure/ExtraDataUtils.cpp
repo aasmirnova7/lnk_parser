@@ -3,7 +3,6 @@
 using namespace std;
 
 void ExtraDataUtils::parseError(long long int errorType) {
-    // std::cout << "__parseError start__" << std::endl;
     switch(errorType) {
         case STG_S_CONVERTED:
         cout << Utils::defaultOffset << "STG_S_CONVERTED" << endl;

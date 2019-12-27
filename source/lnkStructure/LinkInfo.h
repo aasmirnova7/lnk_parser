@@ -9,7 +9,6 @@
     Класс производит разбор структуры LinkInfo для Shell Link (.LNK) Binary File Format.
     Докуметация структуры: 2.3 LinkInfo
     https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-shllink/6813269d-0cc8-4be2-933f-e96e8e3412dc */\
-    // 10 +
 class LinkInfo {
 private:
     /* ----------------------------------------------------------------------------------------------- */
@@ -151,4 +150,4 @@ public:
     void parseNetworkProviderType();
 };
 
-#endif //LNK_JUMP_LIST_PARSER_LINKINFO_H
+#endif

@@ -4,7 +4,6 @@
 using namespace std;
 
 void ShellLink::parseShellLinkStructure(ReadStream* rs, int startPosition) {
-    // std::cout << "__parseShellLinkStructure start__" << std::endl;
     cout << " Start Position offset (in hex style) = " << hex <<  startPosition << endl;
     std::vector<unsigned char> header =  rs->read(startPosition,76);
     startPosition += 76;
@@ -112,15 +111,12 @@ void ShellLink::parseShellLinkStructure(ReadStream* rs, int startPosition) {
 }
 
 int ShellLink::getShellLinkOffsetEnd() {
-    // std::cout << "__getShellLinkOffsetEnd start__" << std::endl;
     return ShellLinkOffsetEnd;
 }
 bool ShellLink::isThisShellLinkHasErrors() {
-    // std::cout << "__isThisShellLinkHasErrors start__" << std::endl;
     return thisShellLinkHasErrors;
 }
 void ShellLink::resetAllFlags() {
-    // std::cout << "__resetAllFlags start__" << std::endl;
     ShellLinkHeader::setHltidListIsSet(false);
     ShellLinkHeader::setHliIsSet(false);
     ShellLinkHeader::setHasNameSet(false);

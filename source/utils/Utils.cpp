@@ -81,7 +81,6 @@ const Utils::clsid_type clsid_list[] = {{ GUID_AddNewPrograms, "AddNewPrograms" 
                                             { GUID_Unknown, "GUID_Unknown" }};
 
 unsigned int Utils::lenFourBytes(std::vector<unsigned int> vec) {
-    // std::cout << "__lenFourBytes start__" << std::endl;
     unsigned int result = (vec[0] << 8) | vec[1];
     unsigned int result2 = (vec[2] << 8) | vec[3];
     unsigned int result3 = (result << 16) | result2;
@@ -90,7 +89,6 @@ unsigned int Utils::lenFourBytes(std::vector<unsigned int> vec) {
 }
 
 int Utils::lenFourBytesChar(std::vector<unsigned char> vec) {
-    // std::cout << "__lenFourBytesChar start__" << std::endl;
     if(vec.size() == 4) {
         unsigned int result = (vec[0] << 8) | vec[1];
         unsigned int result2 = (vec[2] << 8) | vec[3];
@@ -100,7 +98,6 @@ int Utils::lenFourBytesChar(std::vector<unsigned char> vec) {
     return 0;
 }
 int Utils::lenFourBytesFromPos(std::vector<unsigned int> vec, int pos) {
-    // std::cout << "__lenFourBytesFromPos start__" << std::endl;
     unsigned int result = (vec[pos] << 8) | vec[pos+1];
     unsigned int result2 = (vec[pos+2] << 8) | vec[pos+3];
     unsigned int result3 = (result << 16) | result2;
@@ -109,7 +106,6 @@ int Utils::lenFourBytesFromPos(std::vector<unsigned int> vec, int pos) {
 }
 
 int Utils::lenTwoBytesChar(std::vector<unsigned char> vec) {
-    // std::cout << "__lenTwoBytesChar start__" << std::endl;
     unsigned int result = (vec[0] << 8) | vec[1];
     std::string r = to_string(result);
 
@@ -117,18 +113,15 @@ int Utils::lenTwoBytesChar(std::vector<unsigned char> vec) {
 }
 
 int Utils::lenTwoBytes(std::vector<unsigned int> vec) {
-    // std::cout << "__lenTwoBytes start__" << std::endl;
     unsigned int result = (vec[0] << 8) | vec[1];
     return result;
 }
 int Utils::lenTwoBytesFromPos(std::vector<unsigned int> vec, int pos){
-    // std::cout << "__lenTwoBytesFromPos start__" << std::endl;
     unsigned int result = (vec[pos] << 8) | vec[pos+1];
     return result;
 }
 
 void Utils::print_vec(std::vector<unsigned int> vec) {
-    // std::cout << "__print_vec start__" << std::endl;
     int count = 0;
     for (int x: vec) {
         if(count >= 25) {
@@ -141,7 +134,6 @@ void Utils::print_vec(std::vector<unsigned int> vec) {
     std::cout << endl;
 }
 void Utils::print_vec_from_to(std::vector<unsigned int> vec, int from, int to) {
-    // std::cout << "__print_vec_from_to start__" << std::endl;
     int count = 0;
     for (int i = from; i < to; ++i) {
         if(count >= 25) {
@@ -155,7 +147,6 @@ void Utils::print_vec_from_to(std::vector<unsigned int> vec, int from, int to) {
 }
 
 void Utils::print_vec_unicode(std::vector<unsigned int>& vec) {
-    // std::cout << "__print_vec_unicode start__" << std::endl;
     bool lastCharIsBlank = false;
     for(int i=0; i < vec.size(); ++i){
         if(i > 0 && vec[i] == 0 && !lastCharIsBlank) {
@@ -172,7 +163,6 @@ void Utils::print_vec_unicode(std::vector<unsigned int>& vec) {
 }
 
 void Utils::print_vec_unicode_from_to(std::vector<unsigned int>& vec, int from, int to) {
-    // std::cout << "__print_vec_unicode_from_to start__" << std::endl;
     bool lastCharIsBlank = false;
     for(int i=from; i < to; ++i){
         if(i > 0 && vec[i] == 0 && !lastCharIsBlank) {
@@ -188,7 +178,6 @@ void Utils::print_vec_unicode_from_to(std::vector<unsigned int>& vec, int from, 
     std::cout << endl;
 }
 int Utils::getFirstPosWhereByteIsNull(std::vector<unsigned int>& vec, int from) {
-    // std::cout << "__getFirstPosWhereByteIsNull start__" << std::endl;
     for(int i=from; i < vec.size(); ++i){
         if(vec[i] == 0x00)
             return i;
@@ -197,7 +186,6 @@ int Utils::getFirstPosWhereByteIsNull(std::vector<unsigned int>& vec, int from) 
 }
 
 int Utils::getCountOfBytesBeforeNullTerminator(std::vector<unsigned char>::const_iterator it) {
-    // std::cout << "__getCountOfBytesBeforeNullTerminator start__" << std::endl;
     int countBytesBeforeNullTerminated = 0;
     auto itCopy = it;
     // Получаем сколько байт нужно считать до нультермитатора
@@ -208,7 +196,6 @@ int Utils::getCountOfBytesBeforeNullTerminator(std::vector<unsigned char>::const
     return countBytesBeforeNullTerminated + 3;
 }
 int Utils::getCountOfBytesBeforeNullTerminatorInt(std::vector<unsigned int>::const_iterator it) {
-    // std::cout << "__getCountOfBytesBeforeNullTerminatorInt start__" << std::endl;
     int countBytesBeforeNullTerminated = 0;
     auto itCopy = it;
     // Получаем сколько байт нужно считать до нультермитатора
@@ -220,7 +207,6 @@ int Utils::getCountOfBytesBeforeNullTerminatorInt(std::vector<unsigned int>::con
 }
 
 std::vector<LinkTargetIDList::ItemIDList> Utils::fillItemIdList(int count, std::vector<unsigned char>::const_iterator it) {
-    // std::cout << "__fillItemIdList start__" << std::endl;
     std::vector<LinkTargetIDList::ItemIDList> IDList;
     while (count > 0) {
         LinkTargetIDList::ItemIDList itemIdList;
@@ -240,7 +226,6 @@ std::vector<LinkTargetIDList::ItemIDList> Utils::fillItemIdList(int count, std::
 }
 
 long long int Utils::vectEightBytesToUnsignedInt(std::vector<unsigned int> vec, int pos) {
-    // std::cout << "__vectEightBytesToUnsignedInt start__" << std::endl;
     unsigned int result = (vec[pos+0] << 8) | vec[pos+1];
     unsigned int result2 = (vec[pos+2] << 8) | vec[pos+3];
     long long int result3 = (result << 16) | result2;
@@ -253,27 +238,23 @@ long long int Utils::vectEightBytesToUnsignedInt(std::vector<unsigned int> vec, 
     return  result7;
 }
 unsigned int Utils::vectFourBytesToUnsignedInt(std::vector<unsigned int> vec, int pos) {
-    // std::cout << "__vectFourBytesToUnsignedInt start__" << std::endl;
     unsigned int result = (vec[pos] << 8) | vec[pos+1];
     unsigned int result2 = (vec[pos+2] << 8) | vec[pos+3];
     unsigned int result3 = (result << 16) | result2;
     return result3;
 }
 unsigned int Utils::vectTwoToUnsignedInt(std::vector<unsigned int> vec, int pos) {
-    // std::cout << "__vectTwoToUnsignedInt start__" << std::endl;
     unsigned int result = (vec[pos] << 8) | vec[pos + 1];
     return result;
 }
 
 time_t Utils::convertWindowsTimeToUnixTime(long long int input) {
-    // std::cout << "__convertWindowsTimeToUnixTime start__" << std::endl;
     long long int temp;
     temp = input / TICKS_PER_SECOND; //convert from 100ns intervals to seconds;
     temp = temp - EPOCH_DIFFERENCE;  //subtract number of seconds between epochs
     return (time_t) temp;
 }
 void Utils::getDateFromPos(std::vector<unsigned int> vec, int pos) {
-    // std::cout << "__getDateFromPos start__" << std::endl;
     long long int time_l = vectEightBytesToUnsignedInt(vec, pos);
     time_t rawtime = convertWindowsTimeToUnixTime(time_l);
     struct tm * timeinfo;
@@ -283,7 +264,6 @@ void Utils::getDateFromPos(std::vector<unsigned int> vec, int pos) {
 }
 
 void Utils::printSid(std::vector<unsigned int> vec, int pos) {
-    // std::cout << "__printSid start__" << std::endl;
     cout << hex << vec[pos+3] <<  " " << hex << vec[pos+2] << " " << hex << vec[pos+1] << " " << hex << vec[pos] << " " << "-" << " " <<
             hex << vec[pos+5] << " " << hex << vec[pos+4] << " " << "-" << " " << hex << vec[pos+7] << " " << hex << vec[pos+6] << " " << "-"  << " " <<
             hex << vec[pos+8] << " " << hex << vec[pos+9] << " " << "-" << " " <<
@@ -292,13 +272,11 @@ void Utils::printSid(std::vector<unsigned int> vec, int pos) {
 }
 
 void Utils::printMacAddr(std::vector<unsigned int> vec, int pos) {
-    // std::cout << "__printMacAddr start__" << std::endl;
     cout << hex << vec[pos+10] <<  ":" << vec[pos+11] << ":" << vec[pos+12] << ":"
         << vec[pos+13] << ":" << vec[pos+14]  << ":" << vec[pos+15] << endl;
 }
 
 std::string Utils::getClsidType(std::vector<unsigned int> vec) {
-    // std::cout << "__getClsidType start__" << std::endl;
     for (int i = 0; clsid_list[i].clsid != GUID_Unknown; i++) {
         if (compareClsidType(vec, clsid_list[i].clsid)) {
             return clsid_list[i].name;
@@ -307,7 +285,6 @@ std::string Utils::getClsidType(std::vector<unsigned int> vec) {
     return "Not found";
 }
 bool Utils::compareClsidType(std::vector<unsigned int> vec, std::string clsid) {
-    // std::cout << "__compareClsidType start__" << std::endl;
     int j = 0;      // Used for cases when clsid contains \x00 -> I remove all \x00 from clsid-s and it's len = 15 or 14
 
     for(int i = 0 ; i < 16; ++i) {
@@ -323,7 +300,6 @@ bool Utils::compareClsidType(std::vector<unsigned int> vec, std::string clsid) {
 }
 
 void Utils::parseItemData(std::vector<unsigned int> data) {
-    // std::cout << "__parseItemData start__" << std::endl;
     if(data.size() == 0) {  // For cases when  ItemID has len = 0
         cout << endl;
         return;

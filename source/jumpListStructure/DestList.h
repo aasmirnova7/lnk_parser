@@ -8,7 +8,6 @@
 /**
     @class DestList
     Класс описывает структуру DestList для списков быстрого доступа.                                   */
-    // 1 +
 class DestList {
 public:
     /* ----------------------------------------------------------------------------------------------- */
@@ -20,5 +19,4 @@ public:
     void parseDestListStructure(ReadStream* rs, int startPosition);
 };
 
-
-#endif// LNK_JUMP_LIST_PARSER_DESTLIST_H
+#endif

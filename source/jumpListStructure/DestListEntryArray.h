@@ -1,7 +1,6 @@
 #ifndef LNK_JUMP_LIST_PARSER_DESTLISTENTRYARRAY_H
 #define LNK_JUMP_LIST_PARSER_DESTLISTENTRYARRAY_H
 
-
 #include <vector>
 #include "../utils/Utils.h"
 #include "../utils/ReadStream.h"
@@ -10,7 +9,6 @@
 /**
     @class DestListEntryArray
     Класс описывает хранение и разбор структуры DestListEntryArray для списков быстрого доступа.       */
-    // 4 +
 class DestListEntryArray {
 private:
     /* ----------------------------------------------------------------------------------------------- */
@@ -85,5 +83,4 @@ public:
     void printDestListEntryArray();
 };
 
-
-#endif //LNK_JUMP_LIST_PARSER_DESTLISTENTRYARRAY_H
+#endif

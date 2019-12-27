@@ -17,7 +17,6 @@
     Класс производит разбор структуры LinkTargetIDList для Shell Link (.LNK) Binary File Format.
     Докуметация структуры: 2.2 LinkTargetIDList
     https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-shllink/881d7a83-07a5-4702-93e3-f9fc34c3e1e4 */
-    // 4
 class LinkTargetIDList {
 private:
     /// Поле содержит размер структуры IDList. Занимает 2 байта.
@@ -68,4 +67,4 @@ public:
     bool LinkTargetIdHasErrors();
 };
 
-#endif //LNK_JUMP_LIST_PARSER_LINKTARGETIDLIST_H
+#endif

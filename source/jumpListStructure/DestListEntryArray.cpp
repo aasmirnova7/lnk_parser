@@ -6,7 +6,6 @@
 using namespace std;
 
 void DestListEntryArray::fillDestListEntryArray(ReadStream *rs, int readFrom, DestListHeader header) {
-    // std::cout << "__fillDestListEntryArray start__" << std::endl;
     int count = header.getTotalNumberOfCurrentEntries();
     int tmpReadFrom = readFrom;
 
@@ -49,7 +48,6 @@ void DestListEntryArray::fillDestListEntryArray(ReadStream *rs, int readFrom, De
             reverse(tmpDestListEntry.LengthOfUnicodeData.begin(), tmpDestListEntry.LengthOfUnicodeData.end());
             int len = Utils::lenTwoBytes(tmpDestListEntry.LengthOfUnicodeData);
             len *= 2; // Because it is unicode characters
-            //cout << " len = " << dec << len  << endl;
             std::vector<unsigned char> entryStringData =  rs->read(tmpReadFrom, len);
             std::copy(entryStringData.begin(), entryStringData.end(), std::back_inserter(tmpDestListEntry.EntryStringData));
             tmpReadFrom = len + tmpReadFrom;
@@ -61,7 +59,6 @@ void DestListEntryArray::fillDestListEntryArray(ReadStream *rs, int readFrom, De
 }
 
 void DestListEntryArray::reverseAllFields(DestListEntry* tmpDestListEntry) {
-    // std::cout << "__reverseAllFields start__" << std::endl;
     reverse(tmpDestListEntry->Checksum.begin(), tmpDestListEntry->Checksum.end());
     reverse(tmpDestListEntry->EntryId.begin(), tmpDestListEntry->EntryId.end());
     reverse(tmpDestListEntry->Reserved1.begin(), tmpDestListEntry->Reserved1.end());
@@ -73,7 +70,6 @@ void DestListEntryArray::reverseAllFields(DestListEntry* tmpDestListEntry) {
 }
 
 void DestListEntryArray::printDestListEntryArrayInHexStyle() {
-    // std::cout << "__printDestListEntryArrayInHexStyle start__" << std::endl;
     cout << "________________DestList in HEX style____________________" << endl;
     for(int i = 0; i < destListEntryArray.size(); ++i) {
         cout << "DestListEntry " << dec << i + 1<< endl;
@@ -97,7 +93,6 @@ void DestListEntryArray::printDestListEntryArrayInHexStyle() {
     cout << "_________________________________________________________" << endl;
 }
 void DestListEntryArray::printDestListEntryArray() {
-    // std::cout << "__printDestListEntryArray start__" << std::endl;
     cout << "_______________________DestList__________________________" << endl;
     for(int i = 0; i < destListEntryArray.size(); ++i) {
         cout << "DestListEntry " << dec << i + 1 << endl;

@@ -19,7 +19,6 @@
     Класс производит разбор ExtraData для Shell Link (.LNK) Binary File Format.
     Докуметация структуры: 2.5 ExtraData
     https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-shllink/c41e062d-f764-4f13-bd4f-ea812ab9a4d1 */
-// 28 +
 class ExtraData {
 private:
     /* ----------------------------------------------------------------------------------------------- */
@@ -476,4 +475,4 @@ public:
     int getExtraDataOffsetEnd();
 };
 
-#endif //LNK_JUMP_LIST_PARSER_EXTRADATA_H
+#endif

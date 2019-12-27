@@ -24,7 +24,6 @@ static bool RunWithShimLayerSet = false;        // SHIM_PROPS
 static bool ForceNoLinkTrackSet = false;        // TRACKER_PROPS - The TrackerDataBlock (section 2.5.10) is ignored.
 
     void ShellLinkHeader::fillShellLinkHeader(std::vector<unsigned char> header) {
-        // std::cout << "__fillShellLinkHeader start__" << std::endl;
         /* Fill all field */
         auto it = header.begin();
 
@@ -61,7 +60,6 @@ static bool ForceNoLinkTrackSet = false;        // TRACKER_PROPS - The TrackerDa
     }
     /* Reverse All field (read left -> rigth) */
     void ShellLinkHeader::reverseAllFields(){
-        // std::cout << "__reverseAllFields start__" << std::endl;
         reverse(HeaderSize.begin(), HeaderSize.end());
         reverse(LinkFlags.begin(), LinkFlags.end());
         reverse(FileAttributes.begin(), FileAttributes.end());
@@ -78,7 +76,6 @@ static bool ForceNoLinkTrackSet = false;        // TRACKER_PROPS - The TrackerDa
     }
 
     void ShellLinkHeader::printHeaderInHexStyle() {
-        // std::cout << "__printHeaderInHexStyle start__" << std::endl;
         cout << "_____________ShellLinkHeader in HEX style________________" << endl;
         cout << "HeaderSize:                         "; Utils::print_vec(HeaderSize);
         cout << "LinkCLSID:                          "; Utils::printSid(LinkCLSID, 0); cout << endl;
@@ -98,7 +95,6 @@ static bool ForceNoLinkTrackSet = false;        // TRACKER_PROPS - The TrackerDa
     }
 
     bool ShellLinkHeader::isHeaderValid() {
-        // std::cout << "__isHeaderValid start__" << std::endl;
         /* Check HeaderSize */
         if(HeaderSize[0] != 0 && HeaderSize[1] != 0 && HeaderSize[2] != 0 && HeaderSize[3] != 76) {
             cout << "Invalid HeaderSize value. It MUST  be 0x0000004C" << endl;
@@ -141,7 +137,6 @@ static bool ForceNoLinkTrackSet = false;        // TRACKER_PROPS - The TrackerDa
     }
 
     void ShellLinkHeader::parseLinkFlags(unsigned int flags) {
-        // std::cout << "__parseLinkFlags start__" << std::endl;
         if (flags == 0x00000000)
             cout << Utils::defaultOffset << "NONE" << endl;
         if (flags & HasLinkTargetIDList) {
@@ -293,7 +288,6 @@ static bool ForceNoLinkTrackSet = false;        // TRACKER_PROPS - The TrackerDa
     }
 
     void ShellLinkHeader::parseFileAttributesFlags(unsigned int flags) {
-        // std::cout << "__parseFileAttributesFlags start__" << std::endl;
         if (flags == 0x00000000)
             cout << Utils::defaultOffset << "NONE" << endl;
         if (flags & FILE_ATTRIBUTE_READONLY) {
@@ -365,8 +359,7 @@ static bool ForceNoLinkTrackSet = false;        // TRACKER_PROPS - The TrackerDa
         }
     }
 
-    void ShellLinkHeader::parseHotKeyFlags() { // вЗМОЖНО НУЖНО БАЙТЫ ПОМЕНЯТЬ МЕСТАМИ
-        // std::cout << "__parseHotKeyFlags start__" << std::endl;
+    void ShellLinkHeader::parseHotKeyFlags() {
         if (HotKey[0] == VK_NUMPAD00) cout << "No key assigned, ";
         if (HotKey[0] == VK_NUMPAD0) cout << "\"0\" key, ";
         if (HotKey[0] == VK_NUMPAD1) cout << "\"1\" key, ";
@@ -438,7 +431,6 @@ static bool ForceNoLinkTrackSet = false;        // TRACKER_PROPS - The TrackerDa
         std::cout << endl;
     }
     void ShellLinkHeader::parseShowCommand(){
-        // std::cout << "__parseShowCommand start__" << std::endl;
         if (ShowCommand[3] == 1)
             cout << "SW_SHOWNORMAL" << endl << Utils::defaultOffsetDocInfo << "The application is open and its window is open in a normal fashion." << endl;
         if (ShowCommand[3] == 3)
@@ -448,7 +440,6 @@ static bool ForceNoLinkTrackSet = false;        // TRACKER_PROPS - The TrackerDa
     }
 
     void ShellLinkHeader::printHeader(){
-        // std::cout << "__printHeader start__" << std::endl;
         cout << "____________________ShellLinkHeader______________________" << endl;
         cout << "HeaderSize:                         " << dec << Utils::lenFourBytes(HeaderSize) << " bytes" << endl;
         cout << "LinkCLSID:                          "; Utils::printSid(LinkCLSID, 0); cout << endl;
@@ -470,36 +461,28 @@ static bool ForceNoLinkTrackSet = false;        // TRACKER_PROPS - The TrackerDa
     }
 
     bool ShellLinkHeader::HasLinkTargetIDListIsSet() {
-        // std::cout << "__HasLinkTargetIDListIsSet start__" << std::endl;
         return HLTIDListIsSet;
     }
     bool ShellLinkHeader::HasLinkInfoIsSet(){
-        // std::cout << "__HasLinkInfoIsSet start__" << std::endl;
         return HLIIsSet;
     }
 
     bool ShellLinkHeader::HasNameIsSet(){
-        // std::cout << "__HasNameIsSet start__" << std::endl;
         return HasNameSet;
     }
     bool ShellLinkHeader::HasRelativePathIsSet(){
-        // std::cout << "__HasRelativePathIsSet start__" << std::endl;
         return HasRelativePathSet;
     }
     bool ShellLinkHeader::HasWorkingDirIsSet(){
-        // std::cout << "__HasWorkingDirIsSet start__" << std::endl;
         return HasWorkingDirSet;
     }
     bool ShellLinkHeader::HasArgumentsIsSet(){
-        // std::cout << "__HasArgumentsIsSet start__" << std::endl;
         return HasArgumentsSet;
     }
     bool ShellLinkHeader::HasIconLocationIsSet(){
-        // std::cout << "__HasIconLocationIsSet start__" << std::endl;
         return HasIconLocationSet;
     }
     bool ShellLinkHeader::HasStringDataIsSet(){
-        // std::cout << "__HasStringDataIsSet start__" << std::endl;
         if (HasNameSet == true || HasRelativePathSet == true || HasWorkingDirSet == true ||
                 HasArgumentsSet == true || HasIconLocationSet == true)
             return true;
@@ -508,79 +491,60 @@ static bool ForceNoLinkTrackSet = false;        // TRACKER_PROPS - The TrackerDa
 
     /* For ExtraData structure */
 bool ShellLinkHeader::HasDarwinIDIsSet(){
-    // std::cout << "__HasDarwinIDIsSet start__" << std::endl;
     return HasDarwinIDSet;
 }
 bool ShellLinkHeader::HasExpStringIsSet(){
-    // std::cout << "__HasExpStringIsSet start__" << std::endl;
     return HasExpStringSet;
 }
 bool ShellLinkHeader::HasExpIconIsSet(){
-    // std::cout << "__HasExpIconIsSet start__" << std::endl;
     return HasExpIconSet;
 }
 bool ShellLinkHeader::EnableTargetMetadataIsSet(){
-    // std::cout << "__EnableTargetMetadataIsSet start__" << std::endl;
     return EnableTargetMetadataSet;
 }
 bool ShellLinkHeader::RunWithShimLayerIsSet(){
-    // std::cout << "__RunWithShimLayerIsSet start__" << std::endl;
     return RunWithShimLayerSet;
 }
 bool ShellLinkHeader::ForceNoLinkTrackIsSet(){
-    // std::cout << "__ForceNoLinkTrackIsSet start__" << std::endl;
     return ForceNoLinkTrackSet;
 }
 
 void ShellLinkHeader::setHltidListIsSet(bool hltidListIsSet) {
-    // std::cout << "__setHltidListIsSet start__" << std::endl;
     HLTIDListIsSet = hltidListIsSet;
 }
 void ShellLinkHeader::setHliIsSet(bool hliIsSet) {
-    // std::cout << "__setHliIsSet start__" << std::endl;
     HLIIsSet = hliIsSet;
 }
 void ShellLinkHeader::setHasNameSet(bool hasNameSet) {
-    // std::cout << "__setHasNameSet start__" << std::endl;
     HasNameSet = hasNameSet;
 }
 void ShellLinkHeader::setHasRelativePathSet(bool hasRelativePathSet) {
-    // std::cout << "__setHasRelativePathSet start__" << std::endl;
     HasRelativePathSet = hasRelativePathSet;
 }
 void ShellLinkHeader::setHasWorkingDirSet(bool hasWorkingDirSet) {
-    // std::cout << "__setHasWorkingDirSet start__" << std::endl;
     HasWorkingDirSet = hasWorkingDirSet;
 }
 void ShellLinkHeader::setHasArgumentsSet(bool hasArgumentsSet) {
-    // std::cout << "__setHasArgumentsSet start__" << std::endl;
     HasArgumentsSet = hasArgumentsSet;
 }
 void ShellLinkHeader::setHasIconLocationSet(bool hasIconLocationSet) {
-    // std::cout << "__setHasIconLocationSet start__" << std::endl;
     HasIconLocationSet = hasIconLocationSet;
 }
 void ShellLinkHeader::setHasDarwinIdSet(bool hasDarwinIdSet) {
-    // std::cout << "__setHasDarwinIdSet start__" << std::endl;
     HasDarwinIDSet = hasDarwinIdSet;
 }
 void ShellLinkHeader::setHasExpStringSet(bool hasExpStringSet) {
-    // std::cout << "__setHasExpStringSet start__" << std::endl;
     HasExpStringSet = hasExpStringSet;
 }
 void ShellLinkHeader::setHasExpIconSet(bool hasExpIconSet) {
-    // std::cout << "__setHasExpIconSet start__" << std::endl;
     HasExpIconSet = hasExpIconSet;
 }
 void ShellLinkHeader::setEnableTargetMetadataSet(bool enableTargetMetadataSet) {
-    // std::cout << "__setEnableTargetMetadataSet start__" << std::endl;
     EnableTargetMetadataSet = enableTargetMetadataSet;
 }
 void ShellLinkHeader::setRunWithShimLayerSet(bool runWithShimLayerSet) {
-    // std::cout << "__setRunWithShimLayerSet start__" << std::endl;
     RunWithShimLayerSet = runWithShimLayerSet;
 }
 void ShellLinkHeader::setForceNoLinkTrackSet(bool forceNoLinkTrackSet) {
-    // std::cout << "__setForceNoLinkTrackSet start__" << std::endl;
     ForceNoLinkTrackSet = forceNoLinkTrackSet;
 }

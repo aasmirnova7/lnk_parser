@@ -1,7 +1,6 @@
 #ifndef LNK_JUMP_LIST_PARSER_UTILS_H
 #define LNK_JUMP_LIST_PARSER_UTILS_H
 
-
 #include <vector>
 #include <string>
 #include "../lnkStructure/LinkTargetIDList.h"
@@ -10,7 +9,6 @@
 /**
     @class Utils
     Вспомогательный класс для разбора информации в структурах .lnk файла и списков быстрого доступа.       */
-    // 24
 class Utils {
 private:
     /* ----------------------------------------------------------------------------------------------- */
@@ -194,4 +192,4 @@ public:
     };
 };
 
-#endif //LNK_JUMP_LIST_PARSER_UTILS_H
+#endif

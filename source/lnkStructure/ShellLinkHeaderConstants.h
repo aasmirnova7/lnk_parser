@@ -183,4 +183,4 @@
 #define SF_FlagPerUserInit			0x0800	// combine with CSIDL_ value to indicate per-user init (eg. upgrade)
 #define SF_FlagMask					0xFF00	// mask for all possible flag values
 
-#endif //LNK_JUMP_LIST_PARSER_SHELLLINKHEADERCONSTANTS_H
+#endif

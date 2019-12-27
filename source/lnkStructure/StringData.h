@@ -9,7 +9,6 @@
     Класс производит разбор структуры StringDat для Shell Link (.LNK) Binary File Format.
     Докуметация структуры: 2.4 StringData
     https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-shllink/17b69472-0f34-4bcf-b290-eccdb8de224b */
-    // 6 +
 class StringData {
 private:
     /// Поле содержит размер структуры StringData в байтах
@@ -76,4 +75,4 @@ public:
     int getStringDataStructureSize();
 };
 
-#endif //LNK_JUMP_LIST_PARSER_STRINGDATA_H
+#endif

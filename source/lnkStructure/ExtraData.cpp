@@ -5,7 +5,6 @@
 using namespace std;
 
 void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
-    // std::cout << "__fillExtraData start__" << std::endl;
     int tmpReadFrom = readFrom;
     int counter = 0; // Счётчик попыток распарсить структуру ExtraData для избежания зацикливания в сложных случаях.
 
@@ -350,12 +349,10 @@ void ExtraData::fillExtraData(ReadStream *readStream, int readFrom) {
 }
 
 int ExtraData::getExtraDataOffsetEnd() {
-    // getExtraDataOffsetEnd start__" << std::endl;
     return ExtraDataOffsetEnd;
 }
 
 void ExtraData::setStringNameStructInPropsStorage(PropertyStorePropsStruct::SerializedPropertyStorage tmpSerializedPropertyStorage) {
-    // std::cout << "__setStringNameStructInPropsStorage start__" << std::endl;
     if (tmpSerializedPropertyStorage.FormatID[0] == 0xD5 && tmpSerializedPropertyStorage.FormatID[1] == 0xCD &&
         tmpSerializedPropertyStorage.FormatID[2] == 0xD5 && tmpSerializedPropertyStorage.FormatID[3] == 0x05 &&
         tmpSerializedPropertyStorage.FormatID[4] == 0x2E && tmpSerializedPropertyStorage.FormatID[5] == 0x9C &&
@@ -369,7 +366,6 @@ void ExtraData::setStringNameStructInPropsStorage(PropertyStorePropsStruct::Seri
 
 /* Reverse All field (read left -> right) */
 void ExtraData::reverseAllFields() {
-    // std::cout << "__reverseAllFields start__" << std::endl;
     if (consolePropsIsSet) {
         /* CONSOLE_PROPS struct*/
         reverse(CONSOLE_PROPS.BlockSize.begin(), CONSOLE_PROPS.BlockSize.end());
@@ -480,7 +476,6 @@ void ExtraData::reverseAllFields() {
     }
 }
 void ExtraData::parseFillAttributes(bool popupFillAttributes) {
-    // std::cout << "__parseFillAttributes start__" << std::endl;
     if (popupFillAttributes) {
         for (int i = 0; i < CONSOLE_PROPS.PopupFillAttributes.size(); ++i) {
             if (CONSOLE_PROPS.PopupFillAttributes[i] & FOREGROUND_BLUE) cout << "FOREGROUND_BLUE: " <<
@@ -522,7 +517,6 @@ void ExtraData::parseFillAttributes(bool popupFillAttributes) {
     }
 }
 void ExtraData::parseFontFamily() {
-    // std::cout << "__parseFontFamily start__" << std::endl;
     // Первые 2 байта - font family
     for (int i = 0; i < CONSOLE_PROPS.PopupFillAttributes.size() - 2; ++i) {
         if (CONSOLE_PROPS.FontFamily[i] & FF_DONTCARE) cout << "FF_DONTCARE: "<<
@@ -553,7 +547,6 @@ void ExtraData::parseFontFamily() {
     }
 }
 void ExtraData::parseFontWeight() {
-    // std::cout << "__parseFontWeight start__" << std::endl;
     int len = Utils::lenFourBytes(CONSOLE_PROPS.FontWeight);
     if (len >= 700)
         cout << "A bold font." << endl;
@@ -561,7 +554,6 @@ void ExtraData::parseFontWeight() {
         cout << "A regular-weight font." << endl;
 }
 void ExtraData::parseCursorSize() {
-    // std::cout << "__parseCursorSize start__" << std::endl;
     int len = Utils::lenFourBytes(CONSOLE_PROPS.CursorSize);
     cout << dec << len;
     if (len <= 25)
@@ -572,35 +564,30 @@ void ExtraData::parseCursorSize() {
         cout << "A large cursor." << endl;
 }
 void ExtraData::parseFullScreen() {
-    // std::cout << "__parseFullScreen start__" << std::endl;
     if (Utils::lenFourBytes(CONSOLE_PROPS.FullScreen) > 0x00000000)
         cout << "Full-screen mode is on." << endl;
     else
         cout << "Full-screen mode is off." << endl;
 }
 void ExtraData::parseQuickEdit() {
-    // std::cout << "__parseQuickEdit start__" << std::endl;
     if (Utils::lenFourBytes(CONSOLE_PROPS.QuickEdit) > 0x00000000)
         cout << "QuickEdit mode is on." << endl;
     else
         cout << "QuickEdit mode is off." << endl;
 }
 void ExtraData::parseInsertMode() {
-    // std::cout << "__parseInsertMode start__" << std::endl;
     if (Utils::lenFourBytes(CONSOLE_PROPS.InsertMode) > 0x00000000)
         cout << "Insert mode is enabled." << endl;
     else
         cout << "Insert mode is disabled." << endl;
 }
 void ExtraData::parseAutoPosition() {
-    // std::cout << "__parseAutoPosition start__" << std::endl;
     if (Utils::lenFourBytes(CONSOLE_PROPS.AutoPosition) > 0x00000000)
         cout << "The console window is positioned automatically." << endl;
     else
         cout << "The values of the WindowOriginX and WindowOriginY fields are used to position the console window." << endl;
 }
 void ExtraData::parseHistoryNoDup() {
-    // std::cout << "__parseHistoryNoDup start__" << std::endl;
     if (Utils::lenFourBytes(CONSOLE_PROPS.HistoryNoDup) > 0x00000000)
         cout << "Duplicates are allowed." << endl;
     else
@@ -608,7 +595,6 @@ void ExtraData::parseHistoryNoDup() {
 }
 
 int ExtraData::parseCodePageStream(ExtraData::PropertyStorePropsStruct::StringOrIntegerName::TypedPropertyValue value, int from) {
-    // std::cout << "__parseCodePageStream start__" << std::endl;
     cout << Utils::defaultOffsetDocInfo << "MUST be a CodePageString." << endl;
     cout << "              Value:                " << endl;
     cout << "                 CodePageString:    " << endl;
@@ -638,14 +624,12 @@ int ExtraData::parseCodePageStream(ExtraData::PropertyStorePropsStruct::StringOr
     return len + 4;
 }
 int ExtraData::getVectorHeader(std::vector<unsigned int> val) {
-    // std::cout << "__getVectorHeader start__" << std::endl;
     int len = Utils::lenFourBytes(val);
     cout << "              VectorHeader:         " << endl;
     cout << "                 Length:            " << dec << len << " bytes. " << endl;
     return len;
 }
 int ExtraData::getArrayHeader(std::vector<unsigned int> val) {
-    // std::cout << "__getArrayHeader start__" << std::endl;
     cout << "              ArrayHeader:          " << endl;
     cout << "                 Type:              "; Utils::print_vec_from_to(val, 0, 4);
     cout << Utils::defaultOffsetDocInfo << "MUST be set to the value obtained by clearing " <<
@@ -676,18 +660,15 @@ int ExtraData::getArrayHeader(std::vector<unsigned int> val) {
     return len;
 }
 void ExtraData::parseCURRENCY(std::vector<unsigned int> val, int pos) {
-    // std::cout << "__parseCURRENCY start__" << std::endl;
     cout << Utils::defaultOffsetDocInfo << "MUST be a CURRENCY (Packet Version)." << endl;
     cout << "              Value:                ";
     cout << "$ " << (double)Utils::vectEightBytesToUnsignedInt(val, pos)/10000 << endl;
 }
 void ExtraData::parseVT_ERROR(std::vector<unsigned int> val, int from, int to) {
-    // std::cout << "__parseVT_ERROR start__" << std::endl;
     long long int errorVal = Utils::vectEightBytesToUnsignedInt(val, from);
     ExtraDataUtils::parseError(errorVal );
 }
 void ExtraData::parseVT_BOOL(std::vector<unsigned int> val, int pos){
-    // std::cout << "__parseVT_BOOL start__" << std::endl;
     reverse(val.begin(), val.end());
     if(val[pos] == 0x00 && val[pos+1] == 0x00)
         cout << "VARIANT_FALSE = 0x0000 ";
@@ -697,7 +678,6 @@ void ExtraData::parseVT_BOOL(std::vector<unsigned int> val, int pos){
     reverse(val.begin(), val.end());
 }
 int ExtraData::parseUnicodeString(std::vector<unsigned int> val, int pos) {
-    // std::cout << "__parseUnicodeString start__" << std::endl;
     cout << "                 CodePageString:    " << endl;
     int len = Utils::lenFourBytesFromPos(val, pos);
     if(len == 0 && val.size() > 4)
@@ -716,10 +696,9 @@ int ExtraData::parseUnicodeString(std::vector<unsigned int> val, int pos) {
          Utils::defaultOffsetDocInfo << "of 16-bit Unicode characters followed by zero padding to a multiple of 4 bytes. " << endl <<
 
          Utils::defaultOffsetDocInfo << "If Length is zero, this field MUST be zero bytes in length." << endl;
-    return len;// + 4;
+    return len;
 }
 int ExtraData::parseClipboardData(std::vector<unsigned int> val, int pos) {
-    // std::cout << "__parseClipboardData start__" << std::endl;
     cout << "                ClipboardData:      " << endl;
     int len = Utils::lenFourBytesFromPos(val, pos);
     cout << "                     Size:          " << len << " bytes" << endl <<
@@ -731,7 +710,6 @@ int ExtraData::parseClipboardData(std::vector<unsigned int> val, int pos) {
     return len + 4;
 }
 void ExtraData::parseDECIMAL(std::vector<unsigned int> val, int pos) {
-    // std::cout << "__parseDECIMAL start__" << std::endl;
     cout << "                DECIMAL:            " << endl;
     cout << "                 wReserved:         " << val[pos] << " " << val[pos+1] <<
          Utils::defaultOffsetDocInfo << "MUST be set to zero and MUST be ignored. " << endl;
@@ -755,7 +733,6 @@ void ExtraData::parseDECIMAL(std::vector<unsigned int> val, int pos) {
 
 void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int flag,
         ExtraData::PropertyStorePropsStruct::StringOrIntegerName::TypedPropertyValue value) {
-    // std::cout << "__parseTypedPropertyValueTypeAndValueL start__" << std::endl;
     if (flag == VT_EMPTY) {
         cout << "VT_EMPTY: " << endl;
         if (parseType) cout << Utils::defaultOffsetDocInfo << "MUST be zero bytes in length." << endl;
@@ -1370,7 +1347,6 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
             }
         return;
     }
-    // TODO: sequence of TypedPropertyValue packets: Пока не сделано. Сделан вывод в 16-ричном режиме
     if ((flag == VT_VECTOR_VT_VARIANT) || (flag == VT_ARRAY_VT_VARIANT)) {
         if (flag == VT_VECTOR_VT_VARIANT)
             cout << "VT_VECTOR_VT_VARIANT: " << endl;
@@ -1621,12 +1597,10 @@ void ExtraData::parseTypedPropertyValueTypeAndValue(bool parseType, unsigned int
     return;
 }
 void ExtraData::parseColorTableUtils(int posStart) {
-    // std::cout << "__parseColorTableUtils start__" << std::endl;
     cout << Utils::defaultOffset << CONSOLE_PROPS.ColorTable[posStart] << " " << CONSOLE_PROPS.ColorTable[posStart + 1] << " " <<
          CONSOLE_PROPS.ColorTable[posStart + 2] << " " << CONSOLE_PROPS.ColorTable[posStart + 3] << endl;
 }
 void ExtraData::parseColorTable() {
-    // std::cout << "__parseColorTable start__" << std::endl;
     for(int i = 0 ; i < 15; ++i){
         cout << Utils::defaultOffset << i << ":" << endl;
         ExtraData::parseColorTableUtils(4*i);
@@ -1636,7 +1610,6 @@ void ExtraData::parseColorTable() {
 }
 
 void ExtraData::printExtraData() {
-    // std::cout << "__printExtraData start__" << std::endl;
     cout << "_______________________ExtraData_________________________" << endl;
 
     if (consolePropsIsSet) {
@@ -1846,7 +1819,6 @@ void ExtraData::printExtraData() {
 }
 
 void ExtraData::printExtraDataInHexStyle() {
-    // std::cout << "__printExtraDataInHexStyle start__" << std::endl;
     cout << "________________ExtraData in HEX style___________________" << endl;
 
     if (consolePropsIsSet) {
@@ -2008,7 +1980,6 @@ void ExtraData::printExtraDataInHexStyle() {
 }
 
 std::string ExtraData::getSpecialFolderType(unsigned int type) {
-    // std::cout << "__getSpecialFolderType( start__" << std::endl;
     switch (type) {
         case SF_Desktop:				{ return "Desktop"; } break;
         case SF_Internet:				{ return "Internet"; } break;

@@ -10,7 +10,6 @@
     @class ShellLinkAndJumpListHandler
     Класс являющийся обработчиком структур Shell Link (.LNK) Binary File Format
     и списков быстрого доступа                                                                     */
-    // 4 +
 class ShellLinkAndJumpListHandler {
 private:
     /// Поле для хранения информации  о количестве структур ShellLink, разобранных с ошибками.
@@ -53,4 +52,4 @@ public:
     bool parseJumpListStruct();
 };
 
-#endif //LNK_JUMP_LIST_PARSER_SHELLLINKANDJUMPLISTHANDLER_H
+#endif

@@ -5,7 +5,6 @@
 using namespace std;
 
 void DestListHeader::fillDestListHeader(std::vector<unsigned char> destListHeader) {
-    // std::cout << "__fillDestListHeader start__" << std::endl;
     auto it = destListHeader.begin();
 
     std::copy(it, it + 4, std::back_inserter(Version));                         // 4 byte
@@ -24,7 +23,6 @@ void DestListHeader::fillDestListHeader(std::vector<unsigned char> destListHeade
 }
 
 void DestListHeader::reverseAllFields() {
-    // std::cout << "__reverseAllFields start__" << std::endl;
     reverse(Version.begin(), Version.end());
     reverse(TotalNumberOfCurrentEntries.begin(), TotalNumberOfCurrentEntries.end());
     reverse(TotalNumberOfPinnedEntries.begin(), TotalNumberOfPinnedEntries.end());
@@ -34,7 +32,6 @@ void DestListHeader::reverseAllFields() {
 }
 
 void DestListHeader::printDestListHeaderInHexStyle() {
-    // std::cout << "__printDestListHeaderInHexStyle start__" << std::endl;
     cout << "_____________DestListHeader in HEX style________________" << endl;
     cout << "Version:                            "; Utils::print_vec(Version);
     cout << "TotalNumberOfCurrentEntries:        "; Utils::print_vec(TotalNumberOfCurrentEntries);
@@ -45,10 +42,11 @@ void DestListHeader::printDestListHeaderInHexStyle() {
     cout << "_________________________________________________________" << endl;
 }
 void DestListHeader::printDestListHeader() {
-    // std::cout << "__printDestListHeader start__" << std::endl;
     cout << "____________________DestListHeader______________________" << endl;
     cout << "Version:                            " << dec<< Utils::lenFourBytes(Version) << endl;
         cout << Utils::defaultOffsetDocInfo << "1 - for Windows 7" << endl;
+        cout << Utils::defaultOffsetDocInfo << "    for Windows 8" << endl;
+        cout << Utils::defaultOffsetDocInfo << "3 - for Windows 10" << endl;
         cout << Utils::defaultOffsetDocInfo << "4 - for Windows 10" << endl;
     cout << "TotalNumberOfCurrentEntries:        " << dec<< Utils::lenFourBytes(TotalNumberOfCurrentEntries) << endl;
     cout << "TotalNumberOfPinnedEntries:         " << dec<< Utils::lenFourBytes(TotalNumberOfPinnedEntries) << endl;
@@ -61,6 +59,5 @@ void DestListHeader::printDestListHeader() {
 }
 
 unsigned int DestListHeader::getTotalNumberOfCurrentEntries() {
-    // std::cout << "__getTotalNumberOfCurrentEntries start__" << std::endl;
     return Utils::lenFourBytes(TotalNumberOfCurrentEntries);
 }

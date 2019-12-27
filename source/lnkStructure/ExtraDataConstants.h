@@ -3091,4 +3091,4 @@
 #define ERROR_GRAPHICS_MCA_UNSUPPORTED_COLOR_TEMPERATURE 0xC02625DF // The SetMonitorColorTemperature() caller passed a color temperature to it that the current monitor did not support. CRT, plasma, and LCD (TFT) are examples of monitor technology types. This error implies that the monitor violated the MCCS 2.0 or MCCS 2.0 Revision 1 specification.
 #define ERROR_GRAPHICS_ONLY_CONSOLE_SESSION_SUPPORTED 0xC02625E0 // This function can be used only if a program is running in the local console session. It cannot be used if the program is running on a remote desktop session or on a terminal server session.
 
-#endif //LNK_JUMP_LIST_PARSER_EXTRADATACONSTANTS_H
+#endif

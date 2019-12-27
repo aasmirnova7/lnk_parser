@@ -14,7 +14,6 @@
     Класс производит разбор заголовка для Shell Link (.LNK) Binary File Format.
     Докуметация структуры: 2.1 ShellLinkHeader
     https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-shllink/c3376b21-0931-45e4-b2fc-a48ac0e60d15 */
-    // 36 +
 class ShellLinkHeader {
 private:
     // 76 байт
@@ -253,4 +252,4 @@ public:
     static bool ForceNoLinkTrackIsSet();
 };
 
-#endif //LNK_JUMP_LIST_PARSER_SHELLLINKHEADER_H
+#endif

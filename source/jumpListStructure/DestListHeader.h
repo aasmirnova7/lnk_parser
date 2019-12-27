@@ -1,14 +1,12 @@
 #ifndef LNK_JUMP_LIST_PARSER_DESTLISTHEADER_H
 #define LNK_JUMP_LIST_PARSER_DESTLISTHEADER_H
 
-
 #include <vector>
 #include "../utils/Utils.h"
 
 /**
     @class DestListHeader
     Класс описывает хранение и разбор заголовка для списков быстрого доступа.                         */
-    // 5 +
 class DestListHeader {
 private:
     /// Поле хранит в себе информацию о версии jump-list-а. Занимает 4 байта.
@@ -59,4 +57,4 @@ public:
     unsigned int getTotalNumberOfCurrentEntries();
 };
 
-#endif //LNK_JUMP_LIST_PARSER_DESTLISTHEADER_H
+#endif

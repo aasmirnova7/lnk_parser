@@ -6,7 +6,6 @@
 using  namespace std;
 
 void StringData::fillStringData(ReadStream *readStream, int readFrom) {
-    // std::cout << "__fillStringData start__" << std::endl;
     int tmpReadFrom = readFrom;
 
     if(ShellLinkHeader::HasNameIsSet()) {
@@ -85,12 +84,10 @@ void StringData::fillStringData(ReadStream *readStream, int readFrom) {
 }
 
 void StringData::printStringDataUtilInHexStyle(StringDataStruct sdStruct) {
-    // std::cout << "__printStringDataUtilInHexStyle start__" << std::endl;
     cout << "      CountCharacters:              "; Utils::print_vec(sdStruct.CountCharacters);
     cout << "      String:                       "; Utils::print_vec(sdStruct.String);
 }
 void StringData::printStringDataUtil(StringDataStruct sdStruct) {
-    // std::cout << "__printStringDataUtil start__" << std::endl;
     int len = Utils::lenTwoBytes(sdStruct.CountCharacters);
     cout << "      CountCharacters:              " << dec << len << " Unicode characters, "
          << dec << len * 2 << " bytes. " << endl;
@@ -101,7 +98,6 @@ void StringData::printStringDataUtil(StringDataStruct sdStruct) {
 }
 
 void StringData::printStringData() {
-    // std::cout << "__printStringData start__" << std::endl;
     cout << "______________________StringData________________________" << endl;
     if(ShellLinkHeader::HasNameIsSet()) {
         cout << "NAME_STRING:                        " << endl;
@@ -126,7 +122,6 @@ void StringData::printStringData() {
     cout << "_________________________________________________________" << endl;
 }
 void StringData::printStringDataInHexStyle() {
-    // std::cout << "__printStringDataInHexStyle start__" << std::endl;
     cout << "_______________StringData in HEX style___________________" << endl;
     if(ShellLinkHeader::HasNameIsSet()) {
         cout << "NAME_STRING:                        " << endl;
@@ -152,6 +147,5 @@ void StringData::printStringDataInHexStyle() {
 }
 
 int StringData::getStringDataStructureSize() {
-    // std::cout << "__getStringDataStructureSize start__" << std::endl;
     return StringDataSize;
 }

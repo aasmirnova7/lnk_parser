@@ -6,7 +6,6 @@
 using namespace std;
 
 void LinkTargetIDList::fillLinkTargetIDList(std::vector<unsigned char> linkTargetIdList) {
-    // std::cout << "__fillLinkTargetIDList start__" << std::endl;
     auto it_begin = linkTargetIdList.begin();
 
     copy(it_begin, it_begin + 2, std::back_inserter( IDListSize));                      // 2 byte
@@ -42,17 +41,15 @@ void LinkTargetIDList::fillLinkTargetIDList(std::vector<unsigned char> linkTarge
     reverse(TerminalID.begin(), TerminalID.end());
 }
 bool LinkTargetIDList::LinkTargetIdHasErrors() {
-    // std::cout << "__LinkTargetIdHasErrors start__" << std::endl;
     return hasErrors;
 }
 
 void LinkTargetIDList::printLinkTargetIdList() {
-    // std::cout << "__printLinkTargetIdList start__" << std::endl;
     cout <<"____________________LinkTargetIdList______________________" << endl;
     cout << "IDListSize:                         " << dec << Utils::lenTwoBytes(IDListSize) << " bytes" << endl;
     cout << "IDList:                             " << endl ;
     for(int i = 0; i < IDList.size(); ++i){
-        cout << "   ItemID " << i + 1 << endl;
+        cout << "   ItemID " << dec << i + 1 << endl;
         cout << "       ItemIDSize:                  " << dec << Utils::lenTwoBytes(IDList[i].ItemIDSize) << " bytes" << endl;
         cout << "       Data:                        "; Utils::parseItemData(IDList[i].Data);
     }
@@ -61,12 +58,11 @@ void LinkTargetIDList::printLinkTargetIdList() {
 }
 
 void LinkTargetIDList::printLinkTargetIdListInHexStyle() {
-    // std::cout << "__printLinkTargetIdListInHexStyle start__" << std::endl;
     cout <<"_________________LinkTargetIdList in Hex Style___________________" << endl;
     cout << "IDListSize:                         " ; Utils::print_vec(IDListSize);
     cout << "IDList:                             " << endl ;
     for(int i = 0; i < IDList.size(); ++i){
-        cout << "   ItemID " << i + 1 << endl;
+        cout << "   ItemID " << dec << i + 1 << endl;
         cout << "       ItemIDSize:                  "; Utils::print_vec(IDList[i].ItemIDSize);
         cout << "       Data:                        "; Utils::print_vec(IDList[i].Data);
     }
